@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drying Process</title>
+    <style>
+                * {
+            box-sizing: border-box;
+        }
+                body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            align-items: flex-start;
+        }
+
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 768px) {
+    .iframe-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .iframe-container iframe {
+        height: 100vh;
+        width: 100%; /* Full width on small screens */
+    }
+}
+        /* Success message */
+        .success-message {
+            display: none;
+            color: green;
+            background-color: #e6ffe6;
+            border: 1px solid green;
+            padding: 10px;
+            text-align: center;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+    
+    /* Wrapper for form and iframes */
+    .content-wrapper {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        max-width: 1000px;
+        width: 100%;
+    }
+
+    /* Form container */
+    .container {
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 50%;
+    }
+
+    h2 {
+        text-align: center;
+        color: #007BFF;
+    }
+
+    /* Input styles */
+    label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Iframe container */
+    .iframe-container {
+        display: flex;
+        flex-direction: column;
+        height: 172vh;
+        gap: 10px;
+        width: 50%;
+    }
+
+    .iframe-container iframe {
+        width: 120%;
+        height: 160vh; /* Full viewport height */
+        border: none;
+        overflow: hidden;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .content-wrapper {
+            flex-direction: column;
+            display: grid;
+                grid-template-columns: 1fr 1fr; /* Two equal columns */
+                gap: 10px;
+                max-width: 1200px;
+                width: 100%;
+                align-items: start;
+        }
+
+        .container, .iframe-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            min-height: 1000px; /* Ensures equal height */
+        }
+
+        .iframe-container iframe {
+                width: 100%;
+                height: 100%;
+                min-height: 1000px; /* Match container height */
+            }
+        }
+    
+    #back_bnt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            background-color: #0056b3;
+        }
+        
+    .line-group_dry {
+    display: flex;
+    align-items: center;
+    gap: 1px; /* Adjust spacing between the two fields */
+    margin-bottom: 10px;
+    }
+
+    .line-group_dry label {
+    white-space: nowrap; /* Ensures labels stay on one line */
+    }
+
+    .linen-type_dry {
+        width: max-content;
+    }
+
+    #other-linen_dry {
+        display: none; /* Initially hidden */
+    }
+
+    .form-group_dry {
+    margin-bottom: 10px;
+}
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+    <div class="content-wrapper">
+        <div class="container">
+            <h2>Drying Process</h2>
+            <form id="fill_up_dry">
+                <label for="date_dry">DATE:</label>
+                <input type="date" id="date_dry" name="date_dry" required>
+                <span id="dateError" class="error"></span>
+            
+                <label for="equipment_dry">EQUIPMENT</label>
+                <input type="text" id="equipment_dry" name="equipment_dry" required>
+                <span id="equipment_dryError" class="error"></span>
+            
+                <label for="set_time_dry">SET TIME(minutes):</label>
+                <input type="number" id="set_time_dry" name="set_time_dry" required>
+                <span id="timeError" class="error"></span>
+
+                <label for="temp">TEMPERATURE(°C):</label>
+                <input type="number" id="temp" name="temp" required>
+                <span id="tempError" class="error"></span>
+            
+                <div class="line-group_dry">
+                    <label for="linen_type_dry">LINEN TYPE:</label>
+                    <select id="linen_type_dry" required onchange="handleLinenChange()">
+                        <option value="">Select Linen Type</option>
+                        <option value="DUVET COVER">DUVET COVER</option>
+                        <option value="BEDSHEET">BEDSHEET</option>
+                        <option value="BATH TOWEL">BATH TOWEL</option>
+                        <option value="PILLOW CASE">PILLOW CASE</option>
+                        <option value="INFILL">INFILL</option>
+                        <option value="BED PAD">BED PAD</option>
+                        <option value="OTHERS">OTHERS</option>
+                    </select>
+                    <span id="linenError" class="error"></span>
+    
+                
+                    <label for="quantity_dry">QUANTITY:</label>
+                    <input type="number" id="quantity_dry" name="quantity" required>
+                    <span id="quantityError" class="error"></span>
+                </div>
+                
+                <input type="text" id="other-linen_dry" name="other-linen" placeholder="Other Linen Type" style="display: none;">
+            
+                <label for="bfr_dry">TOTAL KGS BEFORE DRY:</label>
+                <input type="number" id="bfr_dry" name="bfr_dry" required>
+                <span id="bfrError" class="error"></span>
+            
+                <label for="aftr_dry">TOTAL KGS AFTER DRY:</label>
+                <input type="number" id="aftr_dry" name="aftr_dry" required>
+                <span id="aftrError" class="error"></span>
+            
+                <button type="submit">ADD TO TEMPLATE</button>
+            </form>
+            
+        </div>
+    
+        <div class="iframe-container">
+            <iframe src="electric_proc_2.html"></iframe>
+            <iframe src="lpg_sub.html" scrolling="no"></iframe>
+        </div>
+    </div>
+    
+    <button type="button" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
+
+    </body>
+    
+
+<script>
+
+
+function handleLinenChange() {
+    var linenType = document.getElementById("linen_type_dry");
+    var otherLinenInput = document.getElementById("other-linen_dry");
+
+    if (linenType.value === "OTHERS") {
+        otherLinenInput.style.display = "block"; // Show input field
+        otherLinenInput.setAttribute("required", "true"); // Make it required
+    } else {
+        otherLinenInput.style.display = "none"; // Hide input field
+        otherLinenInput.removeAttribute("required"); // Remove required attribute
+        otherLinenInput.value = ""; // Clear input
+    }
+}
+
+function validateForm() {
+    let isValid = true;
+
+    // List of error fields
+    let errorFields = [
+        "dateError", "equipment_dryError",
+        "timeError", "tempError", "linenError", "quantity_dryError",
+        "bfrError", "aftrError"
+    ];
+    
+    // Reset previous error messages
+    errorFields.forEach(id => document.getElementById(id).textContent = "");
+
+    // Get input values
+    let date = document.getElementById("date_dry").value.trim();
+    let equipment_dry = document.getElementById("equipment_dry").value.trim();
+    let set_time_dry = document.getElementById("set_time_dry").value.trim();
+    let temp = document.getElementById("temp").value.trim();
+    let linen = document.getElementById("linen_type_dry").valuet.trim();
+    let quantity_dry = document.getElementById("quantity_dry").value.trim();
+    let bfr_dry = document.getElementById("bfr_dry").value.trim();
+    let aftr_dry = document.getElementById("aftr_dry").value.trim();
+
+    if (date === "") {
+        document.getElementById("dateError").textContent = "Date is required!";
+        isValid = false;
+    }
+    if (load === "") {
+        document.getElementById("loadError").textContent = "Load number is required!";
+        isValid = false;
+    }
+    if (trolley === "") {
+        document.getElementById("trolleyError").textContent = "Trolley number is required!";
+        isValid = false;
+    }
+    if (equipment_dry === "") {
+        document.getElementById("equipment_dryError").textContent = "equipment_dry is required!";
+        isValid = false;
+    }
+    if (set_time_dry === "") {
+        document.getElementById("timeError").textContent = "Set time is required!";
+        isValid = false;
+    }
+    if (temp === "") {
+        document.getElementById("tempError").textContent = "Temperature is required!";
+        isValid = false;
+    }
+    if (linen === "") {
+        document.getElementById("linenError").textContent = "Linen type is required!";
+        isValid = false;
+    }
+    if (quantity_dry === "") {
+        document.getElementById("quantity_dryError").textContent = "quantity_dry is required!";
+        isValid = false;
+    }
+    if (bfr_dry === "") {
+        document.getElementById("bfrError").textContent = "Total kgs before wash is required!";
+        isValid = false;
+    }
+    if (aftr_dry === "") {
+        document.getElementById("aftrError").textContent = "Total kgs after wash is required!";
+        isValid = false;
+    }
+    if (detergent === "") {
+        document.getElementById("detdosError").textContent = "Detergent dosing is required!";
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+    document.getElementById("fill_up_dry").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form submission and page reload
+
+
+    // Store data in localStorage
+    localStorage.setItem("date_dry", document.getElementById("date_dry").value);
+    localStorage.setItem("equipment_dry", document.getElementById("equipment_dry").value);
+    localStorage.setItem("set_time_dry", document.getElementById("set_time_dry").value);
+    localStorage.setItem("other-linen_dry", document.getElementById("other-linen_dry").value);
+    localStorage.setItem("temp", document.getElementById("temp").value);
+    localStorage.setItem("linen_type_dry", document.getElementById("linen_type_dry").value);
+    localStorage.setItem("quantity_dry", document.getElementById("quantity_dry").value);
+    localStorage.setItem("bfr_dry", document.getElementById("bfr_dry").value);
+    localStorage.setItem("aftr_dry", document.getElementById("aftr_dry").value);
+
+
+    alert("Data submitted successfully!");
+
+// Redirect after 2 seconds
+setTimeout(function() {
+    window.open("output_2.html", "blank"); // Redirect to the output page
+    location.reload(); // Reload the current page after submission
+}, 1000);
+    });
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LPG Gas Submetering</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif;
+             text-align: center; 
+            }
+        .container { 
+            background-color: rgb(254, 255, 245);
+            max-width: 400px;
+            margin: auto; 
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px; 
+        }
+        input, button { 
+            width: 90%; 
+            padding: 5px; 
+            margin: 5px 0;
+            border-radius: 5px; 
+        }
+        button { 
+            background: #007BFF; 
+            color: white; 
+            border: none; 
+            cursor: pointer;
+            padding: 10px;
+        }
+        button:hover { 
+            background: #0056b3; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>LPG Submetering Data</h2>
+    
+    <strong><label>Initial Reading (kg):</label></strong>
+    <input type="number" id="initialReading_iron" step="0.01">
+    
+    <strong><label>Final Reading (kg):</label></strong>
+    <input type="number" id="finalReading_iron" step="0.01">
+    
+    <strong><label>Price per kg (₱):</label></strong>
+    <input type="number" id="pricePerKg_iron" step="0.01">
+
+    <button onclick="saveData()">Save Data</button>
+    <button onclick="viewReport()">View Report</button>
+</div>
+
+<script>
+function saveData() {
+    let initialReading = parseFloat(document.getElementById("initialReading_iron").value);
+    let finalReading = parseFloat(document.getElementById("finalReading_iron").value);
+    let pricePerKg = parseFloat(document.getElementById("pricePerKg_iron").value);
+
+    if (isNaN(initialReading) || isNaN(finalReading) || isNaN(pricePerKg)) {
+        alert("Please enter valid values.");
+        return;
+    }
+
+    if (finalReading > initialReading) {
+        alert("Error: Final reading cannot be greater than the initial reading.");
+        return;
+    }
+            // Check if data was saved successfully
+    if (
+        localStorage.getItem("initial_reading") !== null &&
+        localStorage.getItem("final_reading") !== null &&
+        localStorage.getItem("gas_used") !== null &&
+        localStorage.getItem("total_cost") !== null
+    ) {
+        alert("Data saved successfully! View the report");
+    } else {
+        alert("Error: Data was not saved successfully.");
+    }
+
+    let gasUsed = (initialReading - finalReading).toFixed(2);
+    let totalCost = (gasUsed * pricePerKg).toFixed(2);
+
+    localStorage.setItem("initial_reading_iron", initialReading);
+    localStorage.setItem("final_reading_iron", finalReading);
+    localStorage.setItem("gas_used_iron", gasUsed);
+    localStorage.setItem("total_cost_iron", totalCost);
+
+}
+
+function viewReport() {
+
+// Redirect after 2 seconds
+setTimeout(function() {
+    window.open("output_3.html", "blank"); // Redirect to the output page
+    location.reload(); // Reload the current page after submission
+}, 1000);
+
+}
+
+</script>
+
+</body>
+</html>

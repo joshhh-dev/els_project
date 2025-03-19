@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drying Process Report</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: #f4f4f4; 
+        }
+        .container {
+             max-width: 600px; 
+             margin: 20px auto; 
+             padding: 20px; 
+             background: white; 
+             border-radius: 5px; 
+             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            }
+        h2 {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+        }
+        th, td { 
+            border: 1px solid #ddd;         
+            padding: 10px;          
+            text-align: left;  
+        }
+        th { 
+            background-color: #007BFF; 
+            color: white; 
+        }
+        tr:nth-child(even) { 
+            background-color: #f8f9fa; 
+        }        
+        
+        button {
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .excel-btn { 
+            background: green; 
+            color: white; 
+            border: none; 
+        }
+        .pdf-btn { 
+            background: red; 
+            color: white; 
+            border: none; 
+        }
+        .back-btn { 
+            background: gray; 
+            color: white; 
+            border: none; 
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Submitted Drying Data</h2>
+        <table>
+            <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>DATE</td><td id="outDate_dry"></td></tr></tr>
+            <tr><td>EQUIPMENT</td><td id="outEquipment_dry"></td></tr>
+            <tr><td>SET TIME</td><td id="outSet_time_dry"></td></tr>
+            <tr><td>TEMPERATURE</td><td id="outTemperature"></td></tr>
+            <tr><td>LINEN TYPE</td>
+                <td id="outLinen-type_dry"></td>
+                <td id="outOtherLinen_dry"></td>
+            </tr>
+            <tr><td>QUANTITY</td><td id="outQuantity_dry"></td></tr>
+            <tr><td>TOTAL KGS BEFORE DRY</td><td id="outBfr_dry"></td></tr>
+            <tr><td>TOTAL KGS AFTER DRY</td><td id="outAftr_dry"></td></tr>
+        </table>
+    
+        <h2>Submitted Electric Submetering Data</h2>
+        <table>
+            <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>START TIME</td><td id="outStartTimes_dry"></td></tr>
+            <tr><td>END TIME</td><td id="outEndTimes_dry"></td></tr>
+            <tr><td>Start Reading (kWh)</td><td id="outStartReadings_dry"></td></tr>
+            <tr><td>End Reading (kWh)</td><td id="outEndReadings_dry"></td></tr>
+            <tr><td>Total kWh Used</td><td id="outTotalUseds_dry"></td></tr>
+            <tr><td>Estimated Cost (₱)</td><td id="outCosts_dry"></td></tr>
+        </table>
+    </div>
+
+<div class="container">
+    <h2>LPG Gas Submetering Report</h2>
+    <table>
+        <tr><th>Field</th><th>Value</th></tr>
+        <tr><td>Initial Reading (kg)</td><td id="outInitialReading"></td></tr>
+        <tr><td>Final Reading (kg)</td><td id="outFinalReading"></td></tr>
+        <tr><td>Gas Used (kg)</td><td id="outGasUsed"></td></tr>
+        <tr><td>Total Cost (₱)</td><td id="outTotalCost"></td></tr>
+    </table>
+
+    <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
+    <button class="pdf-btn" onclick="exportToPDF()">Download as PDF</button>
+    <button class="back-btn" onclick="window.location.href='drying_proc.html'">Go Back</button>
+</div>
+
+    
+
+<script>
+        // Retrieve and display data
+        document.getElementById("outDate_dry").textContent = localStorage.getItem("date_dry") || "N/A";
+        document.getElementById("outEquipment_dry").textContent = localStorage.getItem("equipment_dry") || "N/A";
+        document.getElementById("outSet_time_dry").textContent = localStorage.getItem("set_time_dry") || "N/A";
+        document.getElementById("outTemperature").textContent = localStorage.getItem("temp") || "N/A";
+        document.addEventListener("DOMContentLoaded", function () {
+        let linenType = localStorage.getItem("linen_type_dry") || "N/A";
+        let otherLinen = localStorage.getItem("other-linen_dry") || "";
+        let linenTypeElement = document.getElementById("outLinen-type_dry");
+        let otherLinenElement = document.getElementById("outOtherLinen_dry");
+    
+        if (linenType.toLowerCase() === "others" && otherLinen) {
+            linenTypeElement.textContent = otherLinen;
+            otherLinenElement.style.display = "none";
+        } else {
+            linenTypeElement.textContent = linenType;
+            otherLinenElement.style.display = "none";
+        }
+    });
+        document.getElementById("outQuantity_dry").textContent = localStorage.getItem("quantity_dry") || "N/A";
+        document.getElementById("outBfr_dry").textContent = localStorage.getItem("bfr_dry") || "N/A";
+        document.getElementById("outAftr_dry").textContent = localStorage.getItem("aftr_dry") || "N/A";
+        
+        // Retrieve and display electric metering data from localStorage
+        document.getElementById("outStartTimes_dry").textContent = localStorage.getItem("start_times_dry") || "N/A";
+        document.getElementById("outEndTimes_dry").textContent = localStorage.getItem("end_times_dry") || "N/A";
+        document.getElementById("outStartReadings_dry").textContent = localStorage.getItem("start_readings_dry") || "N/A";
+        document.getElementById("outEndReadings_dry").textContent = localStorage.getItem("end_readings_dry") || "N/A";
+        document.getElementById("outTotalUseds_dry").textContent = localStorage.getItem("total_useds_dry") || "N/A";
+        document.getElementById("outCosts_dry").textContent = localStorage.getItem("costs_dry") || "N/A";
+
+        // Retrieve and display stored data
+        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") || "N/A";
+        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading") || "N/A";
+        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used") || "N/A";
+        document.getElementById("outTotalCost").textContent = localStorage.getItem("total_cost") || "N/A";
+
+    function exportToExcel() {
+    let tables = document.querySelectorAll("table");
+    if (tables.length === 0) {
+        alert("No table data found to export.");
+        return;
+    }
+
+    let wb = XLSX.utils.book_new();
+    let ws_data = [];
+
+    ws_data.push(["Washing & Utility Data Report"]);
+    ws_data.push(["Generated on:", new Date().toLocaleString()]);
+    ws_data.push([]);
+
+    tables.forEach((table) => {
+        let title = table.previousElementSibling?.innerText || "Untitled Table";
+        ws_data.push([title]);
+        ws_data.push([]);
+
+        let rows = table.querySelectorAll("tr");
+        rows.forEach((row) => {
+            let cells = row.querySelectorAll("th, td");
+            let rowData = Array.from(cells).map(cell => cell.innerText.replace(/\n/g, " "));
+            ws_data.push(rowData);
+        });
+
+        ws_data.push([]);
+    });
+
+    let ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, "Report");
+
+    let filename = `Drying_Process_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    XLSX.writeFile(wb, filename);
+}
+
+
+function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4'); // A4 Portrait
+
+    // Title & Timestamp
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("ELS Drying Process", 15, 15);
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Generated on: " + new Date().toLocaleString(), 15, 25);
+
+    let yPosition = 35; // Starting Y position
+    let tables = document.querySelectorAll("table");
+
+    if (tables.length === 0) {
+        alert("No table data found to export.");
+        return;
+    }
+
+    tables.forEach((table) => {
+        let title = table.previousElementSibling?.innerText || "Untitled Table";
+        
+        // Add Table Title
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(title, 15, yPosition);
+        yPosition += 5;
+
+        let headers = [];
+        let rows = [];
+
+        let tableRows = table.querySelectorAll("tr");
+        tableRows.forEach((row, rowIndex) => {
+            let cells = row.querySelectorAll("th, td");
+            let rowData = Array.from(cells).map(cell => cell.innerText);
+
+            if (rowIndex === 0) headers = rowData; // First row as headers
+            else rows.push(rowData);
+        });
+
+        // Generate a table using autoTable plugin
+        if (typeof doc.autoTable === "function") {
+            doc.autoTable({
+                startY: yPosition,
+                head: [headers],
+                body: rows,
+                theme: "striped",
+                styles: { fontSize: 10, cellPadding: 3 },
+                headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] }, // Blue header
+                columnStyles: { 0: { cellWidth: 'auto' } },
+                margin: { top: 40 },
+            });
+
+            yPosition = doc.lastAutoTable.finalY + 10; // Move below last table
+        } else {
+            alert("jsPDF-AutoTable is required for proper formatting.");
+            return;
+        }
+    });
+
+    // Save as a downloadable PDF
+    let filename = `Drying_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(filename);
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Washing Process</title>
+    <style>
+                * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            align-items: flex-start;
+        }
+    
+
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007BFF;
+            
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 768px) {
+    .iframe-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .iframe-container iframe {
+        height: 100vh;
+        width: 100%; /* Full width on small screens */
+    }
+}
+        /* Success message */
+        .success-message {
+            display: none;
+            color: green;
+            background-color: #e6ffe6;
+            border: 1px solid green;
+            padding: 10px;
+            text-align: center;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+    
+        /* Wrapper for form and iframes */
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            max-width: 1000px;
+            width: 100%;
+        }
+    
+        /* Form container */
+        .container {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+        }
+    
+        h2 {
+            text-align: center;
+            color: #007BFF;
+        }
+    
+        /* Input styles */
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+    
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    
+        button {
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    
+        button:hover {
+            background-color: #0056b3;
+        }
+    
+        /* Iframe container */
+        .iframe-container {
+            display: flex;
+            flex-direction: column;
+            height: 172vh;
+            width: 50%;
+        }
+    
+        .iframe-container iframe {
+            width: 120%;
+            height: 160vh; /* Full viewport height */
+            border: none;
+            overflow: hidden;
+        }
+    
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* Two equal columns */
+                gap: 10px;
+                max-width: 1200px;
+                width: 100%;
+                align-items: start;
+            }
+    
+            .container, .iframe-container {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                min-height: 1000px; /* Ensures equal height */
+            }
+    
+            .iframe-container iframe {
+                width: 100%;
+                height: 100%;
+                min-height: 1000px; /* Match container height */
+            }
+        }
+
+        #back_bnt {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        background-color: #0056b3;
+    }
+
+    .line-group {
+    display: flex;
+    align-items: center;
+    gap: 1px; /* Adjust spacing between the two fields */
+    margin-bottom: 10px;
+    }
+
+    .line-group label {
+    white-space: nowrap; /* Ensures labels stay on one line */
+    }
+
+    .linen-type{
+        width: max-content;
+    }
+
+    #other-linen {
+        display: none; /* Initially hidden */
+    }
+
+    .form-group {
+    margin-bottom: 10px;
+}
+
+.dosage-group {
+    display: flex;
+    align-items: center;
+}
+
+.dosage-container {
+    display: flex;
+    padding-left: 10px;
+    align-items: center;
+    gap: 10px;
+}
+
+#unitDisplay {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+    <div class="content-wrapper">
+        <div class="container">
+            <h2>Washing Process</h2>
+            <form id="fill_up">
+                <label for="date">DATE:</label>
+                <input type="date" id="date" name="date" required>
+                <span id="dateError" class="error"></span>
+            
+                <label for="load_number">LOAD #:</label>
+                <input type="number" id="load_number" name="load_number" required>
+                <span id="loadError" class="error"></span>
+            
+                <label for="trolley_number">TROLLEY #:</label>
+                <input type="number" id="trolley_number" name="trolley_number" required>
+                <span id="trolleyError" class="error"></span>
+            
+                <label for="equipment">EQUIPMENT:</label>
+                <select id="equipment" name="equipment" required>
+                    <option value="">Select Equipment</option>
+                    <option value="Equipment_1">Equipment 1</option>
+                    <option value="Equipment_2">Equipment 2</option>
+                    <option value="Equipment_3">Equipment 3</option>
+                    <option value="Equipment_4">Equipment 4</option>
+                    <option value="Equipment_5">Equipment 5</option>
+                    </select>
+                <span id="equipmentError" class="error"></span>
+            
+                <label for="set_time">SET TIME(minutes):</label>
+                <input type="number" id="set_time" name="set_time" required>
+                <span id="timeError" class="error"></span>
+
+
+                <label for="program">PROGRAM:</label>
+                <select id="program" required>
+                    <option value="">Select Program</option>
+                    <option value="HOT">HOT</option>
+                    <option value="WARM">WARM</option>
+                    <option value="COLD">COLD</option>
+                </select>
+                <span id="programError" class="error"></span>
+
+
+            <div class="line-group">
+                <label for="linen-type">LINEN TYPE:</label>
+                <select id="linen-type" required onchange="handleLinenChange()">
+                    <option value="">Select Linen Type</option>
+                    <option value="DUVET COVER">DUVET COVER</option>
+                    <option value="BEDSHEET">BEDSHEET</option>
+                    <option value="BATH TOWEL">BATH TOWEL</option>
+                    <option value="PILLOW CASE">PILLOW CASE</option>
+                    <option value="INFILL">INFILL</option>
+                    <option value="BED PAD">BED PAD</option>
+                    <option value="OTHERS">OTHERS</option>
+                </select>
+                <span id="linenError" class="error"></span>
+
+            
+                <label for="quantity">QUANTITY:</label>
+                <input type="number" id="quantity" name="quantity" required>
+                <span id="quantityError" class="error"></span>
+            </div>
+            
+            <input type="text" id="other-linen" name="other-linen" placeholder="Other Linen Type" style="display: none;">
+
+                <label for="bfr_wash">TOTAL KGS BEFORE WASH:</label>
+                <input type="number" id="bfr_wash" name="bfr_wash" required>
+                <span id="bfrError" class="error"></span>
+            
+                <label for="aftr_wash">TOTAL KGS AFTER WASH:</label>
+                <input type="number" id="aftr_wash" name="aftr_wash" required>
+                <span id="aftrError" class="error"></span>
+            
+
+                <label for="detergent">DETERGENT TYPE:</label>
+                <select id="detergent" required>
+                    <option value="">Select Detergent</option>
+                    <option value="PRO LS Alkali Booster">PRO LS Alkali Booster</option>
+                    <option value="PRO LS Sour Rinse Concentrate">PRO LS Sour Rinse Concentrate</option>
+                    <option value="PRO LS Choloro Neutralizer">PRO LS Choloro Neutralizer</option>
+                    <option value="PRO LS Chlorine Bleach">PRO LS Chlorine Bleach</option>
+                </select>
+
+                <label for="mixType">MIXTURE TYPE:</label>
+                <select id="mixType" required required onchange="updateUnit()">
+                    <option value="">Select Mixture</option>
+                    <option value="Powdered">Powdered</option>
+                    <option value="Liquid">Liquid</option>
+                </select>
+
+                <div class="dosage-group">
+                <label for="dosage">SELECT DOSAGE:</label>
+                <div class="dosage-container">
+                <select id="dosage" required>
+                    <option value="">Select Detergent</option>
+                    <option value="200">200</option>
+                    <option value="400">400</option>
+                    <option value="600">600</option>
+                    <option value="800">800</option>
+                </select>
+                <span id="unitDisplay">mG/mL</span>
+                </div>
+            </div>
+
+                
+                <button type="submit">ADD TO TEMPLATE</button>
+
+                
+            </form>
+            
+        </div>
+    
+        <div class="iframe-container">
+            <iframe src="energy_cons.html"></iframe>
+            <iframe src="water_cons.html"></iframe>
+        </div>
+    </div>
+
+    <button type="button" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
+    </body>
+    
+
+<script>
+
+function updateUnit() {
+    let mixType = document.getElementById("mixType").value;
+    let unitDisplay = document.getElementById("unitDisplay");
+
+    if (mixType === "Powdered") {
+        unitDisplay.textContent = "mG";
+    } else if (mixType === "Liquid") {
+        unitDisplay.textContent = "mL";
+    } else {
+        unitDisplay.textContent = "mG/mL"; // Default placeholder
+    }
+
+    updateDisplay();
+}
+
+function updateDisplay() {
+    let dosage = document.getElementById("dosage").value;
+    let mixType = document.getElementById("mixType").value;
+   
+
+    if (dosage && mixType) {
+        let unit = mixType === "Powdered" ? "mG" : "mL";
+    } else {
+        output.textContent = "";
+    }
+}
+
+
+function handleLinenChange() {
+    var linenType = document.getElementById("linen-type");
+    var otherLinenInput = document.getElementById("other-linen");
+
+    if (linenType.value === "OTHERS") {
+        otherLinenInput.style.display = "block"; // Show input field
+        otherLinenInput.setAttribute("required", "true"); // Make it required
+    } else {
+        otherLinenInput.style.display = "none"; // Hide input field
+        otherLinenInput.removeAttribute("required"); // Remove required attribute
+        otherLinenInput.value = ""; // Clear input
+    }
+}
+    
+function validateForm() {
+    let isValid = true;
+
+    // List of error fields
+    let errorFields = [
+        "dateError", "loadError", "trolleyError", "equipmentError",
+        "timeError", "programError", "linenError", "quantityError",
+        "bfrError", "aftrError", "detdosError"
+    ];
+    
+    // Reset previous error messages
+    errorFields.forEach(id => document.getElementById(id).textContent = "");
+
+    // Get input values
+    let date = document.getElementById("date").value.trim();
+    let load = document.getElementById("load_number").value.trim();
+    let trolley = document.getElementById("trolley_number").value.trim();
+    let equipment = document.getElementById("equipment").value.trim();
+    let set_time = document.getElementById("set_time").value.trim();
+    let program = document.getElementById("program").value;
+    let linen = document.getElementById("linen-type").value;
+    let quantity = document.getElementById("quantity").value.trim();
+    let bfr_wash = document.getElementById("bfr_wash").value.trim();
+    let aftr_wash = document.getElementById("aftr_wash").value.trim();
+    let detergent = document.getElementById("detergent").value;
+
+    if (date === "") {
+        document.getElementById("dateError").textContent = "Date is required!";
+        isValid = false;
+    }
+    if (load === "") {
+        document.getElementById("loadError").textContent = "Load number is required!";
+        isValid = false;
+    }
+    if (trolley === "") {
+        document.getElementById("trolleyError").textContent = "Trolley number is required!";
+        isValid = false;
+    }
+    if (equipment === "") {
+        document.getElementById("equipmentError").textContent = "Equipment is required!";
+        isValid = false;
+    }
+    if (set_time === "") {
+        document.getElementById("timeError").textContent = "Set time is required!";
+        isValid = false;
+    }
+    if (program === "") {
+        document.getElementById("programError").textContent = "Program is required!";
+        isValid = false;
+    }
+    if (linen === "") {
+        document.getElementById("linenError").textContent = "Linen type is required!";
+        isValid = false;
+    }
+    if (quantity === "") {
+        document.getElementById("quantityError").textContent = "Quantity is required!";
+        isValid = false;
+    }
+    if (bfr_wash === "") {
+        document.getElementById("bfrError").textContent = "Total kgs before wash is required!";
+        isValid = false;
+    }
+    if (aftr_wash === "") {
+        document.getElementById("aftrError").textContent = "Total kgs after wash is required!";
+        isValid = false;
+    }
+    if (detergent === "") {
+        document.getElementById("detdosError").textContent = "Detergent dosing is required!";
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+document.getElementById("fill_up").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission and page reload
+
+    // Store data in localStorage
+    localStorage.setItem("date", document.getElementById("date").value);
+    localStorage.setItem("load_number", document.getElementById("load_number").value);
+    localStorage.setItem("trolley_number", document.getElementById("trolley_number").value);
+    localStorage.setItem("equipment", document.getElementById("equipment").value);
+    localStorage.setItem("set_time", document.getElementById("set_time").value);
+    localStorage.setItem("program", document.getElementById("program").value);
+    localStorage.setItem("other-linen", document.getElementById("other-linen").value);
+    localStorage.setItem("linen-type", document.getElementById("linen-type").value);
+    localStorage.setItem("quantity", document.getElementById("quantity").value);
+    localStorage.setItem("bfr_wash", document.getElementById("bfr_wash").value);
+    localStorage.setItem("aftr_wash", document.getElementById("aftr_wash").value);
+    localStorage.setItem("detergent", document.getElementById("detergent").value);
+    localStorage.setItem("mixType", document.getElementById("mixType").value);
+    localStorage.setItem("dosage", document.getElementById("dosage").value);
+
+    // Show success notification
+    alert("Data submitted successfully!");
+
+    // Redirect after 2 seconds
+    setTimeout(function() {
+        window.open("output.html", "blank"); // Redirect to the output page
+        location.reload(); // Reload the current page after submission
+    }, 1000);
+});
+
+
+</script>
+
+
+</body>
+</html>

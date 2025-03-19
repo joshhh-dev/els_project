@@ -1,0 +1,316 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Washing Process Report</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<style>
+    body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px; 
+            margin: 20px auto; 
+            padding: 20px; 
+            background: white; 
+            border-radius: 5px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        h2 {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .excel-btn { 
+            background: green; 
+            color: white; 
+            border: none; 
+        }
+        .pdf-btn { 
+            background: red; 
+            color: white; 
+            border: none; 
+        }
+        .back-btn { 
+            background: gray; 
+            color: white; 
+            border: none; 
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h2>Submitted Laundry Data</h2>
+        <table>
+            <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>DATE</td><td id="outDate"></td></tr>
+            <tr><td>LOAD #</td><td id="outLoad_number"></td></tr>
+            <tr><td>TROLLEY #</td><td id="outTrolley_number"></td></tr>
+            <tr><td>EQUIPMENT</td><td id="outEquipment"></td></tr>
+            <tr><td>SET TIME</td><td id="outSet_time"></td></tr>
+            <tr><td>PROGRAM</td><td id="outProgram"></td> </tr>
+            <tr><td>LINEN TYPE</td>
+                <td id="outLinen-type"></td>
+                <td id="outOtherLinen"></td>
+            </tr>
+            <tr>
+                <td>QUANTITY</td>
+                <td id="outQuantity">
+                </td>
+            </tr>
+            <tr>
+                <td>TOTAL KGS BEFORE WASH</td>
+                <td id="outBfr_wash"></td>
+            </tr>
+            <tr>
+                <td>TOTAL KGS AFTER WASH</td>
+                <td id="outAftr_wash"></td>
+            </tr>
+        </table>
+    
+        <h2>Submitted Electric Submetering Data</h2>
+        <table>
+            <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>START TIME</td><td id="outStartTimes"></td></tr>
+            <tr><td>END TIME</td><td id="outEndTimes"></td></tr>
+            <tr><td>Start Reading (kWh)</td><td id="outStartReadings"></td></tr>
+            <tr><td>End Reading (kWh)</td><td id="outEndReadings"></td></tr>
+            <tr><td>Total kWh Used</td><td id="outTotalUseds"></td></tr>
+            <tr><td>Estimated Cost (₱)</td><td id="outCosts"></td></tr>
+        </table>
+    
+        <h2>Submitted Water Metering Data</h2>
+        <table>
+            <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>START TIME</td><td id="outStartTime"></td></tr>
+            <tr><td>END TIME</td><td id="outEndTime"></td></tr>
+            <tr><td>Program</td><td id="outWaterType"></td></tr>
+            <tr><td>Start Reading (m³)</td><td id="outStartReading"></td></tr>
+            <tr><td>End Reading (m³)</td><td id="outEndReading"></td></tr>
+            <tr><td>Total Water Used (m³)</td><td id="outTotalUsed"></td></tr>
+            <tr><td>Estimated Cost (₱)</td><td id="outCost"></td></tr>
+        </table>
+
+        <h2>DETERGENT DOSING</h2>
+        <table>
+            <tr><th>Field<th>Value</th></th></tr>
+            <tr><td>Laundry Chemical</td><td id="outDetergent"></td></tr>
+            <tr><td>Mixture Type</td><td id="outMixType"></td></tr>
+            <tr><td>Dosage</td><td id="outDosage"></td></tr>
+        </table>
+        <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
+        <button class="pdf-btn" onclick="exportToPDF()">Download as PDF</button>
+        <button class="back-btn" onclick="window.location.href='wash_proc.html'">Go Back</button>
+    </div>
+
+    <script>
+        // Retrieve and display data
+        document.getElementById("outDate").textContent = localStorage.getItem("date") || "N/A";
+        document.getElementById("outLoad_number").textContent = localStorage.getItem("load_number") || "N/A";
+        document.getElementById("outTrolley_number").textContent = localStorage.getItem("trolley_number") || "N/A";
+        document.getElementById("outEquipment").textContent = localStorage.getItem("equipment") || "N/A";
+        document.getElementById("outSet_time").textContent = localStorage.getItem("set_time") || "N/A";
+        document.getElementById("outProgram").textContent = localStorage.getItem("program") || "N/A";
+        document.addEventListener("DOMContentLoaded", function () {
+        let linenType = localStorage.getItem("linen-type") || "N/A";
+        let otherLinen = localStorage.getItem("other-linen") || "";
+        let linenTypeElement = document.getElementById("outLinen-type");
+        let otherLinenElement = document.getElementById("outOtherLinen");
+    
+        if (linenType.toLowerCase() === "others" && otherLinen) {
+            linenTypeElement.textContent = otherLinen;
+            otherLinenElement.style.display = "none";
+        } else {
+            linenTypeElement.textContent = linenType;
+            otherLinenElement.style.display = "none";
+        }
+    });
+        document.getElementById("outQuantity").textContent = localStorage.getItem("quantity") || "N/A";
+        document.getElementById("outBfr_wash").textContent = localStorage.getItem("bfr_wash") || "N/A";
+        document.getElementById("outAftr_wash").textContent = localStorage.getItem("aftr_wash") || "N/A";
+
+        // Retrieve and display electric metering data from localStorage
+        document.getElementById("outStartTimes").textContent = localStorage.getItem("start_times") || "N/A";
+        document.getElementById("outEndTimes").textContent = localStorage.getItem("end_times") || "N/A";
+        document.getElementById("outStartReadings").textContent = localStorage.getItem("start_readings") || "N/A";
+        document.getElementById("outEndReadings").textContent = localStorage.getItem("end_readings") || "N/A";
+        document.getElementById("outTotalUseds").textContent = localStorage.getItem("total_useds") || "N/A";
+        document.getElementById("outCosts").textContent = localStorage.getItem("costs") || "N/A";
+
+        // Retrieve and display water metering data from localStorage
+        document.getElementById("outStartTime").textContent = localStorage.getItem("start_time") || "N/A";
+        document.getElementById("outEndTime").textContent = localStorage.getItem("end_time") || "N/A";
+        document.getElementById("outWaterType").textContent = localStorage.getItem("water_type") || "N/A";
+        document.getElementById("outStartReading").textContent = localStorage.getItem("start_reading") || "N/A";
+        document.getElementById("outEndReading").textContent = localStorage.getItem("end_reading") || "N/A";
+        document.getElementById("outTotalUsed").textContent = localStorage.getItem("total_used") || "N/A";
+        document.getElementById("outCost").textContent = localStorage.getItem("cost") || "N/A";
+
+        document.getElementById("outDetergent").textContent = localStorage.getItem("detergent") || "N/A";
+        document.addEventListener("DOMContentLoaded", function () {
+    let mixType = localStorage.getItem("mixType") || "N/A";
+    let dosage = localStorage.getItem("dosage") || "N/A";
+
+    if (mixType.toLowerCase() === "liquid") {
+        dosage += "mL";
+    } else if (mixType.toLowerCase() === "powdered") {
+        dosage += "mG";
+    }
+
+    document.getElementById("outMixType").textContent = mixType;
+    document.getElementById("outDosage").textContent = dosage;
+});
+
+
+        document.getElementById("currentDate").textContent = new Date().toLocaleString();
+
+    function exportToExcel() {
+    let tables = document.querySelectorAll("table");
+    if (tables.length === 0) {
+        alert("No table data found to export.");
+        return;
+    }
+
+    let wb = XLSX.utils.book_new();
+    let ws_data = [];
+
+    ws_data.push(["Laundry & Utility Data Report"]);
+    ws_data.push(["Generated on:", new Date().toLocaleString()]);
+    ws_data.push([]);
+
+    tables.forEach((table) => {
+        let title = table.previousElementSibling?.innerText || "Untitled Table";
+        ws_data.push([title]);
+        ws_data.push([]);
+
+        let rows = table.querySelectorAll("tr");
+        rows.forEach((row) => {
+            let cells = row.querySelectorAll("th, td");
+            let rowData = Array.from(cells).map(cell => cell.innerText.replace(/\n/g, " "));
+            ws_data.push(rowData);
+        });
+
+        if (ws_data.length > 0) ws_data.push([]); // Adds a blank row only if there's previous data.
+    });
+
+    let ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, "Report");
+
+    let filename = `Laundry_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    XLSX.writeFile(wb, filename);
+}
+
+
+function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4'); // A4 Portrait
+
+    // Title & Timestamp
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("ELS Washing Process", 15, 15);
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Generated on: " + new Date().toLocaleString(), 15, 25);
+
+    let yPosition = 35; // Starting Y position
+    let tables = document.querySelectorAll("table");
+
+    if (tables.length === 0) {
+        alert("No table data found to export.");
+        return;
+    }
+
+    tables.forEach((table) => {
+        let title = table.previousElementSibling?.innerText || "Untitled Table";
+        
+        // Add Table Title
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(title, 15, yPosition);
+        yPosition += 5;
+
+        let headers = [];
+        let rows = [];
+
+        let tableRows = table.querySelectorAll("tr");
+        tableRows.forEach((row, rowIndex) => {
+            let cells = row.querySelectorAll("th, td");
+            let rowData = Array.from(cells).map(cell => cell.innerText);
+
+            if (rowIndex === 0) headers = rowData; // First row as headers
+            else rows.push(rowData);
+        });
+
+        // Generate a table using autoTable plugin
+        if (typeof doc.autoTable === "function") {
+            doc.autoTable({
+                startY: yPosition,
+                head: [headers],
+                body: rows,
+                theme: "striped",
+                styles: { fontSize: 10, cellPadding: 3 },
+                headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] }, // Blue header
+                columnStyles: { 0: { cellWidth: 'auto' } },
+                margin: { top: 40 },
+            });
+
+            yPosition = doc.lastAutoTable.finalY + 10; // Move below last table
+        } else {
+            alert("jsPDF-AutoTable is required for proper formatting.");
+            return;
+        }
+    });
+
+    // Save as a downloadable PDF
+    let filename = `Laundry_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(filename);
+}
+
+
+    </script>
+
+</body>
+</html>

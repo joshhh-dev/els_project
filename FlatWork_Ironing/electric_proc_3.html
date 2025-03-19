@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Submetering</title>
+    <style>
+body {
+    font-family: 'Arial', sans-serif;
+    color: #00aaff; /* Neon Blue Text */
+    text-align: center;
+    padding: 20px;
+}
+
+h2 {
+    color: #19118b; /* Neon Blue */
+    font-size: 28px;
+}
+
+p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: rgb(20, 20, 20);
+}
+
+    button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Water */
+        .strt{
+            background-color: #4dc3ff;
+            color: #003366;
+        }
+
+        .strt:hover{
+            background-color: #0099ff;
+        }
+
+        /* Fire */
+        .stp{
+            background-color: #ff4500;
+            color: white;
+        }
+
+        .stp:hover{
+            background-color: #ff6600;
+        }
+
+        /* Earth */
+        .res{
+            background-color: #228b22;
+            color: white;
+        }
+
+        .res:hover{
+            background-color: #32cd32;
+        }
+
+        /* Air */
+        .sbt{
+            background-color: #dcdcdc;
+            color: #444;
+        }
+
+        .sbt:hover{
+            background-color: #f0f0f0;
+        }
+
+
+.container {
+    background-color: rgb(254, 255, 245); /* More Transparent Dark Blue */
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: left;
+    max-width: 400px;
+    width: 100%;
+    backdrop-filter: blur(10px); /* Frosted Glass Effect */
+}
+
+span {
+    font-weight: bold;
+    color: rgb(3, 43, 87); /* White for Readability */
+}
+
+    </style>
+</head>
+<body>
+    
+
+    <div class="container">
+        <h2>Electric Submetering System</h2>
+        <p><strong>Start Time:</strong> <span id="startTime_iron">--:--:--</span></p>
+        <p><strong>Start Reading (kWh):</strong> <input type="number" id="start_reads_iron" min="0"></p>
+        <p><strong>Cost per kWh: </strong><input type="number" id="costing_iron" min="0"></p>
+
+        <button class="strt" onclick="startMetering_iron()" >Start Metering</button>
+        <button class="stp" onclick="stopMetering_iron()" >Stop Metering</button>
+        <button class="res" onclick="resetMetering_iron()" >Reset</button>
+        <button class="sbt" onclick="submitData_iron()" >Add to template</button>
+
+        <p><strong>End Time:</strong> <span id="endTime_iron">--:--:--</span></p>
+        <p><strong>End Reading (kWh):</strong> <span id="endReading_iron">0</span></p>
+        <p><strong>Total kWh Used:</strong> <span id="totalUsed_iron">0</span> kWh</p>
+        <p><strong>Estimated Cost:</strong> ₱<span id="cost_iron">0</span></p>
+    </div>
+    
+    <script>
+document.getElementById("costing_iron").value = localStorage.getItem("cost_per_kwh_iron") || 0;        let startReading = 0;
+        let endReading = 0;
+        let totalUsed = 0;
+        let interval;
+        localStorage.setItem("cost_per_kwh_iron", costPerKwh); // Store in localStorage
+
+        
+
+        function startMetering_iron() {
+            if (!interval) {
+                let now = new Date();
+                document.getElementById("startTime_iron").textContent = now.toLocaleTimeString();
+
+                let inputStartReading = parseFloat(document.getElementById("start_reads_iron").value);
+                if (isNaN(inputStartReading) || inputStartReading < 0) {
+                alert("Please enter a valid start reading.");
+                return;
+                }
+                
+                // Get the start reading value from input
+                startReading = parseFloat(document.getElementById("start_reads_iron").value) || 0;
+
+                // Reset endReading to match startReading at the beginning
+                endReading = startReading;
+
+                interval = setInterval(() => {
+                    let usage = Math.floor(Math.random() * 5) + 1; // Simulated usage
+                    endReading += usage;
+                    document.getElementById("endReading_iron").textContent = endReading;
+                    let costPerkWh = parseFloat(document.getElementById("costing_iron").value) || 0; // Cost per kWh
+                    totalUsed = endReading - startReading;
+                    document.getElementById("totalUsed_iron").textContent = totalUsed;
+                    document.getElementById("cost_iron").textContent = (totalUsed * costPerkWh).toFixed(2);
+                }, 2000);
+            }
+        }
+
+        function stopMetering_iron() {
+    if (interval) { // Only stop if metering is running
+        clearInterval(interval);
+        interval = null;
+        document.getElementById("endTime_iron").textContent = new Date().toLocaleTimeString();
+    } else {
+        alert("There's nothing to stop.");
+    }
+}
+        function resetMetering_iron() {
+
+            clearInterval(interval);
+            interval = null;
+            startReading = 0;
+            endReading = 0;
+            totalUsed = 0;
+
+            document.getElementById("startTime_iron").textContent = "--:--:--";
+            document.getElementById("endTime_iron").textContent = "--:--:--";
+            document.getElementById("start_reads_iron").value = ""; // Reset input field
+            document.getElementById("endReading_iron").textContent = "0";
+            document.getElementById("totalUsed_iron").textContent = "0";
+            document.getElementById("cost_iron").textContent = "0";
+        }
+
+        function submitData_iron() {
+    // Ensure metering has started at some point
+    if (document.getElementById("startTime_iron").textContent === "--:--:--") {
+        alert("Please start metering before submitting.");
+        return;
+    }
+
+    // Ensure metering has been stopped
+    if (document.getElementById("endTime_iron").textContent === "--:--:--") {
+        alert("Please stop metering before submitting.");
+        return;
+    }
+
+    localStorage.setItem("start_times_iron", document.getElementById("startTime_iron").textContent);
+    localStorage.setItem("end_times_iron", document.getElementById("endTime_iron").textContent);
+    localStorage.setItem("start_readings_iron", startReading);
+    localStorage.setItem("end_readings_iron", endReading);
+    localStorage.setItem("total_useds_iron", totalUsed);
+    localStorage.setItem("costs_iron", document.getElementById("cost_iron").textContent);
+
+    alert("Data submitted successfully!");
+
+    // Redirect after 2 seconds
+    setTimeout(function() {
+        window.open("output_3.html", "blank"); // Redirect to the output page
+        location.reload(); // Reload the current page after submission
+    }, 1000);
+}
+
+    </script>
+</body>
+</html>
