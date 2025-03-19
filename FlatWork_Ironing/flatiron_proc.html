@@ -222,6 +222,13 @@
     .form-group_iron {
     margin-bottom: 10px;
 }
+.size_group_iron{
+    display: inline-block;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
 
 
     </style>
@@ -273,10 +280,19 @@
                     <label for="quantity_iron">QUANTITY:</label>
                     <input type="number" id="quantity_iron" name="quantity" required>
                     <span id="quantityError" class="error"></span>
+                </div>                
+                    <input type="text" id="other-linen_iron" name="other-linen" placeholder="Other Linen Type" style="display: none;">
+
+                    <div class="size_group_iron">
+                        <label for="linen_sizes_iron">LINEN SIZE:</label>
+                        <select id="linen_sizes_iron" disabled>
+                            <option value="">-- SELECT SIZE --</option>
+                            <option value="Size 1">Size 1</option>
+                            <option value="Size 2">Size 2</option>
+                            <option value="Size 3">Size 3</option>
+                        </select>
                 </div>
                 
-                <input type="text" id="other-linen_iron" name="other-linen" placeholder="Other Linen Type" style="display: none;">
-
                 <label for="bfr_iron">TOTAL KGS BEFORE DRY:</label>
                 <input type="number" id="bfr_iron" name="bfr_iron" required>
                 <span id="bfrError" class="error"></span>
@@ -309,6 +325,7 @@
     function handleLinenChange() {
     var linenType = document.getElementById("linen_type_iron");
     var otherLinenInput = document.getElementById("other-linen_iron");
+    var sizeDropdown = document.getElementById("linen_sizes_iron");
 
     if (linenType.value === "OTHERS") {
         otherLinenInput.style.display = "block"; // Show input field
@@ -318,7 +335,14 @@
         otherLinenInput.removeAttribute("required"); // Remove required attribute
         otherLinenInput.value = ""; // Clear input
     }
+    if (linenType !== "") {
+        sizeDropdown.disabled = false;
+    } else {
+        sizeDropdown.disabled = true;
+        sizeDropdown.value = ""; // Reset selection if linen type is deselected
+    }
 }
+
 function validateForm() {
     let isValid = true;
 
@@ -399,6 +423,7 @@ function validateForm() {
     localStorage.setItem("equipment_iron", document.getElementById("equipment_iron").value);
     localStorage.setItem("set_time_iron", document.getElementById("set_time_iron").value);
     localStorage.setItem("other-linen_iron", document.getElementById("other-linen_iron").value);
+    localStorage.setItem("linen_sizes_iron", document.getElementById("linen_sizes_iron").value);
     localStorage.setItem("temp_iron", document.getElementById("temp_iron").value);
     localStorage.setItem("linen_type_iron", document.getElementById("linen_type_iron").value);
     localStorage.setItem("quantity_iron", document.getElementById("quantity_iron").value);

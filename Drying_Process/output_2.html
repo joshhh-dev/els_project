@@ -6,7 +6,8 @@
     <title>Drying Process Report</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <style>
@@ -99,6 +100,7 @@
                 <td id="outLinen_type_dry"></td>
                 <td id="outOtherLinen_dry"></td>
             </tr>
+            <tr><td>LINEN SIZE</td><td id="outLinen_sizes_dry"></td></tr>
             <tr><td>QUANTITY</td><td id="outQuantity_dry"></td></tr>
             <tr><td>TOTAL KGS BEFORE DRY</td><td id="outBfr_dry"></td></tr>
             <tr><td>TOTAL KGS AFTER DRY</td><td id="outAftr_dry"></td></tr>
@@ -153,6 +155,7 @@
             otherLinenElement.style.display = "none";
         }
     });
+        document.getElementById("outLinen_sizes_dry").textContent = localStorage.getItem("linen_sizes_dry") || "N/A";
         document.getElementById("outQuantity_dry").textContent = localStorage.getItem("quantity_dry") || "N/A";
         document.getElementById("outBfr_dry").textContent = localStorage.getItem("bfr_dry") || "N/A";
         document.getElementById("outAftr_dry").textContent = localStorage.getItem("aftr_dry") || "N/A";
