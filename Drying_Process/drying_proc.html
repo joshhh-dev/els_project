@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drying Process</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
                 * {
             box-sizing: border-box;
@@ -207,7 +211,7 @@
     white-space: nowrap; /* Ensures labels stay on one line */
     }
 
-    .linen-type_dry {
+    .linen_type_dry {
         width: max-content;
     }
 
@@ -235,8 +239,15 @@
                 <input type="date" id="date_dry" name="date_dry" required>
                 <span id="dateError" class="error"></span>
             
-                <label for="equipment_dry">EQUIPMENT</label>
-                <input type="text" id="equipment_dry" name="equipment_dry" required>
+                <label for="equipment_dry">EQUIPMENT:</label>
+                <select id="equipment_dry" name="equipment" required>
+                    <option value="">Select Equipment</option>
+                    <option value="Equipment_1">Equipment 1</option>
+                    <option value="Equipment_2">Equipment 2</option>
+                    <option value="Equipment_3">Equipment 3</option>
+                    <option value="Equipment_4">Equipment 4</option>
+                    <option value="Equipment_5">Equipment 5</option>
+                    </select>
                 <span id="equipment_dryError" class="error"></span>
             
                 <label for="set_time_dry">SET TIME(minutes):</label>

@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flatwork Ironing</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    
     <style>
                 * {
             box-sizing: border-box;
@@ -155,7 +161,7 @@
 
     .iframe-container iframe {
         width: 120%;
-        height: 100%; /* Full viewport height */
+        height: 100vh; /* Full viewport height */
         border: none;
         overflow: hidden;
     }
@@ -230,8 +236,15 @@
                 <input type="date" id="date_iron" name="date_iron" required>
                 <span id="dateError" class="error"></span>
             
-                <label for="equipment_iron">EQUIPMENT</label>
-                <input type="text" id="equipment_iron" name="equipment_iron" required>
+                <label for="equipment_iron">EQUIPMENT:</label>
+                <select id="equipment_iron" name="equipment" required>
+                    <option value="">Select Equipment</option>
+                    <option value="Equipment_1">Equipment 1</option>
+                    <option value="Equipment_2">Equipment 2</option>
+                    <option value="Equipment_3">Equipment 3</option>
+                    <option value="Equipment_4">Equipment 4</option>
+                    <option value="Equipment_5">Equipment 5</option>
+                    </select>
                 <span id="equipment_ironError" class="error"></span>
             
                 <label for="set_time_iron">SET TIME(minutes):</label>
@@ -385,6 +398,7 @@ function validateForm() {
     localStorage.setItem("date_iron", document.getElementById("date_iron").value);
     localStorage.setItem("equipment_iron", document.getElementById("equipment_iron").value);
     localStorage.setItem("set_time_iron", document.getElementById("set_time_iron").value);
+    localStorage.setItem("other-linen_iron", document.getElementById("other-linen_iron").value);
     localStorage.setItem("temp_iron", document.getElementById("temp_iron").value);
     localStorage.setItem("linen_type_iron", document.getElementById("linen_type_iron").value);
     localStorage.setItem("quantity_iron", document.getElementById("quantity_iron").value);

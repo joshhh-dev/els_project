@@ -11,9 +11,15 @@
 
     <style>
         body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            background-color: #f4f4f4; 
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            align-items: flex-start;
         }
         .container {
              max-width: 600px; 
@@ -90,7 +96,7 @@
             <tr><td>SET TIME</td><td id="outSet_time_dry"></td></tr>
             <tr><td>TEMPERATURE</td><td id="outTemperature"></td></tr>
             <tr><td>LINEN TYPE</td>
-                <td id="outLinen-type_dry"></td>
+                <td id="outLinen_type_dry"></td>
                 <td id="outOtherLinen_dry"></td>
             </tr>
             <tr><td>QUANTITY</td><td id="outQuantity_dry"></td></tr>
@@ -136,7 +142,7 @@
         document.addEventListener("DOMContentLoaded", function () {
         let linenType = localStorage.getItem("linen_type_dry") || "N/A";
         let otherLinen = localStorage.getItem("other-linen_dry") || "";
-        let linenTypeElement = document.getElementById("outLinen-type_dry");
+        let linenTypeElement = document.getElementById("outLinen_type_dry");
         let otherLinenElement = document.getElementById("outOtherLinen_dry");
     
         if (linenType.toLowerCase() === "others" && otherLinen) {

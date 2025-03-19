@@ -10,9 +10,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 <style>
     body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        align-items: flex-start;
         }
         .container {
             max-width: 600px; 
@@ -90,23 +96,11 @@
             <tr><td>EQUIPMENT</td><td id="outEquipment"></td></tr>
             <tr><td>SET TIME</td><td id="outSet_time"></td></tr>
             <tr><td>PROGRAM</td><td id="outProgram"></td> </tr>
-            <tr><td>LINEN TYPE</td>
-                <td id="outLinen-type"></td>
-                <td id="outOtherLinen"></td>
-            </tr>
-            <tr>
-                <td>QUANTITY</td>
-                <td id="outQuantity">
-                </td>
-            </tr>
-            <tr>
-                <td>TOTAL KGS BEFORE WASH</td>
-                <td id="outBfr_wash"></td>
-            </tr>
-            <tr>
-                <td>TOTAL KGS AFTER WASH</td>
-                <td id="outAftr_wash"></td>
-            </tr>
+            <tr><td>LINEN TYPE</td><td id="outLinen-type"></td><td id="outOtherLinen"></td></tr>
+            <tr><td>LINEN SIZE</td><td id="outLinen_sizes"></td></tr>
+            <tr><td>QUANTITY</td><td id="outQuantity"></td></tr>
+            <tr><td>TOTAL KGS BEFORE WASH</td><td id="outBfr_wash"></td></tr>
+            <tr><td>TOTAL KGS AFTER WASH</td><td id="outAftr_wash"></td></tr>
         </table>
     
         <h2>Submitted Electric Submetering Data</h2>
@@ -119,7 +113,9 @@
             <tr><td>Total kWh Used</td><td id="outTotalUseds"></td></tr>
             <tr><td>Estimated Cost (₱)</td><td id="outCosts"></td></tr>
         </table>
-    
+    </div>
+
+<div class="container">
         <h2>Submitted Water Metering Data</h2>
         <table>
             <tr><th>Field</th><th>Value</th></tr>
@@ -142,7 +138,7 @@
         <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
         <button class="pdf-btn" onclick="exportToPDF()">Download as PDF</button>
         <button class="back-btn" onclick="window.location.href='wash_proc.html'">Go Back</button>
-    </div>
+</div>
 
     <script>
         // Retrieve and display data
@@ -166,6 +162,7 @@
             otherLinenElement.style.display = "none";
         }
     });
+        document.getElementById("outLinen_sizes").textContent = localStorage.getItem("linen_sizes") || "N/A";
         document.getElementById("outQuantity").textContent = localStorage.getItem("quantity") || "N/A";
         document.getElementById("outBfr_wash").textContent = localStorage.getItem("bfr_wash") || "N/A";
         document.getElementById("outAftr_wash").textContent = localStorage.getItem("aftr_wash") || "N/A";
