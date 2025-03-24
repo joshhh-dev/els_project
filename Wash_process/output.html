@@ -101,33 +101,8 @@
             <tr><td>QUANTITY</td><td id="outQuantity"></td></tr>
             <tr><td>TOTAL KGS BEFORE WASH</td><td id="outBfr_wash"></td></tr>
             <tr><td>TOTAL KGS AFTER WASH</td><td id="outAftr_wash"></td></tr>
+            <tr><td>RMC(Residual Moisture Content)</td><td id="outRMC"></td></tr>
         </table>
-    
-        <h2>Submitted Electric Submetering Data</h2>
-        <table>
-            <tr><th>Field</th><th>Value</th></tr>
-            <tr><td>START TIME</td><td id="outStartTimes"></td></tr>
-            <tr><td>END TIME</td><td id="outEndTimes"></td></tr>
-            <tr><td>Start Reading (kWh)</td><td id="outStartReadings"></td></tr>
-            <tr><td>End Reading (kWh)</td><td id="outEndReadings"></td></tr>
-            <tr><td>Total kWh Used</td><td id="outTotalUseds"></td></tr>
-            <tr><td>Estimated Cost (₱)</td><td id="outCosts"></td></tr>
-        </table>
-    </div>
-
-<div class="container">
-        <h2>Submitted Water Metering Data</h2>
-        <table>
-            <tr><th>Field</th><th>Value</th></tr>
-            <tr><td>START TIME</td><td id="outStartTime"></td></tr>
-            <tr><td>END TIME</td><td id="outEndTime"></td></tr>
-            <tr><td>Program</td><td id="outWaterType"></td></tr>
-            <tr><td>Start Reading (m³)</td><td id="outStartReading"></td></tr>
-            <tr><td>End Reading (m³)</td><td id="outEndReading"></td></tr>
-            <tr><td>Total Water Used (m³)</td><td id="outTotalUsed"></td></tr>
-            <tr><td>Estimated Cost (₱)</td><td id="outCost"></td></tr>
-        </table>
-
         <h2>DETERGENT DOSING</h2>
         <table>
             <tr><th>Field<th>Value</th></th></tr>
@@ -135,6 +110,25 @@
             <tr><td>Mixture Type</td><td id="outMixType"></td></tr>
             <tr><td>Dosage</td><td id="outDosage"></td></tr>
         </table>
+    </div>
+        
+
+<div class="container">
+    <h2>Submitted Electric Submetering Data</h2>
+    <table>
+        <tr><th>Field</th><th>Value</th></tr>
+        <tr><td>Start Reading (kWh)</td><td id="outStartReadings"></td></tr>
+        <tr><td>End Reading (kWh)</td><td id="outEndReadings"></td></tr>
+        <tr><td>Total kWh Used</td><td id="outTotalUseds"></td></tr>
+        <tr><td>Estimated Cost (₱)</td><td id="outCosts"></td></tr>
+    </table>
+        <div id="outputContainer">
+        <table>
+
+        </table>
+        </div>
+
+
         <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
         <button class="pdf-btn" onclick="exportToPDF()">Download as PDF</button>
         <button class="back-btn" onclick="window.location.href='wash_proc.html'">Go Back</button>
@@ -166,24 +160,69 @@
         document.getElementById("outQuantity").textContent = localStorage.getItem("quantity") || "N/A";
         document.getElementById("outBfr_wash").textContent = localStorage.getItem("bfr_wash") || "N/A";
         document.getElementById("outAftr_wash").textContent = localStorage.getItem("aftr_wash") || "N/A";
+        document.getElementById("outRMC").textContent = localStorage.getItem("rmc_total") || "N/A";
 
         // Retrieve and display electric metering data from localStorage
-        document.getElementById("outStartTimes").textContent = localStorage.getItem("start_times") || "N/A";
-        document.getElementById("outEndTimes").textContent = localStorage.getItem("end_times") || "N/A";
-        document.getElementById("outStartReadings").textContent = localStorage.getItem("start_readings") || "N/A";
-        document.getElementById("outEndReadings").textContent = localStorage.getItem("end_readings") || "N/A";
+        document.getElementById("outStartReadings").textContent = localStorage.getItem("start_reads") || "N/A";
+        document.getElementById("outEndReadings").textContent = localStorage.getItem("end_reads") || "N/A";
         document.getElementById("outTotalUseds").textContent = localStorage.getItem("total_useds") || "N/A";
         document.getElementById("outCosts").textContent = localStorage.getItem("costs") || "N/A";
 
-        // Retrieve and display water metering data from localStorage
-        document.getElementById("outStartTime").textContent = localStorage.getItem("start_time") || "N/A";
-        document.getElementById("outEndTime").textContent = localStorage.getItem("end_time") || "N/A";
-        document.getElementById("outWaterType").textContent = localStorage.getItem("water_type") || "N/A";
-        document.getElementById("outStartReading").textContent = localStorage.getItem("start_reading") || "N/A";
-        document.getElementById("outEndReading").textContent = localStorage.getItem("end_reading") || "N/A";
-        document.getElementById("outTotalUsed").textContent = localStorage.getItem("total_used") || "N/A";
-        document.getElementById("outCost").textContent = localStorage.getItem("cost") || "N/A";
+// Retrieve stored readings data
+let readingsData = JSON.parse(localStorage.getItem("readingsData")) || [];
 
+// Check if data exists
+if (readingsData.length > 0) {
+    let outputContainer = document.getElementById("outputContainer");
+
+    // Group readings by waterType (Program)
+    let groupedData = {};
+    readingsData.forEach(reading => {
+        if (!groupedData[reading.waterType]) {
+            groupedData[reading.waterType] = [];
+        }
+        groupedData[reading.waterType].push(reading);
+    });
+
+    // Loop through each program and create a table
+    Object.keys(groupedData).forEach(program => {
+        let programTable = document.createElement("div");
+        programTable.innerHTML = `
+        <h2>Water Submetering System</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Program</th>
+                        <th>Start Reading (m³)</th>
+                        <th>End Reading (m³)</th>
+                        <th>Total Water Used (m³)</th>
+                        <th>Estimated Cost (₱)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody_${program}">
+                </tbody>
+            </table>
+        `;
+
+        outputContainer.appendChild(programTable);
+
+        // Insert rows into the respective table
+        let tableBody = document.getElementById(`tableBody_${program}`);
+        groupedData[program].forEach((reading, index) => {
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${program}</td>
+                <td>${reading.startRead || "N/A"}</td>
+                <td>${reading.endRead || "N/A"}</td>
+                <td>${reading.totalUsed || "N/A"}</td>
+                <td>${reading.cost || "N/A"}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    });
+} else {
+    console.log("No readings data found.");
+}
         document.getElementById("outDetergent").textContent = localStorage.getItem("detergent") || "N/A";
         document.addEventListener("DOMContentLoaded", function () {
     let mixType = localStorage.getItem("mixType") || "N/A";
@@ -241,18 +280,17 @@
 
 function exportToPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4'); // A4 Portrait
+    const doc = new jsPDF('l', 'mm', 'a4'); // Landscape A4
 
     // Title & Timestamp
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
-    doc.text("ELS Washing Process", 15, 15);
-    
+    doc.text("ELS Washing Process", 10, 15);
+
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text("Generated on: " + new Date().toLocaleString(), 15, 25);
+    doc.text("Generated on: " + new Date().toLocaleString(), 10, 25);
 
-    let yPosition = 35; // Starting Y position
     let tables = document.querySelectorAll("table");
 
     if (tables.length === 0) {
@@ -260,48 +298,126 @@ function exportToPDF() {
         return;
     }
 
+    let yPosition = 35; 
+    let leftX = 10, rightX = 150;
+    let leftColumnHeight = 35, rightColumnHeight = 35; // Track left & right heights
+    let waterSubmeteringTables = [];
+    let electricSubmeteringTables = [];
+    let detergentDosingTables = [];
+    let otherTables = [];
+
+    // Categorize tables
     tables.forEach((table) => {
-        let title = table.previousElementSibling?.innerText || "Untitled Table";
-        
-        // Add Table Title
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text(title, 15, yPosition);
-        yPosition += 5;
+        let titleElement = table.previousElementSibling;
+        let title = titleElement && titleElement.tagName === "H2" ? titleElement.innerText : "";
 
-        let headers = [];
-        let rows = [];
-
-        let tableRows = table.querySelectorAll("tr");
-        tableRows.forEach((row, rowIndex) => {
-            let cells = row.querySelectorAll("th, td");
-            let rowData = Array.from(cells).map(cell => cell.innerText);
-
-            if (rowIndex === 0) headers = rowData; // First row as headers
-            else rows.push(rowData);
-        });
-
-        // Generate a table using autoTable plugin
-        if (typeof doc.autoTable === "function") {
-            doc.autoTable({
-                startY: yPosition,
-                head: [headers],
-                body: rows,
-                theme: "striped",
-                styles: { fontSize: 10, cellPadding: 3 },
-                headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] }, // Blue header
-                columnStyles: { 0: { cellWidth: 'auto' } },
-                margin: { top: 40 },
-            });
-
-            yPosition = doc.lastAutoTable.finalY + 10; // Move below last table
+        if (title.toLowerCase().includes("electric submetering")) {
+            electricSubmeteringTables.push(table);
+        } else if (title.toLowerCase().includes("water submetering")) {
+            waterSubmeteringTables.push(table);
+        } else if (title.toLowerCase().includes("detergent dosing")) {
+            detergentDosingTables.push(table);
         } else {
-            alert("jsPDF-AutoTable is required for proper formatting.");
-            return;
+            otherTables.push(table);
         }
     });
 
-    // Save as a downloadable PDF
+    // Function to add tables while aligning them properly
+    function addTablesToPDF(tablesArray, groupTitle) {
+        if (tablesArray.length === 0) return;
+
+        // Section Title
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(groupTitle, 10, yPosition);
+        yPosition += 8;
+
+        tablesArray.forEach((table, index) => {
+            let titleElement = table.previousElementSibling;
+            let title = titleElement && titleElement.tagName === "H2" ? titleElement.innerText : "";
+
+            let headers = [];
+            let rows = [];
+
+            table.querySelectorAll("tr").forEach((row, rowIndex) => {
+                let cells = row.querySelectorAll("th, td");
+                let rowData = Array.from(cells).map(cell => cell.innerText);
+
+                if (rowIndex === 0) headers = rowData; // First row = headers
+                else rows.push(rowData);
+            });
+
+            // Determine position for left or right column based on height
+            let startX, startY;
+            if (leftColumnHeight <= rightColumnHeight) {
+                startX = leftX;
+                startY = leftColumnHeight;
+            } else {
+                startX = rightX;
+                startY = rightColumnHeight;
+            }
+
+            // Print Table Title
+            if (title) {
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(12);
+                doc.text(title, startX, startY);
+                startY += 5;
+            }
+
+            // Generate the table
+            if (typeof doc.autoTable === "function") {
+                doc.autoTable({
+                    startY: startY,
+                    startX: startX,
+                    head: [headers],
+                    body: rows,
+                    theme: "grid",
+                    styles: { fontSize: 9, cellPadding: 1.5, valign: 'middle' },
+                    headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] },
+                    tableWidth: 130,
+                    columnStyles: { 0: { cellWidth: 'auto', halign: 'center' } },
+                    margin: { left: startX, right: 10 },
+                    willDrawPage: function (data) {
+                        if (data.cursor.y + 30 > doc.internal.pageSize.height) {
+                            doc.addPage();
+                            leftColumnHeight = 35;
+                            rightColumnHeight = 35;
+                        }
+                    }
+                });
+
+                let tableHeight = doc.lastAutoTable.finalY + 8; // Capture height
+
+                // Adjust column height
+                if (startX === leftX) {
+                    leftColumnHeight = tableHeight;
+                } else {
+                    rightColumnHeight = tableHeight;
+                }
+            } else {
+                alert("jsPDF-AutoTable is required for proper formatting.");
+                return;
+            }
+        });
+
+        // Ensure next section starts on a new line
+        yPosition = Math.max(leftColumnHeight, rightColumnHeight) + 10;
+    }
+    // Add other tables
+    addTablesToPDF(otherTables, "");
+
+    // Add **Water Submetering** next
+    addTablesToPDF(waterSubmeteringTables, "");
+    
+    // Add **Detergent Dosing** next
+    addTablesToPDF(detergentDosingTables, "");
+
+    // Add **Electric Submetering** first
+    addTablesToPDF(electricSubmeteringTables, "");
+
+
+    // Save as PDF
     let filename = `Laundry_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
     doc.save(filename);
 }

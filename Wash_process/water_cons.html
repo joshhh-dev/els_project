@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Water Submetering</title>
     <style>
-        /* Background inspired by water bending */
         body {
             font-family: 'Arial', sans-serif;
-            color: #000; /* White text */
-            text-align: center; 
-
+            color: #000;
+            text-align: center;
         }
 
         h2 {
@@ -18,39 +16,29 @@
             color: #0099ff;
         }
 
-        p {
+        p, label {
             font-size: 18px;
-            margin: 10px 0;
             color: #000;
         }
 
-        label {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        select {
+        select, input {
             padding: 8px;
             font-size: 16px;
             border-radius: 5px;
-            border: none;
-            background-color: #fff;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
+            border: 1px solid #ccc;
         }
 
         .container {
-            background: rgb(255, 255, 255); /* Semi-transparent background */
+            background: rgb(255, 255, 255);
             padding: 20px;
             border-radius: 10px;
             display: inline-block;
             text-align: left;
             max-width: 400px;
             width: 100%;
+            margin: 10px;
         }
 
-        /* Element-themed buttons */
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -62,37 +50,6 @@
             transition: 0.3s;
         }
 
-        /* Water */
-        .btn-water {
-            background-color: #4dc3ff;
-            color: #003366;
-        }
-
-        .btn-water:hover {
-            background-color: #0099ff;
-        }
-
-        /* Fire */
-        .btn-fire {
-            background-color: #ff4500;
-            color: white;
-        }
-
-        .btn-fire:hover {
-            background-color: #ff6600;
-        }
-
-        /* Earth */
-        .btn-earth {
-            background-color: #228b22;
-            color: white;
-        }
-
-        .btn-earth:hover {
-            background-color: #32cd32;
-        }
-
-        /* Air */
         .btn-air {
             background-color: #dcdcdc;
             color: #444;
@@ -101,132 +58,75 @@
         .btn-air:hover {
             background-color: #f0f0f0;
         }
-
-        span {
-            font-weight: bold;
-            color: #003366;
-        }
-
-        #waterType {
-            background-color: #00e6ff;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Water Submetering System</h2>
-        <label for="waterType">Select Water Type:</label>
-    <select id="waterType">
-        <option value="Cold">Cold</option>
-        <option value="Hot">Hot</option>
-        <option value="Warm">Warm</option>
-    </select>
-
-        <p><strong>Start Time:</strong> <span id="startTime">--:--:--</span></p>
-        <p><strong>Start Reading (m³):</strong><input type="number" id="start_read"></p>
-        <!-- <p><strong>Cost</strong></p> -->
-        
-        
-        <button class="btn-water" onclick="startMetering()">Start Metering</button>
-        <button class="btn-fire" onclick="stopMetering()">Stop Metering</button>
-        <button class="btn-earth" onclick="resetMetering()">Reset</button>
-        <button class="btn-air" onclick="submitData()">Add to template</button>
-
-        <p><strong>End Time:</strong> <span id="endTime">--:--:--</span></p>
-        <p><strong>End Reading (m³):</strong> <span id="endReading">0</span></p>
-        <p><strong>Total Used:</strong> <span id="totalUsed">0</span> m³</p>
-        <p><strong>Total Cost(₱):</strong> <span id="cost">₱0</span> </p>
-
+    <div id="readings">
+        <div class="container">
+            <h2>Water Submetering System</h2>
+            <label for="waterType">Select Program:</label>
+            <select class="waterType" onchange="calculate(this)">
+                <option value="Cold">Cold</option>
+                <option value="Hot">Hot</option>
+                <option value="Warm">Warm</option>
+            </select>
+            <p><strong>Start Reading (m³):</strong><input type="number" class="start_read" required oninput="calculate(this)"></p>
+            <p><strong>End Reading (m³):</strong><input type="number" class="endReading" required oninput="calculate(this)"></p>
+            <p><strong>Cost per m³:</strong><input type="number" class="totalCost" required oninput="calculate(this)"></p>
+            <p><strong>Total Used:</strong> <span class="totalUsed">0</span> m³</p>
+            <p><strong>Total Cost(₱):</strong> <span class="cost">₱0</span></p>
+        </div>
     </div>
 
+    <button class="btn-air" onclick="addProgram()">Add Another Reading</button>
+    <button class="btn-air" onclick="submitData()">Submit Data</button>
+
     <script>
-        let startReading = 0;
-        let endReading = 0;
-        let totalUsed = 0;
-        let interval;
-        let waterType = "Cold";
-        let costPerLiter = { Cold: 500, Hot: 1500, Warm: 1000 }; // Updated cost in PHP
+    function calculate(element) {
+        let container = element.closest(".container");
+        let startRead = parseFloat(container.querySelector(".start_read").value) || 0;
+        let endRead = parseFloat(container.querySelector(".endReading").value) || 0;
+        let totalCost = parseFloat(container.querySelector(".totalCost").value) || 0;
+        let totalUsed = endRead - startRead;
+        let cost = totalUsed * totalCost;
 
-        function startMetering() {
-    if (!interval) {
-        let now = new Date();
-        document.getElementById("startTime").textContent = now.toLocaleTimeString();
-        
-        let inputStartReading = parseFloat(document.getElementById("start_read").value);
-        if (isNaN(inputStartReading) || inputStartReading < 0) {
-            alert("Please enter a valid start reading.");
-            return;
-        }
-        
-        startReading = parseFloat(inputStartReading.toFixed(3)); // Round to thousandths
-        endReading = startReading; // Reset end reading at the start
-        document.getElementById("endReading").textContent = endReading.toFixed(3);
-
-        waterType = document.getElementById("waterType").value;
-
-        interval = setInterval(() => {
-            let usage = (Math.floor(Math.random() * 5000) + 1000) / 1000; // Simulated usage
-            endReading += usage;
-            endReading = parseFloat(endReading.toFixed(3)); // Ensure proper rounding
-            document.getElementById("endReading").textContent = endReading.toFixed(3);
-
-            totalUsed = endReading - startReading;
-            totalUsed = parseFloat(totalUsed.toFixed(3)); // Round to thousandths
-            document.getElementById("totalUsed").textContent = totalUsed.toFixed(3);
-
-            let cost = totalUsed * costPerLiter[waterType];
-            document.getElementById("cost").textContent = cost.toFixed(2);
-        }, 2000);
-    }
-}
-
-function stopMetering() {
-    if (!interval) {
-        alert("Metering has not started yet.");
-        return;
+        container.querySelector(".totalUsed").textContent = totalUsed;
+        container.querySelector(".cost").textContent = "₱" + cost;
     }
 
-    clearInterval(interval);
-    interval = null;
-    document.getElementById("endTime").textContent = new Date().toLocaleTimeString();
-}
-
-
-        function resetMetering() {
-            clearInterval(interval);
-            interval = null;
-            startReading = 0;
-            endReading = 0;
-            totalUsed = 0;
-            document.getElementById("startTime").textContent = "--:--:--";
-            document.getElementById("endTime").textContent = "--:--:--";
-            document.getElementById("start_read").value = "";
-            // document.getElementById("startReading").textContent = "0";
-            document.getElementById("endReading").textContent = "0.000";
-            document.getElementById("totalUsed").textContent = "0.000";
-            document.getElementById("cost").textContent = "0.00";
-        }
-
-        function submitData() {
-    // Ensure metering has started at some point
-    if (document.getElementById("startTime").textContent === "--:--:--") {
-        alert("Please start metering before submitting.");
-        return;
+    function addProgram() {
+        let newDiv = document.createElement("div");
+        newDiv.className = "container";
+        newDiv.innerHTML = `
+            <h2>Water Submetering System</h2>
+            <label for="waterType">Select Program:</label>
+            <select class="waterType" onchange="calculate(this)">
+                <option value="Cold">Cold</option>
+                <option value="Hot">Hot</option>
+                <option value="Warm">Warm</option>
+            </select>
+            <p><strong>Start Reading (m³):</strong><input type="number" class="start_read" required oninput="calculate(this)"></p>
+            <p><strong>End Reading (m³):</strong><input type="number" class="endReading" required oninput="calculate(this)"></p>
+            <p><strong>Cost per m³:</strong><input type="number" class="totalCost" required oninput="calculate(this)"></p>
+            <p><strong>Total Used:</strong> <span class="totalUsed">0</span> m³</p>
+            <p><strong>Total Cost(₱):</strong> <span class="cost">₱0</span></p>
+        `;
+        document.getElementById("readings").appendChild(newDiv);
     }
 
-    // Ensure metering has been stopped
-    if (document.getElementById("endTime").textContent === "--:--:--") {
-        alert("Please stop metering before submitting.");
-        return;
-    }
+    function submitData() {
+    let readings = [];
+    document.querySelectorAll(".container").forEach(container => {
+        let waterType = container.querySelector(".waterType").value;
+        let startRead = container.querySelector(".start_read").value;
+        let endRead = container.querySelector(".endReading").value;
+        let totalUsed = container.querySelector(".totalUsed").textContent;
+        let cost = container.querySelector(".cost").textContent;
 
-    localStorage.setItem("start_time", document.getElementById("startTime").textContent);
-    localStorage.setItem("end_time", document.getElementById("endTime").textContent);
-    localStorage.setItem("start_reading", startReading);
-    localStorage.setItem("end_reading", endReading);
-    localStorage.setItem("total_used", totalUsed);
-    localStorage.setItem("cost", document.getElementById("cost").textContent);
+        readings.push({ waterType, startRead, endRead, totalUsed, cost });
+    });
 
+    localStorage.setItem("readingsData", JSON.stringify(readings));
     alert("Data submitted successfully!");
 
 // Redirect after 2 seconds
@@ -234,6 +134,28 @@ setTimeout(function() {
     window.open("output.html", "blank"); // Redirect to the output page
     location.reload(); // Reload the current page after submission
 }, 1000);
+
+let programs = JSON.parse(localStorage.getItem("programs")) || [];
+    
+    let newProgram = {
+        date: localStorage.getItem("date") || "N/A",
+        load_number: localStorage.getItem("load_number") || "N/A",
+        trolley_number: localStorage.getItem("trolley_number") || "N/A",
+        equipment: localStorage.getItem("equipment") || "N/A",
+        set_time: localStorage.getItem("set_time") || "N/A",
+        program: localStorage.getItem("program") || "N/A",
+        linen_type: localStorage.getItem("linen-type") || "N/A",
+        linen_sizes: localStorage.getItem("linen_sizes") || "N/A",
+        quantity: localStorage.getItem("quantity") || "N/A",
+        bfr_wash: localStorage.getItem("bfr_wash") || "N/A",
+        aftr_wash: localStorage.getItem("aftr_wash") || "N/A",
+        rmc_total: localStorage.getItem("rmc_total") || "N/A"
+    };
+
+    programs.push(newProgram);
+    localStorage.setItem("programs", JSON.stringify(programs));
+
+    alert("Program added! You can add another or submit.");
 }
     </script>
 </body>
