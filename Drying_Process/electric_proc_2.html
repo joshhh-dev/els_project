@@ -18,14 +18,14 @@ h2 {
 }
 
 p {
-    font-size: 18px;
+    font-size: 20px;
     margin: 10px 0;
     color: rgb(20, 20, 20);
 }
 
     button {
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             border: none;
             border-radius: 5px;
@@ -78,12 +78,13 @@ p {
 .container {
     background-color: rgb(254, 255, 245); /* More Transparent Dark Blue */
     padding: 20px;
+    margin: none;
     border-radius: 10px;
     display: inline-block;
     text-align: left;
     max-width: 400px;
     width: 100%;
-    backdrop-filter: blur(10px); /* Frosted Glass Effect */
+    backdrop-filter: blur(20px); /* Frosted Glass Effect */
 }
 
 span {
@@ -91,107 +92,46 @@ span {
     color: rgb(3, 43, 87); /* White for Readability */
 }
 
+#start_reads_dry, #end_reads_dry, #costing_dry {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
     </style>
 </head>
 <body>
+
     <div class="container">
         <h2>Electric Submetering System</h2>
-        <p><strong>Start Time:</strong> <span id="startTime_dry">--:--:--</span></p>
-        <p><strong>Start Reading (kWh):</strong> <input type="number" id="start_reads_dry" min="0"></p>
-        <p><strong>Cost per kWh: </strong><input type="number" id="costing_dry" min="0"></p>
+        <p><strong>Start Reading (kWh):</strong> <input type="number" id="start_reads_dry" min="0" oninput="calculate()"></p>
+        <p><strong>End Reading (kWh):</strong> <input type="number" id="end_reads_dry" min="0" oninput="calculate()"></p>
+        <p><strong>Cost per kWh: </strong><input type="number" id="costing_dry" min="0" oninput="calculate()"></p>
 
-        <button class="strt" onclick="startMetering_dry()" >Start Metering</button>
-        <button class="stp" onclick="stopMetering_dry()" >Stop Metering</button>
-        <button class="res" onclick="resetMetering_dry()" >Reset</button>
-        <button class="sbt" onclick="submitData_dry()" >Add to template</button>
-
-        <p><strong>End Time:</strong> <span id="endTime_dry">--:--:--</span></p>
-        <p><strong>End Reading (kWh):</strong> <span id="endReading_dry">0</span></p>
+        <button class="sbt" onclick="submitData()" onsubmit="return refreshPage()" >Add to template</button> 
         <p><strong>Total kWh Used:</strong> <span id="totalUsed_dry">0</span> kWh</p>
         <p><strong>Estimated Cost:</strong> ₱<span id="cost_dry">0</span></p>
     </div>
     
     <script>
-        document.getElementById("costing_dry").value = localStorage.getItem("cost_per_kwh_dry") || 0;
+        function calculate() {
+            let strt_read = parseFloat(document.getElementById("start_reads_dry").value) || 0;
+            let end_read = parseFloat(document.getElementById("end_reads_dry").value) || 0;
+            let costing = parseFloat(document.getElementById("costing_dry").value) || 0;
 
-        let startReading = 0;
-        let endReading = 0;
-        let totalUsed = 0;
-        let interval;
-        localStorage.setItem("cost_per_kwh_dry", costPerKwh); // Store in localStorage
+            electricTotalUsed = end_read - strt_read;
 
-        function startMetering_dry() {
-            if (!interval) {
-                let now = new Date();
-                document.getElementById("startTime_dry").textContent = now.toLocaleTimeString();
+            document.getElementById("totalUsed_dry").textContent = electricTotalUsed;
 
-                let inputStartReading = parseFloat(document.getElementById("start_reads_dry").value);
-                if (isNaN(inputStartReading) || inputStartReading < 0) {
-                alert("Please enter a valid start reading.");
-                return;
-                }
-                
-                // Get the start reading value from input
-                startReading = parseFloat(document.getElementById("start_reads_dry").value) || 0;
-
-                // Reset endReading to match startReading at the beginning
-                endReading = startReading;
-
-                interval = setInterval(() => {
-                    let usage = Math.floor(Math.random() * 5) + 1; // Simulated usage
-                    endReading += usage;
-                    document.getElementById("endReading_dry").textContent = endReading;
-                    let costPerkWh = parseFloat(document.getElementById("costing_dry").value) || 0; // Cost per kWh
-                    totalUsed = endReading - startReading;
-                    document.getElementById("totalUsed_dry").textContent = totalUsed;
-                    document.getElementById("cost_dry").textContent = (totalUsed * costPerkWh).toFixed(2);
-                }, 2000);
-            }
+            est_cost = electricTotalUsed * costing;
+            document.getElementById("cost_dry").textContent = "₱"+ est_cost.toFixed(2);
         }
 
-        function stopMetering_dry() {
-    if (interval) { // Only stop if metering is running
-        clearInterval(interval);
-        interval = null;
-        document.getElementById("endTime_dry").textContent = new Date().toLocaleTimeString();
-    } else {
-        alert("There's nothing to stop.");
-    }
-}
-        function resetMetering_dry() {
-
-            clearInterval(interval);
-            interval = null;
-            startReading = 0;
-            endReading = 0;
-            totalUsed = 0;
-
-            document.getElementById("startTime_dry").textContent = "--:--:--";
-            document.getElementById("endTime_dry").textContent = "--:--:--";
-            document.getElementById("start_reads_dry").value = ""; // Reset input field
-            document.getElementById("endReading_dry").textContent = "0";
-            document.getElementById("totalUsed_dry").textContent = "0";
-            document.getElementById("cost_dry").textContent = "0";
-        }
-
-        function submitData_dry() {
-    // Ensure metering has started at some point
-    if (document.getElementById("startTime_dry").textContent === "--:--:--") {
-        alert("Please start metering before submitting.");
-        return;
-    }
-
-    // Ensure metering has been stopped
-    if (document.getElementById("endTime_dry").textContent === "--:--:--") {
-        alert("Please stop metering before submitting.");
-        return;
-    }
-
-    localStorage.setItem("start_times_dry", document.getElementById("startTime_dry").textContent);
-    localStorage.setItem("end_times_dry", document.getElementById("endTime_dry").textContent);
-    localStorage.setItem("start_readings_dry", startReading);
-    localStorage.setItem("end_readings_dry", endReading);
-    localStorage.setItem("total_useds_dry", totalUsed);
+function submitData() {
+    localStorage.setItem("start_reads_dry", document.getElementById("start_reads_dry").value);
+    localStorage.setItem("end_reads_dry", document.getElementById("end_reads_dry").value);
+    localStorage.setItem("total_useds_dry", document.getElementById("totalUsed_dry").textContent);
     localStorage.setItem("costs_dry", document.getElementById("cost_dry").textContent);
 
     alert("Data submitted successfully!");

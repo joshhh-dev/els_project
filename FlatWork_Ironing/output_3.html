@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ELS FlatWork Ironing Report</title>
+    <title>Ironing Process Report</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <style>
-body { 
-    font-family: Arial, sans-serif;
+        body { 
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
@@ -82,32 +83,32 @@ body {
             color: white; 
             border: none; 
         }
-                    </style>
+        
+    </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Submitted FlatWork Ironing Data</h2>
+        <h2>Submitted ironing Data</h2>
         <table>
             <tr><th>Field</th><th>Value</th></tr>
             <tr><td>DATE</td><td id="outDate_iron"></td></tr></tr>
             <tr><td>EQUIPMENT</td><td id="outEquipment_iron"></td></tr>
             <tr><td>SET TIME</td><td id="outSet_time_iron"></td></tr>
-            <tr><td>TEMPERATURE</td><td id="outTemperature_iron"></td></tr>
+            <tr><td>TEMPERATURE</td><td id="outTemperature"></td></tr>
             <tr><td>LINEN TYPE</td>
                 <td id="outLinen_type_iron"></td>
                 <td id="outOtherLinen_iron"></td>
             </tr>
+            <tr><td>LINEN SIZE</td><td id="outLinen_sizes_iron"></td></tr>
             <tr><td>QUANTITY</td><td id="outQuantity_iron"></td></tr>
-            <tr><td>TOTAL KGS BEFORE IRONING</td><td id="outBfr_iron"></td></tr>
-            <tr><td>TOTAL KGS AFTER IRONING</td><td id="outAftr_iron"></td></tr>
+            <tr><td>TOTAL KGS BEFORE iron</td><td id="outBfr_iron"></td></tr>
+            <tr><td>TOTAL KGS AFTER iron</td><td id="outAftr_iron"></td></tr>
         </table>
     
         <h2>Submitted Electric Submetering Data</h2>
         <table>
             <tr><th>Field</th><th>Value</th></tr>
-            <tr><td>START TIME</td><td id="outStartTimes_iron"></td></tr>
-            <tr><td>END TIME</td><td id="outEndTimes_iron"></td></tr>
             <tr><td>Start Reading (kWh)</td><td id="outStartReadings_iron"></td></tr>
             <tr><td>End Reading (kWh)</td><td id="outEndReadings_iron"></td></tr>
             <tr><td>Total kWh Used</td><td id="outTotalUseds_iron"></td></tr>
@@ -119,25 +120,25 @@ body {
     <h2>LPG Gas Submetering Report</h2>
     <table>
         <tr><th>Field</th><th>Value</th></tr>
-        <tr><td>Initial Reading (kg)</td><td id="outInitialReading_iron"></td></tr>
-        <tr><td>Final Reading (kg)</td><td id="outFinalReading_iron"></td></tr>
-        <tr><td>Gas Used (kg)</td><td id="outGasUsed_iron"></td></tr>
-        <tr><td>Total Cost (₱)</td><td id="outTotalCost_iron"></td></tr>
+        <tr><td>Initial Reading (kg)</td><td id="outInitialReading"></td></tr>
+        <tr><td>Final Reading (kg)</td><td id="outFinalReading"></td></tr>
+        <tr><td>Gas Used (kg)</td><td id="outGasUsed"></td></tr>
+        <tr><td>Total Cost (₱)</td><td id="outTotalCost"></td></tr>
     </table>
 
     <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
     <button class="pdf-btn" onclick="exportToPDF()">Download as PDF</button>
-    <button class="back-btn" onclick="window.location.href='flatiron_proc.html'">Go Back</button>
+    <button class="back-btn" onclick="window.location.href='ironing_proc.html'">Go Back</button>
 </div>
 
     
 
 <script>
         // Retrieve and display data
-        document.getElementById("outDate_iron").textContent = localStorage.getItem("date_iron");
-        document.getElementById("outEquipment_iron").textContent = localStorage.getItem("equipment_iron");
-        document.getElementById("outSet_time_iron").textContent = localStorage.getItem("set_time_iron");
-        document.getElementById("outTemperature_iron").textContent = localStorage.getItem("temp_iron");
+        document.getElementById("outDate_iron").textContent = localStorage.getItem("date_iron") || "N/A";
+        document.getElementById("outEquipment_iron").textContent = localStorage.getItem("equipment_iron") || "N/A";
+        document.getElementById("outSet_time_iron").textContent = localStorage.getItem("set_time_iron") || "N/A";
+        document.getElementById("outTemperature").textContent = localStorage.getItem("temp") || "N/A";
         document.addEventListener("DOMContentLoaded", function () {
         let linenType = localStorage.getItem("linen_type_iron") || "N/A";
         let otherLinen = localStorage.getItem("other-linen_iron") || "";
@@ -152,23 +153,22 @@ body {
             otherLinenElement.style.display = "none";
         }
     });
-        document.getElementById("outQuantity_iron").textContent = localStorage.getItem("quantity_iron");
-        document.getElementById("outBfr_iron").textContent = localStorage.getItem("bfr_iron");
-        document.getElementById("outAftr_iron").textContent = localStorage.getItem("aftr_iron");
+        document.getElementById("outLinen_sizes_iron").textContent = localStorage.getItem("linen_sizes_iron") || "N/A";
+        document.getElementById("outQuantity_iron").textContent = localStorage.getItem("quantity_iron") || "N/A";
+        document.getElementById("outBfr_iron").textContent = localStorage.getItem("bfr_iron") || "N/A";
+        document.getElementById("outAftr_iron").textContent = localStorage.getItem("aftr_iron") || "N/A";
         
         // Retrieve and display electric metering data from localStorage
-        document.getElementById("outStartTimes_iron").textContent = localStorage.getItem("start_times_iron");
-        document.getElementById("outEndTimes_iron").textContent = localStorage.getItem("end_times_iron");
-        document.getElementById("outStartReadings_iron").textContent = localStorage.getItem("start_readings_iron");
-        document.getElementById("outEndReadings_iron").textContent = localStorage.getItem("end_readings_iron");
-        document.getElementById("outTotalUseds_iron").textContent = localStorage.getItem("total_useds_iron");
-        document.getElementById("outCosts_iron").textContent = localStorage.getItem("costs_iron");
+        document.getElementById("outStartReadings_iron").textContent = localStorage.getItem("start_reads_iron") || "N/A";
+        document.getElementById("outEndReadings_iron").textContent = localStorage.getItem("end_reads_iron") || "N/A";
+        document.getElementById("outTotalUseds_iron").textContent = localStorage.getItem("total_useds_iron") || "N/A";
+        document.getElementById("outCosts_iron").textContent = localStorage.getItem("costs_iron") || "N/A";
 
         // Retrieve and display stored data
-        document.getElementById("outInitialReading_iron").textContent = localStorage.getItem("initial_reading_iron") || "N/A";
-        document.getElementById("outFinalReading_iron").textContent = localStorage.getItem("final_reading_iron") || "N/A";
-        document.getElementById("outGasUsed_iron").textContent = localStorage.getItem("gas_used_iron") || "N/A";
-        document.getElementById("outTotalCost_iron").textContent = localStorage.getItem("total_cost_iron") || "N/A";
+        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") || "N/A";
+        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading") || "N/A";
+        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used") || "N/A";
+        document.getElementById("outTotalCost").textContent = localStorage.getItem("total_cost") || "N/A";
 
     function exportToExcel() {
     let tables = document.querySelectorAll("table");
@@ -202,7 +202,7 @@ body {
     let ws = XLSX.utils.aoa_to_sheet(ws_data);
     XLSX.utils.book_append_sheet(wb, ws, "Report");
 
-    let filename = `Flatowrk_Ironing_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    let filename = `ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
     XLSX.writeFile(wb, filename);
 }
 
@@ -214,7 +214,7 @@ function exportToPDF() {
     // Title & Timestamp
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
-    doc.text("ELS Flatwork Ironing Process", 15, 15);
+    doc.text("ELS ironing Process", 15, 15);
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
@@ -270,10 +270,8 @@ function exportToPDF() {
     });
 
     // Save as a downloadable PDF
-    let filename = `Flatowrk_Ironing_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+    let filename = `Ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
     doc.save(filename);
-
-
 }
 
 </script>
