@@ -71,15 +71,15 @@
         <div class="container">
             <h2>Water Submetering System</h2>
             <label for="waterType">Select Program:</label>
-            <select class="waterType" onchange="calculate(this)">
-                <option value="Temp">--Select Temperature--</option>
+            <select id="tmp" class="waterType" onchange="calculate(this)">
+                <option value="">--Select Temperature--</option>
                 <option value="Cold">Cold</option>
                 <option value="Hot">Hot</option>
                 <option value="Warm">Warm</option>
             </select>
-            <p><strong>Start Reading (m³):</strong><input type="number" class="start_read" required oninput="calculate(this)"></p>
-            <p><strong>End Reading (m³):</strong><input type="number" class="endReading" required oninput="calculate(this)"></p>
-            <p><strong>Cost per m³:</strong><input type="number" class="totalCost" required oninput="calculate(this)"></p>
+            <p><strong>Start Reading (m³):</strong><input type="number" class="start_read" oninput="calculate(this)"></p>
+            <p><strong>End Reading (m³):</strong><input type="number" class="endReading" oninput="calculate(this)"></p>
+            <p><strong>Cost per m³:</strong><input type="number" class="totalCost" oninput="calculate(this)"></p>
             <p><strong>Total Used:</strong> <span class="totalUsed">0</span> m³</p>
             <p><strong>Total Cost(₱):</strong> <span class="cost">₱0</span></p>
         </div>
@@ -101,6 +101,7 @@
         let totalCost = parseFloat(container.querySelector(".totalCost").value) || 0;
         let totalUsed = endRead - startRead;
         let cost = totalUsed * totalCost;
+
 
         container.querySelector(".totalUsed").textContent = totalUsed.toFixed(4);
         container.querySelector(".cost").textContent = "₱" + cost.toFixed(4);
