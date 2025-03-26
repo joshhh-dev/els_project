@@ -39,6 +39,12 @@
             margin: 10px;
         }
 
+        .summary {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -66,6 +72,7 @@
             <h2>Water Submetering System</h2>
             <label for="waterType">Select Program:</label>
             <select class="waterType" onchange="calculate(this)">
+                <option value="">--Select Temperature--</option>
                 <option value="Cold">Cold</option>
                 <option value="Hot">Hot</option>
                 <option value="Warm">Warm</option>
@@ -76,6 +83,11 @@
             <p><strong>Total Used:</strong> <span class="totalUsed">0</span> m³</p>
             <p><strong>Total Cost(₱):</strong> <span class="cost">₱0</span></p>
         </div>
+    </div>
+
+    <div class="summary">
+        <p><strong>Overall Total Usage: </strong><span id="sumUsed">0</span> m³</p>
+        <p><strong>Overall Total Cost: </strong>₱<span id="sumCost">0</span></p>
     </div>
 
     <button class="btn-air" onclick="addProgram()">Add Another Reading</button>
@@ -90,8 +102,22 @@
         let totalUsed = endRead - startRead;
         let cost = totalUsed * totalCost;
 
-        container.querySelector(".totalUsed").textContent = totalUsed;
-        container.querySelector(".cost").textContent = "₱" + cost;
+        container.querySelector(".totalUsed").textContent = totalUsed.toFixed(4);
+        container.querySelector(".cost").textContent = "₱" + cost.toFixed(4);
+        updateSummary();
+    }
+
+    function updateSummary() {
+        let totalUsage = 0;
+        let totalCost = 0;
+
+        document.querySelectorAll(".container").forEach(container => {
+            totalUsage += parseFloat(container.querySelector(".totalUsed").textContent) || 0;
+            totalCost += parseFloat(container.querySelector(".cost").textContent.replace("₱", "")) || 0;
+        });
+
+        document.getElementById("sumUsed").textContent = totalUsage.toFixed(4);
+        document.getElementById("sumCost").textContent = totalCost.toFixed(4);
     }
 
     function addProgram() {
@@ -101,6 +127,7 @@
             <h2>Water Submetering System</h2>
             <label for="waterType">Select Program:</label>
             <select class="waterType" onchange="calculate(this)">
+                <option value="">--Select Temperature--</option>
                 <option value="Cold">Cold</option>
                 <option value="Hot">Hot</option>
                 <option value="Warm">Warm</option>
@@ -113,50 +140,45 @@
         `;
         document.getElementById("readings").appendChild(newDiv);
     }
-
     function submitData() {
     let readings = [];
-    document.querySelectorAll(".container").forEach(container => {
-        let waterType = container.querySelector(".waterType").value;
-        let startRead = container.querySelector(".start_read").value;
-        let endRead = container.querySelector(".endReading").value;
-        let totalUsed = container.querySelector(".totalUsed").textContent;
-        let cost = container.querySelector(".cost").textContent;
+    let totalUsage = 0;
+    let totalCost = 0;
 
-        readings.push({ waterType, startRead, endRead, totalUsed, cost });
+    document.querySelectorAll(".container").forEach(container => {
+        let temp = container.querySelector(".waterType").value;
+        let startRead = parseFloat(container.querySelector(".start_read").value) || 0;
+        let endRead = parseFloat(container.querySelector(".endReading").value) || 0;
+        let costPerM3 = parseFloat(container.querySelector(".totalCost").value) || 0;
+        let totalUsed = endRead - startRead;
+        let cost = totalUsed * costPerM3;
+
+        readings.push({
+            temp: temp,
+            startRead: startRead,
+            endRead: endRead,
+            costPerM3: costPerM3,
+            totalUsed: totalUsed.toFixed(4),
+            cost: cost.toFixed(4)
+        });
+
+        totalUsage += totalUsed;
+        totalCost += cost;
     });
 
-    localStorage.setItem("readingsData", JSON.stringify(readings));
-    alert("Data submitted successfully!");
+    // Store data in localStorage
+    localStorage.setItem("waterReadings", JSON.stringify(readings));
 
-// Redirect after 2 seconds
-setTimeout(function() {
-    window.open("output.html", "blank"); // Redirect to the output page
-    location.reload(); // Reload the current page after submission
-}, 1000);
 
-let programs = JSON.parse(localStorage.getItem("programs")) || [];
-    
-    let newProgram = {
-        date: localStorage.getItem("date") || "N/A",
-        load_number: localStorage.getItem("load_number") || "N/A",
-        trolley_number: localStorage.getItem("trolley_number") || "N/A",
-        equipment: localStorage.getItem("equipment") || "N/A",
-        set_time: localStorage.getItem("set_time") || "N/A",
-        program: localStorage.getItem("program") || "N/A",
-        linen_type: localStorage.getItem("linen-type") || "N/A",
-        linen_sizes: localStorage.getItem("linen_sizes") || "N/A",
-        quantity: localStorage.getItem("quantity") || "N/A",
-        bfr_wash: localStorage.getItem("bfr_wash") || "N/A",
-        aftr_wash: localStorage.getItem("aftr_wash") || "N/A",
-        rmc_total: localStorage.getItem("rmc_total") || "N/A"
-    };
+    localStorage.setItem("sumUsed", totalUsage.toFixed(4));
+    localStorage.setItem("sumCost", totalCost.toFixed(4));
 
-    programs.push(newProgram);
-    localStorage.setItem("programs", JSON.stringify(programs));
-
-    alert("Program added! You can add another or submit.");
-}
+     // Redirect after 2 seconds
+        setTimeout(function() {
+            window.open("output.html", "blank"); // Redirect to the output page
+            location.reload(); // Reload the current page after submission
+        }, 1000);
+    }
     </script>
 </body>
 </html>

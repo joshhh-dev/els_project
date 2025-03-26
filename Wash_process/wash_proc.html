@@ -234,39 +234,52 @@ button:hover {
                 <span id="loadError" class="error"></span>
             
                 <label for="trolley_number">TROLLEY #:</label>
-                <input type="number" id="trolley_number" name="trolley_number" required>
+                <select id="trolley_number" name="trolley_number" required>
+                    <option value="">--Select Trolley Number--</option>
+                    <option value="Trolley_1">Trolley 1</option>
+                    <option value="Trolley_2">Trolley 2</option>
+                    <option value="Trolley_3">Trolley 3</option>
+                    <option value="Trolley_4">Trolley 4</option>
+                    <option value="Trolley_5">Trolley 5</option>                    
+                </select>
                 <span id="trolleyError" class="error"></span>
             
                 <label for="equipment">EQUIPMENT:</label>
                 <select id="equipment" name="equipment" required>
-                    <option value="">Select Equipment</option>
-                    <option value="Equipment_1">Equipment 1</option>
-                    <option value="Equipment_2">Equipment 2</option>
-                    <option value="Equipment_3">Equipment 3</option>
-                    <option value="Equipment_4">Equipment 4</option>
-                    <option value="Equipment_5">Equipment 5</option>
+                    <option value="">--Select Equipment--</option>
+                    <option value="Equipment_1">W#1 W5330N</option>
+                    <option value="Equipment_2">W#2 WH6-33</option>
+                    <option value="Equipment_3">W#3 WH6- 33</option>
+                    <option value="Equipment_4">W#1 W4600H</option>
                     </select>
                 <span id="equipmentError" class="error"></span>
             
                 <label for="set_time">SET TIME(minutes):</label>
-                <input type="number" id="set_time" name="set_time" required>
+                <select id="set_time" name="set_time" required>
+                    <option value="">--Set Time--</option>
+                    <option value="51mins">51mins</option>
+                    <option value="54mins">54mins</option>
+                    <option value="48mins">48mins</option>
+                    <option value="52mins">52mins</option>
+                    <option value="58mins">58mins</option>
+                </select>
                 <span id="timeError" class="error"></span>
 
 
-                <label for="program">PROGRAM:</label>
-                <select id="program" required>
-                    <option value="">Select Program</option>
-                    <option value="HOT">HOT</option>
-                    <option value="WARM">WARM</option>
-                    <option value="COLD">COLD</option>
+                <label for="programs">PROGRM:</label>
+                <select id="programs" required>
+                    <option value="">Select programs</option>
+                    <option value="NORMAL 40 WHITET">NORMAL 40 WHITE</option>
+                    <option value="CTCC 30 WHITE">CTCC 30 WHITE</option>
+                    <option value="200 CTCC">200 CTCC</option>
                 </select>
-                <span id="programError" class="error"></span>
+                <span id="programsError" class="error"></span>
 
 
             <div class="line-group">
                 <label for="linen-type">LINEN TYPE:</label>
                 <select id="linen-type" required onchange="handleLinenChange()">
-                    <option value="">Select Linen Type</option>
+                    <option value="">--Select Linen Type--</option>
                     <option value="DUVET COVER">DUVET COVER</option>
                     <option value="BEDSHEET">BEDSHEET</option>
                     <option value="BATH TOWEL">BATH TOWEL</option>
@@ -287,9 +300,9 @@ button:hover {
                 <label for="linen_sizes">LINEN SIZE:</label>
                 <select id="linen_sizes" disabled>
                     <option value="">-- SELECT SIZE --</option>
-                    <option value="Size 1">Size 1</option>
-                    <option value="Size 2">Size 2</option>
-                    <option value="Size 3">Size 3</option>
+                    <option value="King_size">King Size</option>
+                    <option value="Queen_size">Queen Size</option>
+                    <option value="Single">Single</option>
                 </select>
             </div>
 
@@ -308,7 +321,7 @@ button:hover {
 
                 <label for="detergent">DETERGENT TYPE:</label>
                 <select id="detergent" required>
-                    <option value="">Select Detergent</option>
+                    <option value="">--Select Detergent--</option>
                     <option value="PRO LS Alkali Booster">PRO LS Alkali Booster</option>
                     <option value="PRO LS Sour Rinse Concentrate">PRO LS Sour Rinse Concentrate</option>
                     <option value="PRO LS Choloro Neutralizer">PRO LS Choloro Neutralizer</option>
@@ -317,7 +330,7 @@ button:hover {
 
                 <label for="mixType">MIXTURE TYPE:</label>
                 <select id="mixType" required onchange="updateUnit()">
-                    <option value="">Select Mixture</option>
+                    <option value="">--Select Mixture--</option>
                     <option value="Powdered">Powdered</option>
                     <option value="Liquid">Liquid</option>
                 </select>
@@ -326,7 +339,7 @@ button:hover {
                 <label for="dosage">SELECT DOSAGE:</label>
                 <div class="dosage-container">
                 <select id="dosage" required>
-                    <option value="">Select Detergent</option>
+                    <option value="">--Select Detergent--</option>
                     <option value="200">200</option>
                     <option value="400">400</option>
                     <option value="600">600</option>
@@ -428,7 +441,7 @@ function validateForm() {
     // List of error fields
     let errorFields = [
         "dateError", "loadError", "trolleyError", "equipmentError",
-        "timeError", "programError", "linenError", "quantityError",
+        "timeError", "programsError", "linenError", "quantityError",
         "bfrError", "aftrError", "detdosError"
     ];
     
@@ -441,7 +454,7 @@ function validateForm() {
     let trolley = document.getElementById("trolley_number").value.trim();
     let equipment = document.getElementById("equipment").value.trim();
     let set_time = document.getElementById("set_time").value.trim();
-    let program = document.getElementById("program").value;
+    let programs = document.getElementById("programs").value;
     let linen = document.getElementById("linen-type").value;
     let quantity = document.getElementById("quantity").value.trim();
     let bfr_wash = document.getElementById("bfr_wash").value.trim();
@@ -470,8 +483,8 @@ function validateForm() {
         document.getElementById("timeError").textContent = "Set time is required!";
         isValid = false;
     }
-    if (program === "") {
-        document.getElementById("programError").textContent = "Program is required!";
+    if (programs === "") {
+        document.getElementById("programsError").textContent = "programs is required!";
         isValid = false;
     }
     if (linen === "") {
@@ -507,7 +520,7 @@ document.getElementById("fill_up").addEventListener("submit", function(event) {
     localStorage.setItem("trolley_number", document.getElementById("trolley_number").value);
     localStorage.setItem("equipment", document.getElementById("equipment").value);
     localStorage.setItem("set_time", document.getElementById("set_time").value);
-    localStorage.setItem("program", document.getElementById("program").value);
+    localStorage.setItem("program", document.getElementById("programs").value);
     localStorage.setItem("other-linen", document.getElementById("other-linen").value);
     localStorage.setItem("linen-type", document.getElementById("linen-type").value);
     localStorage.setItem("linen_sizes", document.getElementById("linen_sizes").value);

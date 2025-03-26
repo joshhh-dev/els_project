@@ -127,6 +127,11 @@
 
         </table>
         </div>
+        <table>
+            <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>Overall Total Consumption (m³)</td><td id="sumUsed"></td></tr>
+            <tr><td>Overall Total Cost (₱)</td><td id="sumCost"></td></tr>
+         </table>
 
 
         <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
@@ -160,7 +165,7 @@
         document.getElementById("outQuantity").textContent = localStorage.getItem("quantity") || "N/A";
         document.getElementById("outBfr_wash").textContent = localStorage.getItem("bfr_wash") || "N/A";
         document.getElementById("outAftr_wash").textContent = localStorage.getItem("aftr_wash") || "N/A";
-        document.getElementById("outRMC").textContent = localStorage.getItem("rmc_total") || "N/A";
+        document.getElementById("outRMC").textContent = localStorage.getItem("rmc_total") || "N/A"; 
 
         // Retrieve and display electric metering data from localStorage
         document.getElementById("outStartReadings").textContent = localStorage.getItem("start_reads") || "N/A";
@@ -169,15 +174,15 @@
         document.getElementById("outCosts").textContent = localStorage.getItem("costs") || "N/A";
 
 // Retrieve stored readings data
-let readingsData = JSON.parse(localStorage.getItem("readingsData")) || [];
+let waterReadings = JSON.parse(localStorage.getItem("waterReadings")) || [];
 
 // Check if data exists
-if (readingsData.length > 0) {
+if (waterReadings.length > 0) {
     let outputContainer = document.getElementById("outputContainer");
 
     // Group readings by waterType (Program)
     let groupedData = {};
-    readingsData.forEach(reading => {
+    waterReadings.forEach(reading => {
         if (!groupedData[reading.waterType]) {
             groupedData[reading.waterType] = [];
         }
@@ -185,21 +190,21 @@ if (readingsData.length > 0) {
     });
 
     // Loop through each program and create a table
-    Object.keys(groupedData).forEach(program => {
+    Object.keys(groupedData).forEach(temp=> {
         let programTable = document.createElement("div");
         programTable.innerHTML = `
         <h2>Water Submetering System</h2>
             <table border="1">
                 <thead>
                     <tr>
-                        <th>Program</th>
+                        <th>Temperature</th>
                         <th>Start Reading (m³)</th>
                         <th>End Reading (m³)</th>
                         <th>Total Water Used (m³)</th>
                         <th>Estimated Cost (₱)</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody_${program}">
+                <tbody id="tableBody_${temp}">
                 </tbody>
             </table>
         `;
@@ -207,11 +212,11 @@ if (readingsData.length > 0) {
         outputContainer.appendChild(programTable);
 
         // Insert rows into the respective table
-        let tableBody = document.getElementById(`tableBody_${program}`);
-        groupedData[program].forEach((reading, index) => {
+        let tableBody = document.getElementById(`tableBody_${temp}`);
+        groupedData[temp].forEach((reading,temp) => {
             let row = document.createElement("tr");
             row.innerHTML = `
-                <td>${program}</td>
+                <td>${reading.temp}</td>
                 <td>${reading.startRead || "N/A"}</td>
                 <td>${reading.endRead || "N/A"}</td>
                 <td>${reading.totalUsed || "N/A"}</td>
@@ -223,6 +228,13 @@ if (readingsData.length > 0) {
 } else {
     console.log("No readings data found.");
 }
+console.log(JSON.parse(localStorage.getItem("waterReadings")));
+    //Displays the overall total of all water readings
+    //Retrieve and display total values
+    document.getElementById("sumUsed").textContent = localStorage.getItem("sumUsed") || "0";
+    document.getElementById("sumCost").textContent = localStorage.getItem("sumCost") || "0";
+
+
         document.getElementById("outDetergent").textContent = localStorage.getItem("detergent") || "N/A";
         document.addEventListener("DOMContentLoaded", function () {
     let mixType = localStorage.getItem("mixType") || "N/A";
@@ -239,7 +251,7 @@ if (readingsData.length > 0) {
 });
 
 
-        document.getElementById("currentDate").textContent = new Date().toLocaleString();
+    document.getElementById("currentDate").textContent = new Date().toLocaleString();
 
     function exportToExcel() {
     let tables = document.querySelectorAll("table");
