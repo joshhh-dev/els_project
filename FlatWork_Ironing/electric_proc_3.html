@@ -5,120 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electric Submetering</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            color: #00aaff;
-            text-align: center;
-            padding: 15px;
-            margin: 0; /* Remove default body margin */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 100vh; /* Ensures content fills the screen */
-        }
+body { 
+    font-family: Arial, sans-serif; 
+    font-size: 18px;
+    display: flex;
+    justify-content: flex-start; /* Aligns content to the left */
+    align-items: flex-start;
+    height: 100vh;
+    background-color: #f4f4f4;
+    padding-left: 20px; /* Adds some spacing from the left */
+}
+.container_iron { 
+    background-color: rgb(254, 255, 245); 
+    max-width: 500px; 
+    padding: 30px; 
+    border-radius: 10px; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
 
-        h2 {
-            color: #19118b; /* Neon Blue */
-            font-size: 28px;
-        }
+.input-group_iron {
+    display: flex;
+    flex-direction: column; /* Ensures label appears above input */
+    margin: 10px 0;
+    text-align: left;
+}
 
-        p {
-            font-size: 18px;
-            margin: 10px 0;
-            color: rgb(20, 20, 20);
-        }
 
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            width: 100%;
-            border-radius: 5px;
-            margin: 10px;
-            cursor: pointer;
-            transition: 0.3s;;
-        }
+.input-group_iron label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
 
-        /* Button Styles */
-        .strt {
-            background-color: #4dc3ff;
-            color: #003366;
-        }
-        .strt:hover {
-            background-color: #0099ff;
-        }
+.input-group_iron input {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
 
-        .stp {
-            background-color: #ff4500;
-            color: white;
-        }
-        .stp:hover {
-            background-color: #ff6600;
-        }
+.overall_total_iron {
+    display: flex;
+    justify-content: flex-start; /* Aligns table to the left */
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
 
-        .res {
-            background-color: #228b22;
-            color: white;
-        }
-        .res:hover {
-            background-color: #32cd32;
-        }
+table {
+    width: 100%;
+    max-width: 300px;
+    border-collapse: collapse;
+    margin: 0; /* Remove auto centering */
+    text-align: left; /* Align table text to the left */
+}
 
-        .sbt {
-            background-color: #dcdcdc;
-            color: #444;
-        }
-        .sbt:hover {
-            background-color: #f0f0f0;
-        }
+th, td {
+    padding: 10px;
+    text-align: left; /* Ensure text aligns left */
+}
 
-        .container {
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            text-align: left;
-            max-width: 350px;
-            width: 100%;
-        }
 
-        span {
-            font-weight: bold;
-            color: rgb(3, 43, 87);
-        }
+th {
+    background-color: #007BFF;
+    color: white;
+    text-align: left; /* Align headers to the left */
+}
 
-        input {
-            width: 90%;
-            padding: 8px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin: 20px 0; 
-        }
-        th, td { 
-            border: 1px solid #ddd;         
-            padding: 10px;          
-            text-align: left;  
-        }
-        td {
-            size: 18px;
-        }
-        th{ 
-            background-color: #007BFF; 
-            color: white; 
-        }
-        tr:nth-child(even) { 
-            background-color: #f8f9fa; 
-        }
-        .summary-container_iron p {
-            color: #dcdcdc;
-            size: 12px;
-        }
+.btn-container_iron {
+    display: flex;
+    justify-content: flex-start; /* Align buttons to the left */
+    gap: 10px;
+    margin-top: 5px;
+}
+
+button { 
+    width: 45%;
+    padding: 10px;
+    background: #007BFF; 
+    color: white; 
+    border: none; 
+    border-radius: 5px;
+    cursor: pointer; 
+    font-size: 16px;
+    text-align: center;
+}
+button:hover { 
+    background: #0056b3; 
+}
     </style>
 </head>
 <body>
