@@ -284,22 +284,22 @@ iframe {
                 <label for="equipment">EQUIPMENT:</label>
                 <select id="equipment" name="equipment" required>
                     <option value="">--Select Equipment--</option>
-                    <option value="Equipment_1">W#1 W5330N</option>
-                    <option value="Equipment_2">W#2 WH6-33</option>
-                    <option value="Equipment_3">W#3 WH6- 33</option>
-                    <option value="Equipment_4">W#4 W4600H</option>
+                    <option value="W#1 W5330N">W#1 W5330N</option>
+                    <option value="W#2 WH6-33">W#2 WH6-33</option>
+                    <option value="W#3 WH6- 33">W#3 WH6- 33</option>
+                    <option value="W#4 W4600H">W#4 W4600H</option>
                     </select>
                 <span id="equipmentError" class="error"></span>
             
                 <label for="set_time">SET TIME(minutes):</label>
-                <select id="set_time" name="set_time" required>
-                    <option value="">--Set Time--</option>
+                <input type="number" id="set_time" name="set_time" required>
+                    <!-- <option value="">--Set Time--</option>
                     <option value="51mins">51mins</option>
                     <option value="54mins">54mins</option>
                     <option value="48mins">48mins</option>
                     <option value="52mins">52mins</option>
                     <option value="58mins">58mins</option>
-                </select>
+                </input> -->
                 <span id="timeError" class="error"></span>
 
 
@@ -375,13 +375,13 @@ iframe {
                 <div class="dosage-group">
                 <label for="dosage">SELECT DOSAGE:</label>
                 <div class="dosage-container">
-                <select id="dosage" required>
-                    <option value="">--Select Detergent--</option>
+                <input type="number" id="dosage" required>
+                    <!-- <option value="">--Select Dosage--</option>
                     <option value="200">200</option>
                     <option value="400">400</option>
                     <option value="600">600</option>
                     <option value="800">800</option>
-                </select>
+                </input> -->
                 <span id="unitDisplay">mG/mL</span>
                 </div>
             </div>
