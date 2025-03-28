@@ -3,54 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LPG Gas Submetering</title>
+    <title>Drying Process</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif;
-             text-align: center; 
-            }
-        .container { 
-            background-color: rgb(254, 255, 245);
-            max-width: 400px;
-            margin: auto; 
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px; 
-        }
-        input, button { 
-            width: 90%; 
-            padding: 5px; 
-            margin: 5px 0;
-            border-radius: 5px; 
-        }
-        button { 
-            background: #007BFF; 
-            color: white; 
-            border: none; 
-            cursor: pointer;
-            padding: 10px;
-        }
-        button:hover { 
-            background: #0056b3; 
-        }
+body { 
+    font-family: Arial, sans-serif; 
+    font-size: 18px;
+    display: flex;
+    justify-content: flex-start; /* Aligns content to the left */
+    align-items: flex-start;
+    height: 100vh;
+    background-color: #f4f4f4;
+    padding-left: 20px; /* Adds some spacing from the left */
+}
+.container_iron { 
+    background-color: rgb(254, 255, 245); 
+    max-width: 500px; 
+    padding: 30px; 
+    border-radius: 10px; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-group_iron {
+    display: flex;
+    flex-direction: column; /* Ensures label appears above input */
+    margin: 10px 0;
+    text-align: left;
+}
+
+
+.input-group_iron label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+.input-group_iron input {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.overall_total_iron {
+    display: flex;
+    justify-content: flex-start; /* Aligns table to the left */
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+table {
+    width: 100%;
+    max-width: 300px;
+    border-collapse: collapse;
+    margin: 0; /* Remove auto centering */
+    text-align: left; /* Align table text to the left */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left; /* Ensure text aligns left */
+}
+
+
+th {
+    background-color: #007BFF;
+    color: white;
+    text-align: left; /* Align headers to the left */
+}
+
+.btn-container_iron {
+    display: flex;
+    justify-content: flex-start; /* Align buttons to the left */
+    gap: 10px;
+    margin-top: 5px;
+}
+
+button { 
+    width: 45%;
+    padding: 10px;
+    background: #007BFF; 
+    color: white; 
+    border: none; 
+    border-radius: 5px;
+    cursor: pointer; 
+    font-size: 16px;
+    text-align: center;
+}
+button:hover { 
+    background: #0056b3; 
+}
+
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>LPG Submetering Data</h2>
-    
-    <strong><label>Initial Reading (kg):</label></strong>
-    <input type="number" id="initialReading_iron" step="0.01">
-    
-    <strong><label>Final Reading (kg):</label></strong>
-    <input type="number" id="finalReading_iron" step="0.01">
-    
-    <strong><label>Price per kg (₱):</label></strong>
-    <input type="number" id="pricePerKg_iron" step="0.01">
+<div class="container_iron">
+    <h2 style="text-align: center;">LPG Submetering Data</h2>
 
-    <button onclick="saveData()">Save Data</button>
-    <button onclick="viewReport()">View Report</button>
+    <div class="input-group_iron">
+        <label>Start Reading (cu.m):</label>
+        <input type="number" id="initialReading_iron" step="0.01">
+    </div>
+
+    <div class="input-group_iron">
+        <label>Final Reading (cu.m):</label>
+        <input type="number" id="finalReading_iron" step="0.01">
+    </div>
+
+    <div class="input-group_iron">
+        <label>Price per kg (₱):</label>
+        <input type="number" id="pricePerKg_iron" step="0.01">
+    </div>
+
+    <div class="overall_total_iron">
+        <table>
+            <tr>
+                <th>Total Consumption (cu.m)</th>
+                <th>KGS of LPG</th>
+                <th>Total Cost (₱)</th>
+            </tr>
+            <tr>
+                <td><span id="totalConsump_iron">0.00cu.m</span></td>
+                <td><span id="lpgKgs_iron">0.00kGs</span></td>  
+                <td><span id="totalPrice_iron">₱0.00</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="btn-container_iron">
+        <button onclick="saveData()">Save Data</button>
+        <button onclick="viewReport()">View Report</button>
+    </div>
 </div>
 
 <script>
@@ -64,42 +149,33 @@ function saveData() {
         return;
     }
 
-    if (finalReading > initialReading) {
-        alert("Error: Final reading cannot be greater than the initial reading.");
+    if (finalReading < initialReading) {
+        alert("Error: Final reading cannot be lower than the initial reading.");
         return;
     }
-            // Check if data was saved successfully
-    if (
-        localStorage.getItem("initial_reading") !== null &&
-        localStorage.getItem("final_reading") !== null &&
-        localStorage.getItem("gas_used") !== null &&
-        localStorage.getItem("total_cost") !== null
-    ) {
-        alert("Data saved successfully! View the report");
-    } else {
-        alert("Error: Data was not saved successfully.");
-    }
 
-    let gasUsed = (initialReading - finalReading).toFixed(2);
-    let totalCost = (gasUsed * pricePerKg).toFixed(2);
+    let gasUsed = finalReading - initialReading;
+    let lpgKgs = 1.898 * gasUsed;
+    let totalCost = pricePerKg * lpgKgs;
+
+    document.getElementById("lpgKgs_iron").innerHTML = lpgKgs.toFixed(2) + "kGs";
+    document.getElementById("totalConsump_iron").innerHTML = gasUsed.toFixed(2) + "cu.m";
+    document.getElementById("totalPrice_iron").innerHTML ="₱" + totalCost.toFixed(2);
 
     localStorage.setItem("initial_reading_iron", initialReading);
     localStorage.setItem("final_reading_iron", finalReading);
     localStorage.setItem("gas_used_iron", gasUsed);
     localStorage.setItem("total_cost_iron", totalCost);
 
+    alert("Data saved successfully! View the report.");
 }
 
 function viewReport() {
-
-// Redirect after 2 seconds
-setTimeout(function() {
-    window.open("output_3.html", "blank"); // Redirect to the output page
-    location.reload(); // Reload the current page after submission
-}, 1000);
-
+    setTimeout(function() {
+        window.open("output_3.html", "_blank"); 
+        location.reload();
+    }, 1000);
 }
-
 </script>
 
 </body>

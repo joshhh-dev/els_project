@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
+        
  * {
     box-sizing: border-box;
 }
@@ -108,7 +109,7 @@ button:hover {
 
 .iframe-container iframe {
     width: 100%;
-    height: 82vh; /* Reduced height */
+    height: 105vh; /* Reduced height */
     border: none;
     overflow: hidden;
     margin: 0; /* Remove extra spacing */
@@ -193,7 +194,11 @@ button:hover {
     }
 
     .iframe-container iframe {
-        height: 100vh; /* Adjusted height */
+        width: 100%;
+        height: 105vh; /* Adjust height as needed */
+        border: none;
+        overflow: hidden; /* Prevent scrolling */
+        margin: 0;
     }
 }
 
@@ -216,6 +221,38 @@ button:hover {
         height: 100%; /* Smaller height for tablets */
     }
 }
+
+/* Ensure the table takes full width */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+}
+
+/* Adjust table cells to ensure they fit properly */
+td {
+    width: 100%;
+    height: 500px; /* Adjust height as needed */
+    padding: 0;  /* Remove padding */
+    border: 1px solid #ccc;
+    vertical-align: top; /* Aligns iframe to the top */
+    line-height: 0;
+
+}
+th, td {
+    border: none; /* Removes borders from table cells */
+    padding: 10px; /* Optional: Adjust spacing */
+}
+
+/* Make iframe responsive and fit its container */
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
 
     </style>
 </head>
@@ -358,8 +395,20 @@ button:hover {
         </div>
     
         <div class="iframe-container">
-            <iframe src="energy_cons.html"></iframe>
-            <iframe src="water_cons.html"></iframe>
+            <table>
+                <tr>
+                    <td>
+                        <iframe src="energy_cons.html" scrolling="no"></iframe>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <iframe src="water_cons.html"></iframe>
+                    </td>
+                </tr>
+            </table>
+
         </div>
     </div>
 
@@ -506,7 +555,7 @@ function validateForm() {
     if (detergent === "") {
         document.getElementById("detdosError").textContent = "Detergent dosing is required!";
         isValid = false;
-    }
+    } 
 
     return isValid;
 }

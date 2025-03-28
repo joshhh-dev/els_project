@@ -7,36 +7,61 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            color: #000;
+            color: #00aaff;
             text-align: center;
+            padding: 10px;
+            margin: 0; /* Remove default body margin */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 90vh; /* Ensures content fills the screen */
         }
 
         h2 {
-            font-size: 30px;
-            color: #0099ff;
+            font-size: 28px;
+            color: #007BFF;
+            margin-bottom: 15px;
         }
 
         p, label {
             font-size: 18px;
-            color: #000;
+            font-weight: bold;
+            color: #333;
         }
 
-        select, input {
+        /* Form group for aligning labels and inputs */
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        /* Labels */
+        label {
+            font-weight: bold;
+            width: 40%; /* Adjust width to align properly */
+            text-align: left;
+        }
+
+        /* Inputs and Selects */
+        input, select {
+            width: 55%; /* Adjust width as needed */
             padding: 8px;
-            font-size: 16px;
-            border-radius: 5px;
             border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
         }
-
         .container {
-            background: rgb(255, 255, 255);
+            background: #fff;
             padding: 20px;
             border-radius: 10px;
             display: inline-block;
             text-align: left;
             max-width: 400px;
             width: 100%;
-            margin: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
 
         .summary {
@@ -46,8 +71,8 @@
         }
 
         button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 10px 15px;
+            font-size: 18px;
             font-weight: bold;
             border: none;
             border-radius: 5px;
@@ -56,95 +81,135 @@
             transition: 0.3s;
         }
 
-        .btn-air {
-            background-color: #dcdcdc;
-            color: #444;
+        .btn-action {
+            background-color: #007BFF;
+            color: white;
         }
 
-        .btn-air:hover {
-            background-color: #f0f0f0;
+        .btn-action:hover {
+            background-color: #0056b3;
         }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 5px 0; 
+        }
+        th, td { 
+            border: 1px solid #ddd;         
+            padding: 10px;          
+            text-align: left;  
+        }
+        th { 
+            background-color: #007BFF; 
+            color: white; 
+        }
+        tr:nth-child(even) { 
+            background-color: #f8f9fa; 
+        }   
     </style>
 </head>
 <body>
     <div id="readings">
         <div class="container">
             <h2>Water Submetering System</h2>
-            <label for="waterType">Select Program:</label>
-            <select id="tmp" class="waterType" onchange="calculate(this)">
-                <option value="">--Select Temperature--</option>
-                <option value="Cold">Cold</option>
-                <option value="Hot">Hot</option>
-                <option value="Warm">Warm</option>
-            </select>
-            <p><strong>Start Reading (m³):</strong><input type="number" class="start_read" oninput="calculate(this)"></p>
-            <p><strong>End Reading (m³):</strong><input type="number" class="endReading" oninput="calculate(this)"></p>
-            <p><strong>Cost per m³:</strong><input type="number" class="totalCost" oninput="calculate(this)"></p>
-            <p><strong>Total Used:</strong> <span class="totalUsed">0</span> m³</p>
-            <p><strong>Total Cost(₱):</strong> <span class="cost">₱0</span></p>
-        </div>
-    </div>
-
-    <div class="summary">
-        <p><strong>Overall Total Usage: </strong><span id="sumUsed">0</span> m³</p>
-        <p><strong>Overall Total Cost: </strong>₱<span id="sumCost">0</span></p>
-    </div>
-
-    <button class="btn-air" onclick="addProgram()">Add Another Reading</button>
-    <button class="btn-air" onclick="submitData()">Submit Data</button>
-
-    <script>
-    function calculate(element) {
-        let container = element.closest(".container");
-        let startRead = parseFloat(container.querySelector(".start_read").value) || 0;
-        let endRead = parseFloat(container.querySelector(".endReading").value) || 0;
-        let totalCost = parseFloat(container.querySelector(".totalCost").value) || 0;
-        let totalUsed = endRead - startRead;
-        let cost = totalUsed * totalCost;
-
-
-        container.querySelector(".totalUsed").textContent = totalUsed.toFixed(4);
-        container.querySelector(".cost").textContent = "₱" + cost.toFixed(4);
-        updateSummary();
-    }
-
-    function updateSummary() {
-        let totalUsage = 0;
-        let totalCost = 0;
-
-        document.querySelectorAll(".container").forEach(container => {
-            totalUsage += parseFloat(container.querySelector(".totalUsed").textContent) || 0;
-            totalCost += parseFloat(container.querySelector(".cost").textContent.replace("₱", "")) || 0;
-        });
-
-        document.getElementById("sumUsed").textContent = totalUsage.toFixed(4);
-        document.getElementById("sumCost").textContent = totalCost.toFixed(4);
-    }
-
-    function addProgram() {
-        let newDiv = document.createElement("div");
-        newDiv.className = "container";
-        newDiv.innerHTML = `
-            <h2>Water Submetering System</h2>
-            <label for="waterType">Select Program:</label>
+            <label>Select Program:</label>
             <select class="waterType" onchange="calculate(this)">
                 <option value="">--Select Temperature--</option>
                 <option value="Cold">Cold</option>
                 <option value="Hot">Hot</option>
                 <option value="Warm">Warm</option>
             </select>
-            <p><strong>Start Reading (m³):</strong><input type="number" class="start_read" required oninput="calculate(this)"></p>
-            <p><strong>End Reading (m³):</strong><input type="number" class="endReading" required oninput="calculate(this)"></p>
-            <p><strong>Cost per m³:</strong><input type="number" class="totalCost" required oninput="calculate(this)"></p>
-            <p><strong>Total Used:</strong> <span class="totalUsed">0</span> m³</p>
-            <p><strong>Total Cost(₱):</strong> <span class="cost">₱0</span></p>
-        `;
-        document.getElementById("readings").appendChild(newDiv);
+            <p>Start Reading (m³): <input type="number" class="start_read" id="start_reads" oninput="calculate(this)"></p>
+            <p>End Reading (m³): <input type="number" class="endReading" id="end_reads" oninput="calculate(this)"></p>
+            <p>Cost per m³ (₱): <input type="number" class="totalCost" id="costing" oninput="calculate(this)"></p>
+            <table>
+                <tr>
+                    <th>Total Used (m³)</th>
+                    <th>Total Cost (₱)</th>
+                </tr>
+                <tr>
+                    <td><span class="totalUsed">0</span></td>
+                    <td><span class="cost">0</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="summary">
+        <table>
+            <tr>
+                <th>Overall Total Usage (m³)</th>
+                <th>Overall Total Cost (₱)</th>
+            </tr>
+            <tr>
+                <td><span id="sumUsed">0</span></td>
+                <td><span id="sumCost">0</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <button class="btn-secondary" onclick="addProgram()">Add Reading</button>
+    <button class="btn-action" onclick="submitData()">Submit Data</button>
+
+    <script>
+        function calculate(element) {
+            let container = element.closest(".container");
+            let startRead = parseFloat(container.querySelector(".start_read").value) || 0;
+            let endRead = parseFloat(container.querySelector(".endReading").value) || 0;
+            let costPerM3 = parseFloat(container.querySelector(".totalCost").value) || 0;
+
+            let totalUsed = Math.max(0, endRead - startRead);
+            let cost = totalUsed * costPerM3;
+
+            container.querySelector(".totalUsed").textContent = totalUsed.toFixed(4);
+            container.querySelector(".cost").textContent = "₱" + cost.toFixed(4);
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let totalUsage = 0, totalCost = 0;
+
+            document.querySelectorAll(".container").forEach(container => {
+                totalUsage += parseFloat(container.querySelector(".totalUsed").textContent) || 0;
+                totalCost += parseFloat(container.querySelector(".cost").textContent.replace("₱", "")) || 0;
+            });
+
+            document.getElementById("sumUsed").textContent = totalUsage.toFixed(4);
+            document.getElementById("sumCost").textContent = totalCost.toFixed(4);
+        }
+
+        function addProgram() {
+            let newDiv = document.createElement("div");
+            newDiv.className = "container";
+            newDiv.innerHTML = document.querySelector(".container").innerHTML;
+            document.getElementById("readings").appendChild(newDiv);
+        }
+
+        function submitData() {
+    let startRead = document.getElementById("start_reads").value.trim();
+    let endRead = document.getElementById("end_reads").value.trim();
+    let costing = document.getElementById("costing").value.trim();
+
+    // Check if any field is empty
+    if (startRead === "" || endRead === "" || costing === "") {
+        alert("Please fill in all fields before submitting.");
+        return;
+    } else {
+        alert("Data Submitted Successfully");
     }
-    function submitData() {
+
     let readings = [];
-    let totalUsage = 0;
-    let totalCost = 0;
+    let totalUsage = 0, totalCost = 0;
 
     document.querySelectorAll(".container").forEach(container => {
         let temp = container.querySelector(".waterType").value;
@@ -155,10 +220,10 @@
         let cost = totalUsed * costPerM3;
 
         readings.push({
-            temp: temp,
-            startRead: startRead,
-            endRead: endRead,
-            costPerM3: costPerM3,
+            temp,
+            startRead,
+            endRead,
+            costPerM3,
             totalUsed: totalUsed.toFixed(4),
             cost: cost.toFixed(4)
         });
@@ -167,19 +232,16 @@
         totalCost += cost;
     });
 
-    // Store data in localStorage
     localStorage.setItem("waterReadings", JSON.stringify(readings));
-
-
     localStorage.setItem("sumUsed", totalUsage.toFixed(4));
     localStorage.setItem("sumCost", totalCost.toFixed(4));
 
-     // Redirect after 2 seconds
-        setTimeout(function() {
-            window.open("output.html", "blank"); // Redirect to the output page
-            location.reload(); // Reload the current page after submission
-        }, 1000);
-    }
+    setTimeout(() => {
+        window.open("output.html", "_blank");
+        location.reload();
+    }, 1000);
+}
+ 
     </script>
 </body>
 </html>
