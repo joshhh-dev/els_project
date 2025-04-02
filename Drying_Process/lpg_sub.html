@@ -85,7 +85,7 @@ button {
     background: #007BFF; 
     color: white; 
     border: none; 
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer; 
     font-size: 16px;
     text-align: center;
@@ -102,12 +102,12 @@ button:hover {
     <h2 style="text-align: center;">LPG Submetering Data</h2>
 
     <div class="input-group">
-        <label>Start Reading (cu.m):</label>
+        <label>Start Reading (m³):</label>
         <input type="number" id="initialReading" step="0.01">
     </div>
 
     <div class="input-group">
-        <label>Final Reading (cu.m):</label>
+        <label>Final Reading (m³):</label>
         <input type="number" id="finalReading" step="0.01">
     </div>
 
@@ -119,12 +119,12 @@ button:hover {
     <div class="overall_total">
         <table>
             <tr>
-                <th>Total Consumption (cu.m)</th>
+                <th>Total Consumption (m³)</th>
                 <th>KGS of LPG</th>
                 <th>Total Cost (₱)</th>
             </tr>
             <tr>
-                <td><span id="totalConsump">0.0000cu.m</span></td>
+                <td><span id="totalConsump">0.0000m³</span></td>
                 <td><span id="lpgKgs">0.0000kGs</span></td>  
                 <td><span id="totalPrice">₱0.0000</span></td>
             </tr>
@@ -158,7 +158,7 @@ function saveData() {
     let totalCost = pricePerKg * lpgKgs;
 
     document.getElementById("lpgKgs").innerHTML = lpgKgs.toFixed(4) + "kGs";
-    document.getElementById("totalConsump").innerHTML = gasUsed.toFixed(4) + "cu.m";
+    document.getElementById("totalConsump").innerHTML = gasUsed.toFixed(4) + "m³";
     document.getElementById("totalPrice").innerHTML ="₱" + totalCost.toFixed(4);
 
     localStorage.setItem("initial_reading", initialReading);
@@ -170,6 +170,15 @@ function saveData() {
 }
 
 function viewReport() {
+    let initialReading = document.getElementById("initialReading").value;
+    let finalReading = document.getElementById("finalReading").value;
+    let pricePerKg = document.getElementById("pricePerKg").value;
+
+    if(initialReading.trim === "" || finalReading === "" || pricePerKg === ""){
+        alert("This field cannot be empty");
+        return false;
+    }
+
     setTimeout(function() {
         window.open("output_2.html", "_blank"); 
         location.reload();

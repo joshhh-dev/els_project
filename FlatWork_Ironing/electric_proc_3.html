@@ -121,18 +121,18 @@
 <body>
     <div class="container">
         <h2>Electric Submetering System</h2>
-        <p><strong>Start Reading (kWh):</strong> <input type="number" id="start_reads_dry" min="0" oninput="calculate()"></p>
-        <p><strong>End Reading (kWh):</strong> <input type="number" id="end_reads_dry" min="0" oninput="calculate()"></p>
-        <p><strong>Cost per kWh:</strong> <input type="number" id="costing_dry" min="0" oninput="calculate()"></p>  
-        <div class="summary-container_dry">
+        <p><strong>Start Reading (kWh):</strong> <input type="number" id="start_reads_iron" min="0" oninput="calculate()"></p>
+        <p><strong>End Reading (kWh):</strong> <input type="number" id="end_reads_iron" min="0" oninput="calculate()"></p>
+        <p><strong>Cost per kWh:</strong> <input type="number" id="costing_iron" min="0" oninput="calculate()"></p>  
+        <div class="summary-container_iron">
             <table>
                 <tr>
                     <th><p><strong>Total kWh Used</strong>(kWh)</p></th>
                     <th><p><strong>Estimated Cost</strong>(₱)</p></th>               
                 </tr>
                 <tr>
-                    <td><span id="totalUsed_dry">0</span></td>
-                    <td><span id="cost_dry">0</span></td>
+                    <td><span id="totalUsed_iron">0</span></td>
+                    <td><span id="cost_iron">0</span></td>
                 </tr>
     
             </table>
@@ -144,27 +144,36 @@
 
     <script>
         function calculate() {
-            let startRead = parseFloat(document.getElementById("start_reads_dry").value) || 0;
-            let endRead = parseFloat(document.getElementById("end_reads_dry").value) || 0;
-            let costing = parseFloat(document.getElementById("costing_dry").value) || 0;
+            let startRead = parseFloat(document.getElementById("start_reads_iron").value) || 0;
+            let endRead = parseFloat(document.getElementById("end_reads_iron").value) || 0;
+            let costing = parseFloat(document.getElementById("costing_iron").value) || 0;
             
             let totalUsed = Math.max(0, endRead - startRead);
             let estimatedCost = totalUsed * costing;
             
-            document.getElementById("totalUsed_dry").textContent = totalUsed.toFixed(2)+ "kWh";
-            document.getElementById("cost_dry").textContent = "₱" + estimatedCost.toFixed(2);
+            document.getElementById("totalUsed_iron").textContent = totalUsed.toFixed(2)+ "kWh";
+            document.getElementById("cost_iron").textContent = estimatedCost.toFixed(2);
         }
 
         function submitData() {
-            localStorage.setItem("start_reads_dry", document.getElementById("start_reads_dry").value);
-            localStorage.setItem("end_reads_dry", document.getElementById("end_reads_dry").value);
-            localStorage.setItem("total_used_dry", document.getElementById("totalUsed_dry").textContent);
-            localStorage.setItem("cost_dry", document.getElementById("cost_dry").textContent);
+            let startRead = document.getElementById("start_reads_iron").value;
+            let endRead = document.getElementById("end_reads_iron").value;
+            let costing = document.getElementById("costing_iron").value;
+
+            if(startRead === "" || endRead === "" || costing === "") {
+                alert("This field cannot be empty");
+                return false;
+            }
+
+            localStorage.setItem("start_reads_iron", document.getElementById("start_reads_iron").value);
+            localStorage.setItem("end_reads_iron", document.getElementById("end_reads_iron").value);
+            localStorage.setItem("total_used_iron", document.getElementById("totalUsed_iron").textContent);
+            localStorage.setItem("cost_iron", document.getElementById("cost_iron").textContent);
 
             alert("Data submitted successfully!");
             
             setTimeout(function() {
-                window.open("output_2.html", "_blank");
+                window.open("output_3.html", "_blank");
                 location.reload();
             }, 1000);
         }

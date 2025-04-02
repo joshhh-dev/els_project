@@ -111,7 +111,7 @@
             <tr><th>Field</th><th>Value</th></tr>
             <tr><td>Start Reading (kWh)</td><td id="outStartReadings_iron"></td></tr>
             <tr><td>End Reading (kWh)</td><td id="outEndReadings_iron"></td></tr>
-            <tr><td>Total kWh Used</td><td id="outTotalUseds_iron"></td></tr>
+            <tr><td>Total kWh Used (kWh)</td><td id="outTotalUseds_iron"></td></tr>
             <tr><td>Estimated Cost (₱)</td><td id="outCosts_iron"></td></tr>
         </table>
     </div>
@@ -120,15 +120,15 @@
     <h2>LPG Gas Submetering Report</h2>
     <table>
         <tr><th>Field</th><th>Value</th></tr>
-        <tr><td>Initial Reading (kg)</td><td id="outInitialReading"></td></tr>
-        <tr><td>Final Reading (kg)</td><td id="outFinalReading"></td></tr>
-        <tr><td>Gas Used (kg)</td><td id="outGasUsed"></td></tr>
+        <tr><td>Initial Reading (m³)</td><td id="outInitialReading"></td></tr>
+        <tr><td>Final Reading (m³)</td><td id="outFinalReading"></td></tr>
+        <tr><td>Gas Used (m³)</td><td id="outGasUsed"></td></tr>
         <tr><td>Total Cost (₱)</td><td id="outTotalCost"></td></tr>
     </table>
 
     <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
     <button class="pdf-btn" onclick="exportToPDF()">Download as PDF</button>
-    <button class="back-btn" onclick="window.location.href='ironing_proc.html'">Go Back</button>
+    <button class="back-btn" onclick="window.location.href='flatiron_proc.html'">Go Back</button>
 </div>
 
     
@@ -159,16 +159,16 @@
         document.getElementById("outAftr_iron").textContent = localStorage.getItem("aftr_iron") || "N/A";
         
         // Retrieve and display electric metering data from localStorage
-        document.getElementById("outStartReadings_iron").textContent = localStorage.getItem("start_reads_iron") || "N/A";
-        document.getElementById("outEndReadings_iron").textContent = localStorage.getItem("end_reads_iron") || "N/A";
-        document.getElementById("outTotalUseds_iron").textContent = localStorage.getItem("total_useds_iron") || "N/A";
-        document.getElementById("outCosts_iron").textContent = localStorage.getItem("costs_iron") || "N/A";
+        document.getElementById("outStartReadings_iron").textContent = localStorage.getItem("start_reads_iron") + "kWh" || "N/A";
+        document.getElementById("outEndReadings_iron").textContent = localStorage.getItem("end_reads_iron") + "kWh" || "N/A";
+        document.getElementById("outTotalUseds_iron").textContent = localStorage.getItem("total_used_iron") || "N/A";
+        document.getElementById("outCosts_iron").textContent = "₱" + localStorage.getItem("cost_iron") || "N/A";
 
         // Retrieve and display stored data
-        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") || "N/A";
-        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading") || "N/A";
-        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used") || "N/A";
-        document.getElementById("outTotalCost").textContent = localStorage.getItem("total_cost") || "N/A";
+        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading_iron") + "m³" || "N/A";
+        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading_iron") + "m³" || "N/A";
+        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used_iron") + "m³" || "N/A";
+        document.getElementById("outTotalCost").textContent = "₱" + localStorage.getItem("total_cost_iron") || "N/A";
 
     function exportToExcel() {
     let tables = document.querySelectorAll("table");

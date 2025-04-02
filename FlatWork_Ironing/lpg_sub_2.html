@@ -120,12 +120,12 @@ button:hover {
     <div class="overall_total_iron">
         <table>
             <tr>
-                <th>Total Consumption (cu.m)</th>
+                <th>Total Consumption (m³)</th>
                 <th>KGS of LPG</th>
                 <th>Total Cost (₱)</th>
             </tr>
             <tr>
-                <td><span id="totalConsump_iron">0.00cu.m</span></td>
+                <td><span id="totalConsump_iron">0.00m³</span></td>
                 <td><span id="lpgKgs_iron">0.00kGs</span></td>  
                 <td><span id="totalPrice_iron">₱0.00</span></td>
             </tr>
@@ -159,7 +159,7 @@ function saveData() {
     let totalCost = pricePerKg * lpgKgs;
 
     document.getElementById("lpgKgs_iron").innerHTML = lpgKgs.toFixed(2) + "kGs";
-    document.getElementById("totalConsump_iron").innerHTML = gasUsed.toFixed(2) + "cu.m";
+    document.getElementById("totalConsump_iron").innerHTML = gasUsed.toFixed(2) + "m³";
     document.getElementById("totalPrice_iron").innerHTML ="₱" + totalCost.toFixed(2);
 
     localStorage.setItem("initial_reading_iron", initialReading);
@@ -171,6 +171,14 @@ function saveData() {
 }
 
 function viewReport() {
+    let initialReading = document.getElementById("initialReading_iron").value;
+    let finalReading = document.getElementById("finalReading_iron").value;
+    let pricePerKg = document.getElementById("pricePerKg_iron").value;
+    if(initialReading.trim === "" || finalReading === "" || pricePerKg === ""){
+        alert("This field cannot be empty");
+        return false;
+    }
+
     setTimeout(function() {
         window.open("output_3.html", "_blank"); 
         location.reload();
