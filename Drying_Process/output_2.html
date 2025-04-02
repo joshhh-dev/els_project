@@ -165,10 +165,10 @@
         document.getElementById("outCosts_dry").textContent = localStorage.getItem("costs_dry") || "N/A";
 
         // Retrieve and display stored data
-        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") || "N/A";
-        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading") || "N/A";
-        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used") || "N/A";
-        document.getElementById("outTotalCost").textContent = localStorage.getItem("total_cost") || "N/A";
+        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") + "kg" || "N/A";
+        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading") + "kg" || "N/A";
+        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used") + "kg" || "N/A";
+        document.getElementById("outTotalCost").textContent = "₱" + localStorage.getItem("total_cost") || "N/A";
 
     function exportToExcel() {
     let tables = document.querySelectorAll("table");

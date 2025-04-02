@@ -73,7 +73,7 @@ body {
         }
 
         .container {
-            background-color: #f0f0f0;
+            background-color: #f9fdff;
             padding: 20px;
             border-radius: 10px;
             display: inline-block;
@@ -109,7 +109,7 @@ body {
             color: white; 
         }
         tr:nth-child(even) { 
-            background-color: #f8f9fa; 
+            background-color:  #f0f0f0; 
         }
         .summary-container p {
             color: #dcdcdc;
@@ -130,8 +130,8 @@ body {
                 <th><p><strong>Estimated Cost</strong>(₱)</p></th>               
             </tr>
             <tr>
-                <td><span id="totalUsed">0</span></td>
-                <td><span id="cost">0</span></td>
+                <td><span id="totalUsed">0.0000kWh</span></td>
+                <td><span id="cost">₱0.0000</span></td>
             </tr>
 
         </table>
@@ -147,8 +147,8 @@ body {
             let totalUsed = Math.max(0, endRead - startRead);
             let estimatedCost = totalUsed * costing;
             
-            document.getElementById("totalUsed").textContent = totalUsed.toFixed(2);
-            document.getElementById("cost").textContent = "₱" + estimatedCost.toFixed(2);
+            document.getElementById("totalUsed").textContent = totalUsed.toFixed(4);
+            document.getElementById("cost").textContent = "₱" + estimatedCost.toFixed(4);
         }
 
         function submitData() {

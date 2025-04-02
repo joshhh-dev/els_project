@@ -137,8 +137,8 @@
                     <th>Total Cost (₱)</th>
                 </tr>
                 <tr>
-                    <td><span class="totalUsed">0</span></td>
-                    <td><span class="cost">0</span></td>
+                    <td><span class="totalUsed">0.0000m³</span></td>
+                    <td><span class="cost">₱0.0000</span></td>
                 </tr>
             </table>
         </div>
@@ -151,8 +151,8 @@
                 <th>Overall Total Cost (₱)</th>
             </tr>
             <tr>
-                <td><span id="sumUsed">0</span></td>
-                <td><span id="sumCost">0</span></td>
+                <td><span id="sumUsed">0.0000</span>m³</td>
+                <td><span id="sumCost">₱0.0000</span></td>
             </tr>
         </table>
     </div>
@@ -170,7 +170,7 @@
             let totalUsed = Math.max(0, endRead - startRead);
             let cost = totalUsed * costPerM3;
 
-            container.querySelector(".totalUsed").textContent = totalUsed.toFixed(4);
+            container.querySelector(".totalUsed").textContent = totalUsed.toFixed(4) + "m³";
             container.querySelector(".cost").textContent = "₱" + cost.toFixed(4);
 
             updateSummary();

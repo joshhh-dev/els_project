@@ -124,9 +124,9 @@ button:hover {
                 <th>Total Cost (₱)</th>
             </tr>
             <tr>
-                <td><span id="totalConsump">0.00cu.m</span></td>
-                <td><span id="lpgKgs">0.00kGs</span></td>  
-                <td><span id="totalPrice">₱0.00</span></td>
+                <td><span id="totalConsump">0.0000cu.m</span></td>
+                <td><span id="lpgKgs">0.0000kGs</span></td>  
+                <td><span id="totalPrice">₱0.0000</span></td>
             </tr>
         </table>
     </div>
@@ -157,14 +157,14 @@ function saveData() {
     let lpgKgs = 1.898 * gasUsed;
     let totalCost = pricePerKg * lpgKgs;
 
-    document.getElementById("lpgKgs").innerHTML = lpgKgs.toFixed(2) + "kGs";
-    document.getElementById("totalConsump").innerHTML = gasUsed.toFixed(2) + "cu.m";
-    document.getElementById("totalPrice").innerHTML ="₱" + totalCost.toFixed(2);
+    document.getElementById("lpgKgs").innerHTML = lpgKgs.toFixed(4) + "kGs";
+    document.getElementById("totalConsump").innerHTML = gasUsed.toFixed(4) + "cu.m";
+    document.getElementById("totalPrice").innerHTML ="₱" + totalCost.toFixed(4);
 
     localStorage.setItem("initial_reading", initialReading);
     localStorage.setItem("final_reading", finalReading);
-    localStorage.setItem("gas_used", gasUsed);
-    localStorage.setItem("total_cost", totalCost);
+    localStorage.setItem("gas_used", gasUsed.toFixed(4));
+    localStorage.setItem("total_cost", totalCost.toFixed(4));
 
     alert("Data saved successfully! View the report.");
 }
