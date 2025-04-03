@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         
  * {
@@ -115,15 +116,7 @@ button:hover {
     margin: 0; /* Remove extra spacing */
 }
 
-/* Back button */
-#back_bnt {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
-    background-color: #0056b3;
-}
+
 
 /* Form group elements */
 .line-group {
@@ -259,9 +252,9 @@ iframe {
 <body>
 
     <div class="content-wrapper">
-        <div class="container">
-            <h2>Washing Process</h2>
-            <form id="fill_up">
+        <div class="container" style="width: 40rem;">
+            <h2 class="card-title">Washing Process</h2>
+            <form id="fill_up" >
                 <label for="date">DATE:</label>
                 <input type="date" id="date" name="date" required>
                 <span id="dateError" class="error"></span>
@@ -269,16 +262,17 @@ iframe {
                 <label for="load_number">LOAD #:</label>
                 <input type="number" id="load_number" name="load_number" required>
                 <span id="loadError" class="error"></span>
-            
-                <label for="trolley_number">TROLLEY #:</label>
-                <select id="trolley_number" name="trolley_number" required>
-                    <option value="">--Select Trolley Number--</option>
+
+                <label  for="trolley_number">TROLLEY #:</label>
+                <select class="custom-select" id="trolley_number" name="trolley_number" required>
+                    <option value="" selected>--Select Trolley Number--</option>
                     <option value="Trolley_1">Trolley 1</option>
                     <option value="Trolley_2">Trolley 2</option>
                     <option value="Trolley_3">Trolley 3</option>
                     <option value="Trolley_4">Trolley 4</option>
                     <option value="Trolley_5">Trolley 5</option>                    
                 </select>
+
                 <span id="trolleyError" class="error"></span>
             
                 <label for="equipment">EQUIPMENT:</label>
@@ -388,31 +382,12 @@ iframe {
 
                 
                 <button type="submit">Submit Data</button>
-
-                
+                <button type="button" class="btn btn-secondary" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
             </form>
             
         </div>
-    
-        <div class="iframe-container">
-            <table>
-                <tr>
-                    <td>
-                        <iframe src="energy_cons.html" scrolling="no"></iframe>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td>
-                        <iframe src="water_cons.html"></iframe>
-                    </td>
-                </tr>
-            </table>
-
-        </div>
     </div>
-
-    <button type="button" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
     </body>
     
 
@@ -586,8 +561,7 @@ document.getElementById("fill_up").addEventListener("submit", function(event) {
 
     // Redirect after 2 seconds
     setTimeout(function() {
-        window.open("output.html", "blank"); // Redirect to the output page
-        location.reload(); // Reload the current page after submission
+        window.open("energy_cons.html", "blank"); // Redirect to the output page
     }, 1000);
 });
 

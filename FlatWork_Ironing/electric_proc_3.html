@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electric Submetering</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
             color: #00aaff;
             text-align: center;
-            padding: 15px;
+            padding: 10px;
             margin: 0; /* Remove default body margin */
             display: flex;
             flex-direction: column;
@@ -21,138 +22,85 @@
             color: #19118b; /* Neon Blue */
             font-size: 28px;
         }
-
-        p {
-            font-size: 18px;
-            margin: 10px 0;
-            color: rgb(20, 20, 20);
-        }
-
         button {
             padding: 10px 20px;
             font-size: 18px;
             font-weight: bold;
             border: none;
-            width: 100%;
+
             border-radius: 5px;
             margin: 10px;
             cursor: pointer;
             transition: 0.3s;;
         }
 
-        /* Button Styles */
-        .strt {
-            background-color: #4dc3ff;
-            color: #003366;
-        }
-        .strt:hover {
-            background-color: #0099ff;
-        }
 
-        .stp {
-            background-color: #ff4500;
-            color: white;
-        }
-        .stp:hover {
-            background-color: #ff6600;
-        }
-
-        .res {
-            background-color: #228b22;
-            color: white;
-        }
-        .res:hover {
-            background-color: #32cd32;
-        }
-
-        .sbt {
-            background-color: #dcdcdc;
-            color: #444;
-        }
-        .sbt:hover {
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            text-align: left;
-            max-width: 400px;
-            width: 100%;
-        }
-
-        span {
-            font-weight: bold;
-            color: rgb(3, 43, 87);
-        }
-
-        input {
-            width: 95%;
-            padding: 8px;
-            font-size: 18px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
         table { 
             width: 100%; 
             border-collapse: collapse; 
             margin: 20px 0; 
         }
-        th, td { 
-            border: 1px solid #ddd;         
-            padding: 10px;          
-            text-align: left;  
-        }
-        th{ 
-            background-color: #007BFF; 
-            color: white; 
-        }
-        tr:nth-child(even) { 
-            background-color: #f8f9fa; 
-        }
-        .summary-container_iron p {
-            color: #dcdcdc;
-            size: 12px;
-        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Electric Submetering System</h2>
-        <p><strong>Start Reading (kWh):</strong> <input type="number" id="start_reads_iron" min="0" oninput="calculate()"></p>
-        <p><strong>End Reading (kWh):</strong> <input type="number" id="end_reads_iron" min="0" oninput="calculate()"></p>
-        <p><strong>Cost per kWh:</strong> <input type="number" id="costing_iron" min="0" oninput="calculate()"></p>  
-        <div class="summary-container_iron">
-            <table>
-                <tr>
-                    <th><p><strong>Total kWh Used</strong>(kWh)</p></th>
-                    <th><p><strong>Estimated Cost</strong>(₱)</p></th>               
-                </tr>
-                <tr>
-                    <td><span id="totalUsed_iron">0</span></td>
-                    <td><span id="cost_iron">0</span></td>
-                </tr>
-    
-            </table>
-        </div>  
-        <button class="sbt" onclick="submitData()">Add to template</button>
-    </div>
+    <div class="card mx-auto" style="width: 500px;">
+        <div class="card text-white">
+        <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
+        <div class="input-group mb-3">
+            <div class="input-group">
+                <span class="input-group-text" id=""><strong>Start Reading (kWh):</strong></span>
+                <input class="form-control" type="number" id="start_reads_iron" min="0" oninput="calculate()">
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group">
+                <span class="input-group-text" id=""><strong>End Reading (kWh):</strong></span> 
+                <input class="form-control" type="number" id="end_reads_iron" min="0" oninput="calculate()">
+            </div>
+        </div>
+            <div class="input-group mb-3">
+                <div class="input-group">
+                    <span class="input-group-text" id=""><strong>Cost per kWh:</strong></span>
+                    <input class="form-control" type="number" id="cost_iron" min="0" oninput="calculate()">                  </div>   
+                </div>
+            </div>
 
+    </div> 
+</div>
+
+</div>
+<div class="card mx-auto border-light">
+    <table class="table table-bordered" style="width: 500px; height: 100px;" >
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"><p><strong>Total kWh Used</strong>(kWh)</p></th>
+                <th scope="col"><p><strong>Estimated Cost</strong>(₱)</p></th>               
+            </tr>
+        </thead>
+        <tr>
+            <th scope="row"><span id="totalUsed_iron">0.0000kWh</span></th>
+            <th scope="row"><span id="costing_iron">₱0.0000</span></th>
+        </tr>
+
+    </table>
+</div>
+
+<button class="btn btn-primary btn-lg btn-block" onclick="submitData()">Add to template</button>
+<button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='flatiron_proc.html'">Back</button>
     
 
     <script>
         function calculate() {
             let startRead = parseFloat(document.getElementById("start_reads_iron").value) || 0;
             let endRead = parseFloat(document.getElementById("end_reads_iron").value) || 0;
-            let costing = parseFloat(document.getElementById("costing_iron").value) || 0;
+            let costing = parseFloat(document.getElementById("cost_iron").value) || 0;
             
             let totalUsed = Math.max(0, endRead - startRead);
             let estimatedCost = totalUsed * costing;
             
-            document.getElementById("totalUsed_iron").textContent = totalUsed.toFixed(2)+ "kWh";
-            document.getElementById("cost_iron").textContent = estimatedCost.toFixed(2);
+            document.getElementById("totalUsed_iron").textContent = totalUsed.toFixed(4)+ "kWh";
+            document.getElementById("costing_iron").textContent = "₱" + estimatedCost.toFixed(4);
         }
 
         function submitData() {
@@ -168,13 +116,12 @@
             localStorage.setItem("start_reads_iron", document.getElementById("start_reads_iron").value);
             localStorage.setItem("end_reads_iron", document.getElementById("end_reads_iron").value);
             localStorage.setItem("total_used_iron", document.getElementById("totalUsed_iron").textContent);
-            localStorage.setItem("cost_iron", document.getElementById("cost_iron").textContent);
+            localStorage.setItem("cost_iron", document.getElementById("costing_iron").textContent);
 
             alert("Data submitted successfully!");
             
             setTimeout(function() {
-                window.open("output_3.html", "_blank");
-                location.reload();
+                window.open("lpg_sub_2.html");
             }, 1000);
         }
     </script>
