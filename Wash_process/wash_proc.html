@@ -50,15 +50,7 @@
             color: white;
         }
 
-        /* Adjust main content to account for fixed nav */
-        body {
-            padding-top: 60px;
-            min-height: 100vh;
-        }
 
- * {
-    box-sizing: border-box;
-}
 
 body {
     font-family: Arial, sans-serif;
@@ -294,7 +286,7 @@ iframe {
     <!-- Navigation Bar -->
     <div class="nav-container">
         <div class="nav-buttons">
-            <button class="nav-button active" onclick="window.location.href='wash_proc.html'">Washing Process</button>
+            <button class="nav-button active" onclick="window.location.href='wash_proc.html'">Wash Process</button>
             <button class="nav-button" onclick="window.location.href='energy_cons.html'">Electric Submetering</button>
             <button class="nav-button" onclick="window.location.href='water_cons.html'">Water Submetering</button>
         </div>
@@ -430,9 +422,8 @@ iframe {
             </div>
 
                 
-                <button type="submit">Submit Data</button>
+                <button type="submit">Next</button>
                 <button type="button" class="btn btn-secondary" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
-                <button type="reset" class="btn btn-danger">Reset</button>
             </form>
             
         </div>
@@ -516,81 +507,6 @@ function handleLinenChange() {
 
 }
     
-function validateForm() {
-    let isValid = true;
-
-    // List of error fields
-    let errorFields = [
-        "dateError", "loadError", "trolleyError", "equipmentError",
-        "timeError", "programsError", "linenError", "quantityError",
-        "bfrError", "aftrError", "detdosError"
-    ];
-    
-    // Reset previous error messages
-    errorFields.forEach(id => document.getElementById(id).textContent = "");
-
-    // Get input values
-    let date = document.getElementById("date").value.trim();
-    let load = document.getElementById("load_number").value.trim();
-    let trolley = document.getElementById("trolley_number").value.trim();
-    let equipment = document.getElementById("equipment").value.trim();
-    let set_time = document.getElementById("set_time").value.trim();
-    let programs = document.getElementById("programs").value;
-    let linen = document.getElementById("linen-type").value;
-    let quantity = document.getElementById("quantity").value.trim();
-    let bfr_wash = document.getElementById("bfr_wash").value.trim();
-    let aftr_wash = document.getElementById("aftr_wash").value.trim();
-    let detergent = document.getElementById("detergent").value;
-
-
-
-    if (date === "") {
-        document.getElementById("dateError").textContent = "Date is required!";
-        isValid = false;
-    }
-    if (load === "") {
-        document.getElementById("loadError").textContent = "Load number is required!";
-        isValid = false;
-    }
-    if (trolley === "") {
-        document.getElementById("trolleyError").textContent = "Trolley number is required!";
-        isValid = false;
-    }
-    if (equipment === "") {
-        document.getElementById("equipmentError").textContent = "Equipment is required!";
-        isValid = false;
-    }
-    if (set_time === "") {
-        document.getElementById("timeError").textContent = "Set time is required!";
-        isValid = false;
-    }
-    if (programs === "") {
-        document.getElementById("programsError").textContent = "programs is required!";
-        isValid = false;
-    }
-    if (linen === "") {
-        document.getElementById("linenError").textContent = "Linen type is required!";
-        isValid = false;
-    }
-    if (quantity === "") {
-        document.getElementById("quantityError").textContent = "Quantity is required!";
-        isValid = false;
-    }
-    if (bfr_wash === "") {
-        document.getElementById("bfrError").textContent = "Total kgs before wash is required!";
-        isValid = false;
-    }
-    if (aftr_wash === "") {
-        document.getElementById("aftrError").textContent = "Total kgs after wash is required!";
-        isValid = false;
-    }
-    if (detergent === "") {
-        document.getElementById("detdosError").textContent = "Detergent dosing is required!";
-        isValid = false;
-    } 
-
-    return isValid;
-}
 
 document.getElementById("fill_up").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent form submission and page reload
@@ -615,6 +531,7 @@ document.getElementById("fill_up").addEventListener("submit", function(event) {
 
     // Show success notification
     alert("Data submitted successfully!");
+    window.location.href = "energy_cons.html";
 });
 
 

@@ -130,10 +130,11 @@
                 </tr>
     
             </table>
+            <button class="btn btn-primary btn-lg btn-block" onclick="submitData()">Next</button>
+    <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='wash_proc.html'">Back</button>
         </div>
 
-    <button class="btn btn-primary btn-lg btn-block" onclick="submitData()">Add to template</button>
-    <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='wash_proc.html'">Back</button>
+    
 
     <script>
         function calculate() {
@@ -164,6 +165,8 @@
             localStorage.setItem("cost", document.getElementById("cost").textContent);
 
             alert("Data submitted successfully!");
+
+            window.location.href = "water_cons.html";
             
         }
     </script>

@@ -164,7 +164,7 @@
     <div class="main-content">
         <div class="form-container">
             <h2>Electric Submetering - Flatwork Ironing</h2>
-            <div class="card mx-auto" style="width: 500px;">
+            <div class="card mx-auto mb-3" style="width: 500px;">
                 <div class="card text-white">
                 <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
                 <div class="input-group mb-3">
@@ -187,27 +187,27 @@
                     </div>
 
                 </div> 
+                <table class="table table-bordered" style="width: 550px; height: 100px;" >
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col"><p><strong>Total kWh Used</strong>(kWh)</p></th>
+                            <th scope="col"><p><strong>Estimated Cost</strong>(₱)</p></th>               
+                        </tr>
+                    </thead>
+                    <tr>
+                        <th scope="row"><span id="totalUsed_iron">0.0000kWh</span></th>
+                        <th scope="row"><span id="costing_iron">₱0.0000</span></th>
+                    </tr>
+    
+                </table>
+                    <div class="button-container mt-4">
+                        <button class="btn btn-secondary btn-lg" onclick="window.location.href='flatiron_proc.html'" id="backButton">Back</button>
+                        <button class="btn btn-primary btn-lg" onclick="submitData()" id="nextButton">Next</button>
+                    </div>
             </div>
         </div>
-        <div class="card mx-auto border-light">
-            <table class="table table-bordered" style="width: 500px; height: 100px;" >
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col"><p><strong>Total kWh Used</strong>(kWh)</p></th>
-                        <th scope="col"><p><strong>Estimated Cost</strong>(₱)</p></th>               
-                    </tr>
-                </thead>
-                <tr>
-                    <th scope="row"><span id="totalUsed_iron">0.0000kWh</span></th>
-                    <th scope="row"><span id="costing_iron">₱0.0000</span></th>
-                </tr>
 
-            </table>
-        </div>
-        <div class="button-container mt-4">
-            <button class="btn btn-secondary btn-lg" onclick="window.location.href='flatiron_proc.html'" id="backButton">Back</button>
-            <button class="btn btn-primary btn-lg" onclick="submitData()" id="nextButton">Next</button>
-        </div>
+
     </div>
 
     <script>

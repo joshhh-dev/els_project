@@ -167,7 +167,7 @@
     <!-- Navigation Bar -->
     <div class="nav-container">
         <div class="nav-buttons">
-            <button class="nav-button" onclick="window.location.href='wash_proc.html'">Washing Process</button>
+            <button class="nav-button" onclick="window.location.href='wash_proc.html'">Wash Process</button>
             <button class="nav-button" onclick="window.location.href='energy_cons.html'">Electric Submetering</button>
             <button class="nav-button active" onclick="window.location.href='water_cons.html'">Water Submetering</button>
         </div>
@@ -216,11 +216,11 @@
             </table>            
             </div>
         </div>
-
+        <button class="btn-secondary" onclick="addProgram()">Add Reading</button>
+        <button class="btn-action" onclick="submitData()">Submit Data</button>
     </div>
 
-    <button class="btn-secondary" onclick="addProgram()">Add Reading</button>
-    <button class="btn-action" onclick="submitData()">Submit Data</button>
+
 
     <script>
         // Check URL parameters for hideNav
@@ -277,7 +277,7 @@
         return;
     } else {
         alert("Data Submitted Successfully");
-        alert("Data will be displayed in the output page");
+        alert("Data will be displayed");
     }
 
     let readings = [];
