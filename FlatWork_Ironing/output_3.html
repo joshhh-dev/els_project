@@ -3,233 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drying Process Report</title>
+    <title>Flatwork Ironing Report</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body { 
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            align-items: flex-start;
+            padding: 20px;
         }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
         h2 {
             background: #007BFF;
             color: white;
-            padding: 10px;
+            padding: 15px;
             border-radius: 5px;
             text-align: center;
+            margin: 0;
+            font-size: 1.5rem;
         }
-       
-
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .modal-dialog {
+            max-width: 90%;
+            margin: 1.75rem auto;
+        }
+        
+        .modal-content {
+            border-radius: 10px;
+        }
+        
+        .modal-body {
+            padding: 0;
+            height: 90vh;
+        }
+        
+        .modal iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
-
-    <div class="card mx-auto mb-15">
-        <h2>Submitted Ironing Data</h2>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <tr><th>Field</th><th>Value</th></tr>
-                <tr><td>DATE</td><td id="outDate_iron"></td></tr></tr>
-                <tr><td>EQUIPMENT</td><td id="outEquipment_iron"></td></tr>
-                <tr><td>SET TIME</td><td id="outSet_time_iron"></td></tr>
-                <tr><td>TEMPERATURE(°C)</td><td id="outTemperature"></td></tr>
-                <tr><td>LINEN TYPE</td>
-                    <td id="outLinen_type_iron"></td>
-                    <td id="outOtherLinen_iron"></td>
-                </tr>
-                <tr><td>LINEN SIZE</td><td id="outLinen_sizes_iron"></td></tr>
-                <tr><td>QUANTITY</td><td id="outQuantity_iron"></td></tr>
-                <tr><td>TOTAL KGS BEFORE DRY</td><td id="outBfr_iron"></td></tr>
-                <tr><td>TOTAL KGS AFTER DRY</td><td id="outAftr_iron"></td></tr>
-            </table>
-            <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='flatiron_proc.html'">Edit Section</button>
-
+    <div class="container">
+        <div class="card">
+            <h2>Submitted Ironing Data</h2>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td>DATE</td><td id="outDate_iron"></td></tr>
+                    <tr><td>EQUIPMENT</td><td id="outEquipment_iron"></td></tr>
+                    <tr><td>SET SPEED</td><td id="outSet_time_iron"></td></tr>
+                    <tr><td>TEMPERATURE(°C)</td><td id="outTemperature"></td></tr>
+                    <tr><td>LINEN TYPE</td>
+                        <td id="outLinen_type_iron"></td>
+                        <td id="outOtherLinen_iron"></td>
+                    </tr>
+                    <tr><td>LINEN SIZE</td><td id="outLinen_sizes_iron"></td></tr>
+                    <tr><td>QUANTITY</td><td id="outQuantity_iron"></td></tr>
+                    <tr><td>TOTAL KGS BEFORE DRY</td><td id="outBfr_iron"></td></tr>
+                    <tr><td>TOTAL KGS AFTER DRY</td><td id="outAftr_iron"></td></tr>
+                </table>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ironingModal">Edit Section</button>
+                </div>
+            </div>
         </div>
 
-        <div class="card-body table-bordered mb-15">
+        <div class="card">
             <h2>Submitted Electric Submetering Data</h2>
-            <table class="table">
-                <tr><th>Field</th><th>Value</th></tr>
-                <tr><td>Start Reading (kWh)</td><td id="outStartReadings_iron"></td></tr>
-                <tr><td>End Reading (kWh)</td><td id="outEndReadings_iron"></td></tr>
-                <tr><td>Total kWh Used</td><td id="outTotalUseds_iron"></td></tr>
-                <tr><td>Estimated Cost (₱)</td><td id="outCosts_iron"></td></tr>
-            </table>
-            <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='electric_proc_3.html'">Edit Section</button>
-
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td>Start Reading (kWh)</td><td id="outStartReadings_iron"></td></tr>
+                    <tr><td>End Reading (kWh)</td><td id="outEndReadings_iron"></td></tr>
+                    <tr><td>Total kWh Used</td><td id="outTotalUseds_iron"></td></tr>
+                    <tr><td>Estimated Cost (₱)</td><td id="outCosts_iron"></td></tr>
+                </table>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#electricModal">Edit Section</button>
+                </div>
+            </div>
         </div>
 
-<div class="card-body table-bordered mb-15" style="width: 50vh;">
-    <h2>LPG Gas Submetering Report</h2>
-    <table class="table">
-        <tr><th>Field</th><th>Value</th></tr>
-        <tr><th>Initial Reading (kg)</th><td id="outInitialReading"></td></tr>
-        <tr><th>Final Reading (kg)</th><td id="outFinalReading"></td></tr>
-        <tr><th>Gas Used (kg)</th><td id="outGasUsed"></td></tr>
-        <tr><th>Total Cost (₱)</th><td id="outTotalCost"></td></tr>
-    </table>
-    <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='lpg_sub_2.html'">Edit Section</button>
-</div>
-<button class="btn  btn-success mb-3" onclick="exportToExcel()">Download as Excel</button>
-<button class="btn mb-3 btn-danger" onclick="exportToPDF()">Download as PDF</button>
-<button class="btn mb-3 btn-secondary" onclick="window.location.href='drying_proc.html'">Go Back</button>
-</div>
+        <div class="card">
+            <h2>LPG Gas Submetering Report</h2>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td>Initial Reading (m³)</td><td id="outInitialReading"></td></tr>
+                    <tr><td>Final Reading (m³)</td><td id="outFinalReading"></td></tr>
+                    <tr><td>Total Gas Used (m³)</td><td id="outGasUsed"></td></tr>
+                    <tr><td>LPG Used (kGs)</td><td id="outLpgKgs"></td></tr>
+                    <tr><td>Price per kg (₱)</td><td id="outPricePerKg"></td></tr>
+                    <tr><td>Total Cost (₱)</td><td id="outTotalCost"></td></tr>
+                </table>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lpgModal">Edit Section</button>
+                </div>
+            </div>
+        </div>
 
+        <div class="btn-container">
+            <button class="btn btn-success" onclick="exportToExcel()">Download as Excel</button>
+            <button class="btn btn-danger" onclick="exportToPDF()">Download as PDF</button>
+            <button class="btn btn-secondary" onclick="clearAllDataAndGoHome()">Go to HomePage</button>
+        </div>
+    </div>
 
+    <!-- Modals -->
+    <div class="modal fade" id="ironingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Ironing Process</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe src="flatiron_proc.html?hideNav=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<script>
+    <div class="modal fade" id="electricModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Electric Submetering</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe src="electric_proc_3.html?hideNav=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="lpgModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit LPG Submetering</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe src="lpg_sub_2.html?hideNav=true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Refresh page when modal is closed to update data
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            modal.addEventListener('hidden.bs.modal', function () {
+                location.reload();
+            });
+        });
+
+        // Function to clear all data and go to homepage
+        function clearAllDataAndGoHome() {
+            try {
+                // Clear ironing process data
+                localStorage.removeItem("date_iron");
+                localStorage.removeItem("equipment_iron");
+                localStorage.removeItem("set_time_iron");
+                localStorage.removeItem("temp");
+                localStorage.removeItem("linen_type_iron");
+                localStorage.removeItem("other-linen_iron");
+                localStorage.removeItem("linen_sizes_iron");
+                localStorage.removeItem("quantity_iron");
+                localStorage.removeItem("bfr_iron");
+                localStorage.removeItem("aftr_iron");
+
+                // Clear electric submetering data
+                localStorage.removeItem("start_reads_iron");
+                localStorage.removeItem("end_reads_iron");
+                localStorage.removeItem("total_used_iron");
+                localStorage.removeItem("cost_iron");
+
+                // Clear LPG submetering data
+                localStorage.removeItem("initial_reading_iron");
+                localStorage.removeItem("final_reading_iron");
+                localStorage.removeItem("gas_used_iron");
+                localStorage.removeItem("total_cost_iron");
+
+                console.log("All data cleared successfully");
+                // Navigate to homepage
+                window.location.href = '../index.html';
+            } catch (error) {
+                console.error("Error clearing data:", error);
+                alert("There was an error clearing the data. Please try again.");
+            }
+        }
+
         // Retrieve and display data
         document.getElementById("outDate_iron").textContent = localStorage.getItem("date_iron") || "N/A";
         document.getElementById("outEquipment_iron").textContent = localStorage.getItem("equipment_iron") || "N/A";
         document.getElementById("outSet_time_iron").textContent = localStorage.getItem("set_time_iron") || "N/A";
         document.getElementById("outTemperature").textContent = localStorage.getItem("temp") || "N/A";
         document.addEventListener("DOMContentLoaded", function () {
-        let linenType = localStorage.getItem("linen_type_iron") || "N/A";
-        let otherLinen = localStorage.getItem("other-linen_iron") || "";
-        let linenTypeElement = document.getElementById("outLinen_type_iron");
-        let otherLinenElement = document.getElementById("outOtherLinen_iron");
-    
-        if (linenType.toLowerCase() === "others" && otherLinen) {
-            linenTypeElement.textContent = otherLinen;
-            otherLinenElement.style.display = "none";
-        } else {
-            linenTypeElement.textContent = linenType;
-            otherLinenElement.style.display = "none";
-        }
-    });
+            let linenType = localStorage.getItem("linen_type_iron") || "N/A";
+            let otherLinen = localStorage.getItem("other-linen_iron") || "";
+            let linenTypeElement = document.getElementById("outLinen_type_iron");
+            let otherLinenElement = document.getElementById("outOtherLinen_iron");
+        
+            if (linenType.toLowerCase() === "others" && otherLinen) {
+                linenTypeElement.textContent = otherLinen;
+                otherLinenElement.style.display = "none";
+            } else {
+                linenTypeElement.textContent = linenType;
+                otherLinenElement.style.display = "none";
+            }
+        });
         document.getElementById("outLinen_sizes_iron").textContent = localStorage.getItem("linen_sizes_iron") || "N/A";
         document.getElementById("outQuantity_iron").textContent = localStorage.getItem("quantity_iron") || "N/A";
         document.getElementById("outBfr_iron").textContent = localStorage.getItem("bfr_iron") || "N/A";
         document.getElementById("outAftr_iron").textContent = localStorage.getItem("aftr_iron") || "N/A";
         
-        // Retrieve and display electric metering data from localStorage
+        // Retrieve and display electric metering data
         document.getElementById("outStartReadings_iron").textContent = localStorage.getItem("start_reads_iron") || "N/A";
         document.getElementById("outEndReadings_iron").textContent = localStorage.getItem("end_reads_iron") || "N/A";
         document.getElementById("outTotalUseds_iron").textContent = localStorage.getItem("total_used_iron") || "N/A";
         document.getElementById("outCosts_iron").textContent = localStorage.getItem("cost_iron") || "N/A";
 
-        // Retrieve and display stored data
-        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading_iron") + "kg" || "N/A";
-        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading_iron") + "kg" || "N/A";
-        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used_iron") + "kg" || "N/A";
-        document.getElementById("outTotalCost").textContent = "₱" + localStorage.getItem("total_cost_iron") || "N/A";
-
-    function exportToExcel() {
-    let tables = document.querySelectorAll("table");
-    if (tables.length === 0) {
-        alert("No table data found to export.");
-        return;
-    }
-
-    let wb = XLSX.utils.book_new();
-    let ws_data = [];
-
-    ws_data.push(["Washing & Utility Data Report"]);
-    ws_data.push(["Generated on:", new Date().toLocaleString()]);
-    ws_data.push([]);
-
-    tables.forEach((table) => {
-        let title = table.previousElementSibling?.innerText || "Untitled Table";
-        ws_data.push([title]);
-        ws_data.push([]);
-
-        let rows = table.querySelectorAll("tr");
-        rows.forEach((row) => {
-            let cells = row.querySelectorAll("th, td");
-            let rowData = Array.from(cells).map(cell => cell.innerText.replace(/\n/g, " "));
-            ws_data.push(rowData);
-        });
-
-        ws_data.push([]);
-    });
-
-    let ws = XLSX.utils.aoa_to_sheet(ws_data);
-    XLSX.utils.book_append_sheet(wb, ws, "Report");
-
-    let filename = `Ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
-    XLSX.writeFile(wb, filename);
-}
-
-
-function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4'); // A4 Portrait
-
-    // Title & Timestamp
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(16);
-    doc.text("ELS Ironing Process", 15, 15);
-    
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.text("Generated on: " + new Date().toLocaleString(), 15, 25);
-
-    let yPosition = 35; // Starting Y position
-    let tables = document.querySelectorAll("table");
-
-    if (tables.length === 0) {
-        alert("No table data found to export.");
-        return;
-    }
-
-    tables.forEach((table) => {
-        let title = table.previousElementSibling?.innerText || "Untitled Table";
+        // Retrieve and display LPG data
+        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading_iron") ? parseFloat(localStorage.getItem("initial_reading_iron")).toFixed(4) + "m³" : "N/A";
+        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading_iron") ? parseFloat(localStorage.getItem("final_reading_iron")).toFixed(4) + "m³" : "N/A";
+        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used_iron") ? parseFloat(localStorage.getItem("gas_used_iron")).toFixed(4) + "m³" : "N/A";
         
-        // Add Table Title
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text(title, 15, yPosition);
-        yPosition += 5;
+        // Calculate and display LPG kGs
+        if (localStorage.getItem("gas_used_iron")) {
+            const gasUsed = parseFloat(localStorage.getItem("gas_used_iron"));
+            const lpgKgs = (1.898 * gasUsed).toFixed(4);
+            document.getElementById("outLpgKgs").textContent = lpgKgs + "kGs";
+        } else {
+            document.getElementById("outLpgKgs").textContent = "N/A";
+        }
+        
+        document.getElementById("outPricePerKg").textContent = localStorage.getItem("pricePerKg_iron") ? "₱" + parseFloat(localStorage.getItem("pricePerKg_iron")).toFixed(2) : "N/A";
+        document.getElementById("outTotalCost").textContent = localStorage.getItem("total_cost_iron") ? "₱" + parseFloat(localStorage.getItem("total_cost_iron")).toFixed(4) : "N/A";
 
-        let headers = [];
-        let rows = [];
+        function exportToExcel() {
+            let tables = document.querySelectorAll("table");
+            if (tables.length === 0) {
+                alert("No table data found to export.");
+                return;
+            }
 
-        let tableRows = table.querySelectorAll("tr");
-        tableRows.forEach((row, rowIndex) => {
-            let cells = row.querySelectorAll("th, td");
-            let rowData = Array.from(cells).map(cell => cell.innerText);
+            let wb = XLSX.utils.book_new();
+            let ws_data = [];
 
-            if (rowIndex === 0) headers = rowData; // First row as headers
-            else rows.push(rowData);
-        });
+            ws_data.push(["Flatwork Ironing Process Report"]);
+            ws_data.push(["Generated on:", new Date().toLocaleString()]);
+            ws_data.push([]);
 
-        // Generate a table using autoTable plugin
-        if (typeof doc.autoTable === "function") {
-            doc.autoTable({
-                startY: yPosition,
-                head: [headers],
-                body: rows,
-                theme: "striped",
-                styles: { fontSize: 10, cellPadding: 3 },
-                headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] }, // Blue header
-                columnStyles: { 0: { cellWidth: 'auto' } },
-                margin: { top: 40 },
+            tables.forEach((table) => {
+                let title = table.closest('.card').querySelector('h2').innerText || "Untitled Table";
+                ws_data.push([title]);
+                ws_data.push([]);
+
+                let rows = table.querySelectorAll("tr");
+                rows.forEach((row) => {
+                    let cells = row.querySelectorAll("th, td");
+                    let rowData = Array.from(cells).map(cell => cell.innerText.replace(/\n/g, " "));
+                    ws_data.push(rowData);
+                });
+
+                ws_data.push([]);
             });
 
-            yPosition = doc.lastAutoTable.finalY + 10; // Move below last table
-        } else {
-            alert("jsPDF-AutoTable is required for proper formatting.");
-            return;
+            let ws = XLSX.utils.aoa_to_sheet(ws_data);
+            XLSX.utils.book_append_sheet(wb, ws, "Report");
+
+            let filename = `Ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.xlsx`;
+            XLSX.writeFile(wb, filename);
         }
-    });
 
-    // Save as a downloadable PDF
-    let filename = `Ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
-    doc.save(filename);
-}
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
 
-</script>
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("ELS Flatwork Ironing Process", 15, 15);
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("Generated on: " + new Date().toLocaleString(), 15, 25);
 
+            let yPosition = 35;
+            let tables = document.querySelectorAll("table");
+
+            if (tables.length === 0) {
+                alert("No table data found to export.");
+                return;
+            }
+
+            tables.forEach((table) => {
+                let title = table.closest('.card').querySelector('h2').innerText || "Untitled Table";
+                
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(12);
+                doc.text(title, 15, yPosition);
+                yPosition += 5;
+
+                let headers = [];
+                let rows = [];
+
+                let tableRows = table.querySelectorAll("tr");
+                tableRows.forEach((row, rowIndex) => {
+                    let cells = row.querySelectorAll("th, td");
+                    let rowData = Array.from(cells).map(cell => cell.innerText);
+
+                    if (rowIndex === 0) headers = rowData;
+                    else rows.push(rowData);
+                });
+
+                doc.autoTable({
+                    startY: yPosition,
+                    head: [headers],
+                    body: rows,
+                    theme: "striped",
+                    styles: { fontSize: 10, cellPadding: 3 },
+                    headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] },
+                    columnStyles: { 0: { cellWidth: 'auto' } },
+                    margin: { top: 40 },
+                });
+
+                yPosition = doc.lastAutoTable.finalY + 10;
+            });
+
+            let filename = `Ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+            doc.save(filename);
+        }
+    </script>
 </body>
 </html>

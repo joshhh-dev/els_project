@@ -3,75 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drying Process</title>
+    <title>LPG Consumption</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-body { 
-    font-family: Arial, sans-serif; 
-    font-size: 18px;
-    display: flex;
-    justify-content: flex-start; /* Aligns content to the left */
-    align-items: flex-start;
-    padding-top: 20vh; /* Adds some spacing from the left */
-}
-.container { 
-    max-width: 500px; 
-    padding: 30px; 
-    border-radius: 10px; 
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-.overall_total {
-    display: flex;
-    justify-content: flex-start; /* Aligns table to the left */
-    margin-top: 10px;
-    margin-bottom: 5px;
-}
+        body { 
+            font-family: Arial, sans-serif; 
+            font-size: 18px;
+            margin: 0;
+            padding-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-button { 
-    width: 45%;
-    padding: 10px;
-    background: #007BFF; 
-    color: white; 
-    border: none; 
-    border-radius: 10px;
-    cursor: pointer; 
-    font-size: 16px;
-    text-align: center;
-}
-button:hover { 
-    background: #0056b3; 
-}
+        .main-content {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
 
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .button-container button {
+            min-width: 120px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .nav-container {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: auto;
+            min-width: 150px;
+        }
+        
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .nav-button.active {
+            background-color: #0056b3;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .error-feedback {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .input-group.error .input-group-text {
+            border-color: #dc3545;
+        }
+
+        .input-group.error .form-control {
+            border-color: #dc3545;
+        }
+
+        .input-group.error + .error-feedback {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <div class="nav-container">
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='drying_proc.html'">Drying Process</button>
+            <button class="nav-button" onclick="window.location.href='electric_proc_2.html'">Electric Submetering</button>
+            <button class="nav-button active" onclick="window.location.href='lpg_sub.html'">LPG Submetering</button>
+        </div>
+    </div>
 
-<div class="container">
-    <div class="card-body">
+    <div class="main-content">
+        <div class="card">
+            <h2>LPG Submetering Data</h2>
 
-        <h2>LPG Submetering Data</h2>
-
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <span class="input-group-text "><strong> Start Reading (m³):</strong></span>
+            <div class="input-group mb-3">
+                <span class="input-group-text"><strong>Start Reading (m³):</strong></span>
                 <input class="form-control" type="number" id="initialReading" step="0.01">
+                <div class="error-feedback">This field is required</div>
             </div>
-        </div>
-    
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <span class="input-group-text"><strong> Final Reading (m³):</strong></span>
+        
+            <div class="input-group mb-3">
+                <span class="input-group-text"><strong>Final Reading (m³):</strong></span>
                 <input class="form-control" type="number" id="finalReading" step="0.01">
+                <div class="error-feedback">This field is required</div>
             </div>
-        </div>
-    
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <span class="input-group-text"><strong>Price per kg (₱): </strong></span>
+        
+            <div class="input-group mb-3">
+                <span class="input-group-text"><strong>Price per kg (₱):</strong></span>
                 <input class="form-control" type="number" id="pricePerKg" step="0.01">
+                <div class="error-feedback">This field is required</div>
             </div>
-        </div>
-    
 
             <table class="table table-bordered">
                 <thead>
@@ -89,62 +170,136 @@ button:hover {
                     </tr>
                 </tbody>
             </table>
-   
+
+            <div class="button-container">
+                <button class="btn btn-secondary" onclick="window.location.href='electric_proc_2.html'">Back</button>
+                <div>
+                    <button class="btn btn-primary" onclick="saveData()">Compute</button>
+                    <button class="btn btn-success" onclick="viewReport()">View Report</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="btn-container">
-        <button class="btn btn-m btn-primary" onclick="saveData()">Compute</button>
-        <button class="btn btn-m btn-secondary" onclick="viewReport()">View Report</button>
-    </div>
-</div>
+    <script>
+        function checkHideNav() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hideNav = urlParams.get('hideNav');
+            if (hideNav === 'true') {
+                document.querySelector('.button-container').style.display = 'none';
+            }
+        }
 
-<script>
-function saveData() {
-    let initialReading = parseFloat(document.getElementById("initialReading").value);
-    let finalReading = parseFloat(document.getElementById("finalReading").value);
-    let pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
+        // Load existing data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkHideNav();
+            
+            // Load existing data if available
+            document.getElementById("initialReading").value = localStorage.getItem("initial_reading") || "";
+            document.getElementById("finalReading").value = localStorage.getItem("final_reading") || "";
+            document.getElementById("pricePerKg").value = localStorage.getItem("price_per_kg") || "";
+            
+            // Calculate if we have all values
+            if (document.getElementById("initialReading").value && 
+                document.getElementById("finalReading").value && 
+                document.getElementById("pricePerKg").value) {
+                saveData();
+            }
+        });
 
-    if (isNaN(initialReading) || isNaN(finalReading) || isNaN(pricePerKg)) {
-        alert("Please enter valid values.");
-        return;
-    }
+        function clearErrors() {
+            document.querySelectorAll('.input-group').forEach(group => {
+                group.classList.remove('error');
+            });
+        }
 
-    if (finalReading < initialReading) {
-        alert("Error: Final reading cannot be lower than the initial reading.");
-        return;
-    }
+        function validateInputs() {
+            let initialReading = parseFloat(document.getElementById("initialReading").value);
+            let finalReading = parseFloat(document.getElementById("finalReading").value);
+            let pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
+            let isValid = true;
 
-    let gasUsed = finalReading - initialReading;
-    let lpgKgs = 1.898 * gasUsed;
-    let totalCost = pricePerKg * lpgKgs;
+            // Clear previous errors
+            clearErrors();
 
-    document.getElementById("lpgKgs").innerHTML = lpgKgs.toFixed(4) + "kGs";
-    document.getElementById("totalConsump").innerHTML = gasUsed.toFixed(4) + "m³";
-    document.getElementById("totalPrice").innerHTML ="₱" + totalCost.toFixed(4);
+            if (isNaN(initialReading)) {
+                document.getElementById("initialReading").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
+            if (isNaN(finalReading)) {
+                document.getElementById("finalReading").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
+            if (isNaN(pricePerKg)) {
+                document.getElementById("pricePerKg").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
 
-    localStorage.setItem("initial_reading", initialReading);
-    localStorage.setItem("final_reading", finalReading);
-    localStorage.setItem("gas_used", gasUsed.toFixed(4));
-    localStorage.setItem("total_cost", totalCost.toFixed(4));
+            if (finalReading < initialReading) {
+                document.getElementById("finalReading").closest('.input-group').classList.add('error');
+                document.getElementById("finalReading").nextElementSibling.textContent = "Final reading cannot be lower than initial reading";
+                isValid = false;
+            }
 
-    alert("Data saved successfully! View the report.");
-}
+            return isValid;
+        }
 
-function viewReport() {
-    let initialReading = document.getElementById("initialReading").value;
-    let finalReading = document.getElementById("finalReading").value;
-    let pricePerKg = document.getElementById("pricePerKg").value;
+        function clearFields() {
+            document.getElementById("initialReading").value = "";
+            document.getElementById("finalReading").value = "";
+            document.getElementById("pricePerKg").value = "";
+            document.getElementById("lpgKgs").innerHTML = "0.0000kGs";
+            document.getElementById("totalConsump").innerHTML = "0.0000m³";
+            document.getElementById("totalPrice").innerHTML = "₱0.0000";
+        }
 
-    if(initialReading.trim === "" || finalReading === "" || pricePerKg === ""){
-        alert("This field cannot be empty");
-        return false;
-    }
+        function saveData() {
+            if (!validateInputs()) {
+                return;
+            }
 
-    setTimeout(function() {
-        window.open("output_2.html", "_blank"); 
-    }, 1000);
-}
-</script>
+            let initialReading = parseFloat(document.getElementById("initialReading").value);
+            let finalReading = parseFloat(document.getElementById("finalReading").value);
+            let pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
 
+            let gasUsed = finalReading - initialReading;
+            let lpgKgs = 1.898 * gasUsed;
+            let totalCost = pricePerKg * lpgKgs;
+
+            document.getElementById("lpgKgs").innerHTML = lpgKgs.toFixed(4) + "kGs";
+            document.getElementById("totalConsump").innerHTML = gasUsed.toFixed(4) + "m³";
+            document.getElementById("totalPrice").innerHTML = "₱" + totalCost.toFixed(4);
+
+            // Store all values in localStorage
+            localStorage.setItem("initial_reading", initialReading);
+            localStorage.setItem("final_reading", finalReading);
+            localStorage.setItem("price_per_kg", pricePerKg);
+            localStorage.setItem("gas_used", gasUsed.toFixed(4));
+            localStorage.setItem("total_cost", totalCost.toFixed(4));
+
+
+        }
+
+        function viewReport() {
+            if (!validateInputs()) {
+                return;
+            }
+
+            // Save data before viewing report
+            saveData();
+
+            // Check if we're in a modal
+            const urlParams = new URLSearchParams(window.location.search);
+            const hideNav = urlParams.get('hideNav');
+            if (hideNav === 'true') {
+                window.parent.location.reload();
+            } else {
+                window.location.href = "output_2.html";
+            }
+
+            alert("Data saved successfully!");
+            clearFields();
+        }
+    </script>
 </body>
 </html>

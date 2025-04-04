@@ -3,94 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electric Submetering</title>
+    <title>Electric Submetering - Flatwork Ironing</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Arial', sans-serif;
-            color: #00aaff;
-            text-align: center;
-            padding: 10px;
-            margin: 0; /* Remove default body margin */
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding-top: 80px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
             justify-content: center;
-            min-height: 100vh; /* Ensures content fills the screen */
+            gap: 20px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         h2 {
-            color: #19118b; /* Neon Blue */
-            font-size: 28px;
+            text-align: center;
+            color: #007BFF;
+            margin-bottom: 20px;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
+
+        label {
             font-weight: bold;
-            border: none;
+            display: block;
+            margin-top: 10px;
+        }
 
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            margin: 10px;
+            font-size: 16px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .button-container button {
+            min-width: 120px;
+        }
+
+        .nav-container {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            transition: 0.3s;;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: auto;
+            min-width: 150px;
+        }
+        
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .nav-button.active {
+            background-color: #0056b3;
         }
 
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin: 20px 0; 
+            .form-container {
+                width: 100%;
+            }
         }
 
+        .error-feedback {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error .form-control,
+        .error select {
+            border-color: #dc3545;
+        }
+
+        .error .error-feedback {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
     </style>
 </head>
 <body>
-    <div class="card mx-auto" style="width: 500px;">
-        <div class="card text-white">
-        <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <span class="input-group-text" id=""><strong>Start Reading (kWh):</strong></span>
-                <input class="form-control" type="number" id="start_reads_iron" min="0" oninput="calculate()">
-            </div>
+    <div class="nav-container">
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='flatiron_proc.html'">Flatwork Ironing Process</button>
+            <button class="nav-button active" onclick="window.location.href='electric_proc_3.html'">Electric Submetering</button>
+            <button class="nav-button" onclick="window.location.href='lpg_sub_2.html'">LPG Submetering</button>
         </div>
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <span class="input-group-text" id=""><strong>End Reading (kWh):</strong></span> 
-                <input class="form-control" type="number" id="end_reads_iron" min="0" oninput="calculate()">
-            </div>
-        </div>
-            <div class="input-group mb-3">
-                <div class="input-group">
-                    <span class="input-group-text" id=""><strong>Cost per kWh:</strong></span>
-                    <input class="form-control" type="number" id="cost_iron" min="0" oninput="calculate()">                  </div>   
+    </div>
+
+    <div class="main-content">
+        <div class="form-container">
+            <h2>Electric Submetering - Flatwork Ironing</h2>
+            <div class="card mx-auto" style="width: 500px;">
+                <div class="card text-white">
+                <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
+                <div class="input-group mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text" id=""><strong>Start Reading (kWh):</strong></span>
+                        <input class="form-control" type="number" id="start_reads_iron" min="0" oninput="calculate()">
+                    </div>
                 </div>
+                <div class="input-group mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text" id=""><strong>End Reading (kWh):</strong></span> 
+                        <input class="form-control" type="number" id="end_reads_iron" min="0" oninput="calculate()">
+                    </div>
+                </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text" id=""><strong>Cost per kWh:</strong></span>
+                            <input class="form-control" type="number" id="cost_iron" min="0" oninput="calculate()">                  </div>   
+                        </div>
+                    </div>
+
+                </div> 
             </div>
+        </div>
+        <div class="card mx-auto border-light">
+            <table class="table table-bordered" style="width: 500px; height: 100px;" >
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col"><p><strong>Total kWh Used</strong>(kWh)</p></th>
+                        <th scope="col"><p><strong>Estimated Cost</strong>(₱)</p></th>               
+                    </tr>
+                </thead>
+                <tr>
+                    <th scope="row"><span id="totalUsed_iron">0.0000kWh</span></th>
+                    <th scope="row"><span id="costing_iron">₱0.0000</span></th>
+                </tr>
 
-    </div> 
-</div>
-
-</div>
-<div class="card mx-auto border-light">
-    <table class="table table-bordered" style="width: 500px; height: 100px;" >
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col"><p><strong>Total kWh Used</strong>(kWh)</p></th>
-                <th scope="col"><p><strong>Estimated Cost</strong>(₱)</p></th>               
-            </tr>
-        </thead>
-        <tr>
-            <th scope="row"><span id="totalUsed_iron">0.0000kWh</span></th>
-            <th scope="row"><span id="costing_iron">₱0.0000</span></th>
-        </tr>
-
-    </table>
-</div>
-
-<button class="btn btn-primary btn-lg btn-block" onclick="submitData()">Add to template</button>
-<button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='flatiron_proc.html'">Back</button>
-    
+            </table>
+        </div>
+        <div class="button-container mt-4">
+            <button class="btn btn-secondary btn-lg" onclick="window.location.href='flatiron_proc.html'" id="backButton">Back</button>
+            <button class="btn btn-primary btn-lg" onclick="submitData()" id="nextButton">Next</button>
+        </div>
+    </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hideNav = urlParams.get('hideNav');
+            
+            if (hideNav === 'true') {
+                const navContainer = document.querySelector('.nav-container');
+                if (navContainer) {
+                    navContainer.style.display = 'none';
+                }
+                document.body.style.paddingTop = '20px';
+                
+                // Update buttons for edit mode
+                const nextButton = document.getElementById('nextButton');
+                if (nextButton) {
+                    nextButton.textContent = 'Done Editing';
+                    nextButton.onclick = function() {
+                        submitData();
+                        window.parent.location.reload(); // Refresh the parent window
+                    };
+                }
+                // Hide back button in edit mode
+                const backButton = document.getElementById('backButton');
+                if (backButton) {
+                    backButton.style.display = 'none';
+                }
+            }
+        });
+
         function calculate() {
             let startRead = parseFloat(document.getElementById("start_reads_iron").value) || 0;
             let endRead = parseFloat(document.getElementById("end_reads_iron").value) || 0;

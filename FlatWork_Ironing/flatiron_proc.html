@@ -9,35 +9,60 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-                * {
+        * {
             box-sizing: border-box;
-            }
-                body {
+        }
+        body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 10px;
-            padding: 50px;
+            margin: 0;
+            padding-top: 80px;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            flex-direction: row;
-            align-items: flex-start;
         }
 
-        .container {
+        .main-content {
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .form-container {
             background: white;
-            padding: 70px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .iframe-container {
+            width: 50%;
+            display: none;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             text-align: center;
-            color: #007bff;
-            
+            color: #007BFF;
+            margin-bottom: 20px;
         }
 
         label {
@@ -55,213 +80,129 @@
             font-size: 16px;
         }
 
-        button {
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 20px;
             width: 100%;
+        }
+
+        .button-container button {
+            min-width: 120px;
+        }
+
+        .nav-container {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-button {
+            padding: 10px 20px;
             background-color: #007BFF;
             color: white;
             border: none;
-            padding: 10px;
-            font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: auto;
+            min-width: 150px;
         }
-
-        button:hover {
+        
+        .nav-button:hover {
             background-color: #0056b3;
         }
-        @media (max-width: 768px) {
-    .iframe-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .iframe-container iframe {
-        height: 100vh;
-        width: 100%; /* Full width on small screens */
-    }
-}
-        /* Success message */
-        .success-message {
-            display: none;
-            color: green;
-            background-color: #e6ffe6;
-            border: 1px solid green;
-            padding: 10px;
-            text-align: center;
-            margin-top: 15px;
-            border-radius: 5px;
+        
+        .nav-button.active {
+            background-color: #0056b3;
         }
 
-    
-    /* Wrapper for form and iframes */
-    .content-wrapper {
-        display: flex;
-        gap: 20px;
-        align-items: flex-start;
-        max-width: 1000px;
-        width: 100%;
-    }
-
-    /* Form container */
-    .container {
-        background: white;
-        padding: 10px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 50%;
-    }
-
-    h2 {
-        text-align: center;
-        color: #007BFF;
-    }
-
-    /* Input styles */
-    label {
-        font-weight: bold;
-        display: block;
-        margin-top: 10px;
-    }
-
-    input, select {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-    }
-
-    button {
-        width: 100%;
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    /* Iframe container */
-    .iframe-container {
-        display: flex;
-        flex-direction: column;
-        height: 135vh;
-        gap: 15px;
-        width: 50%;
-    }
-
-    .iframe-container iframe {
-        width: 120%;
-        height: 100vh; /* Full viewport height */
-        border: none;
-        overflow: hidden;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .content-wrapper {
-            flex-direction: column;
-            display: grid;
-                grid-template-columns: 1fr 1fr; /* Two equal columns */
-                gap: 10px;
-                max-width: 1200px;
-                width: 100%;
-                align-items: start;
+        .line-group_iron {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        .container, .iframe-container {
-            background: white;
+        .line-group_iron label {
+            white-space: nowrap;
+        }
+
+        .size_group_iron {
+            display: inline-block;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            min-height: 1000px; /* Ensures equal height */
+            background: #f9f9f9;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+            width: 100%;
         }
 
-        .iframe-container iframe {
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .form-container,
+            .iframe-container {
                 width: 100%;
-                height: 100%;
-                min-height: 1000px; /* Match container height */
+            }
+
+            .iframe-container iframe {
+                height: 500px;
             }
         }
-    
-    .line-group_iron {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Adjust spacing between the two fields */
-    margin-bottom: 10px;
-    }
 
-    .line-group_iron label {
-    white-space: nowrap; /* Ensures labels stay on one line */
-    }
+        .error-feedback {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 4px;
+            display: none;
+        }
 
-    .linen_type_iron {
-        width: max-content;
-    }
+        .error .form-control,
+        .error select {
+            border-color: #dc3545;
+        }
 
-    #other-linen_iron {
-        display: none; /* Initially hidden */
-    }
+        .error .error-feedback {
+            display: block;
+        }
 
-    .form-group_iron {
-    margin-bottom: 10px;
-}
-
-.size_group_iron{
-    display: inline-block;
-    padding: 30px;
-    border-radius: 10px;
-    background: #f9f9f9;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-}
-/* Ensure the table takes full width */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-}
-
-/* Adjust table cells to ensure they fit properly */
-td {
-    width: 100%;
-    height: 500px; /* Adjust height as needed */
-    padding: 0;  /* Remove padding */
-    border: 1px solid #ccc;
-    vertical-align: top; /* Aligns iframe to the top */
-    line-height: 0;
-
-}
-th, td {
-    border: none; /* Removes borders from table cells */
-    padding: 10px; /* Optional: Adjust spacing */
-}
-
-/* Make iframe responsive and fit its container */
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-}
-
-
-
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
     </style>
 </head>
 <body>
+    <div class="nav-container">
+        <div class="nav-buttons">
+            <button class="nav-button active" onclick="window.location.href='flatiron_proc.html'">Flatwork Ironing Process</button>
+            <button class="nav-button" onclick="window.location.href='electric_proc_3.html'">Electric Submetering</button>
+            <button class="nav-button" onclick="window.location.href='lpg_sub_2.html'">LPG Submetering</button>
+        </div>
+    </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h2 class="card-title">Ironing Process</h2>
+    <div class="main-content">
+        <div class="form-container">
+            <h2>Flatwork Ironing Process</h2>
             <form id="fill_up_iron">
                 <label for="date_iron">DATE:</label>
                 <input type="date" id="date_iron" name="date_iron" required>
@@ -321,8 +262,10 @@ iframe {
                 <input type="number" id="aftr_iron" name="aftr_iron" required>
                 <span id="aftrError" class="error"></span>
             
-                <button class="btn btn-primary btn-m" type="submit">Submit Data</button>
-                <button class="btn btn-secondary btn-m" type="button" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
+                <div class="button-container mt-4">
+                    <button class="btn btn-secondary btn-lg" type="button" id="back_btn" onclick="window.location.href='../index.html'">Back</button>
+                    <button class="btn btn-primary btn-lg" type="submit" id="submit_btn">Next</button>
+                </div>
             </form>
             
         </div>
@@ -333,7 +276,48 @@ iframe {
     
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if hideNav parameter exists in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const hideNav = urlParams.get('hideNav');
+    
+    if (hideNav === 'true') {
+        // Hide the navigation container
+        const navContainer = document.querySelector('.nav-container');
+        if (navContainer) {
+            navContainer.style.display = 'none';
+        }
+        // Adjust body padding since nav is hidden
+        document.body.style.paddingTop = '20px';
 
+        // Update buttons for edit mode
+        const backBtn = document.getElementById('back_btn');
+        const submitBtn = document.getElementById('submit_btn');
+        if (backBtn && submitBtn) {
+            backBtn.style.display = 'none';
+            submitBtn.textContent = 'Done Editing';
+        }
+
+        // Update form submission in edit mode
+        document.getElementById('fill_up_iron').onsubmit = function(e) {
+            e.preventDefault();
+            // Store the data
+            localStorage.setItem("date_iron", document.getElementById("date_iron").value);
+            localStorage.setItem("equipment_iron", document.getElementById("equipment_iron").value);
+            localStorage.setItem("set_time_iron", document.getElementById("set_time_iron").value);
+            localStorage.setItem("other-linen_iron", document.getElementById("other-linen_iron").value);
+            localStorage.setItem("linen_sizes_iron", document.getElementById("linen_sizes_iron").value);
+            localStorage.setItem("temp", document.getElementById("temp").value);
+            localStorage.setItem("linen_type_iron", document.getElementById("linen_type_iron").value);
+            localStorage.setItem("quantity_iron", document.getElementById("quantity_iron").value);
+            localStorage.setItem("bfr_iron", document.getElementById("bfr_iron").value);
+            localStorage.setItem("aftr_iron", document.getElementById("aftr_iron").value);
+
+            // Refresh the parent window to show updated data
+            window.parent.location.reload();
+        };
+    }
+});
 
 function handleLinenChange() {
     var linenType = document.getElementById("linen_type_iron");

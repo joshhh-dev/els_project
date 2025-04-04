@@ -9,35 +9,60 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-                * {
+        * {
             box-sizing: border-box;
-            }
-                body {
+        }
+        body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 10px;
-            padding: 50px;
+            margin: 0;
+            padding-top: 80px;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            flex-direction: row;
-            align-items: flex-start;
         }
 
-        .container {
+        .main-content {
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .form-container {
             background: white;
-            padding: 70px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .iframe-container {
+            width: 50%;
+            display: none;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             text-align: center;
-            color: #007bff;
-            
+            color: #007BFF;
+            margin-bottom: 20px;
         }
 
         label {
@@ -55,254 +80,186 @@
             font-size: 16px;
         }
 
-        button {
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 20px;
             width: 100%;
+        }
+
+        .button-container button {
+            min-width: 120px;
+        }
+
+        .nav-container {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-button {
+            padding: 10px 20px;
             background-color: #007BFF;
             color: white;
             border: none;
-            padding: 10px;
-            font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: auto;
+            min-width: 150px;
         }
-
-        button:hover {
+        
+        .nav-button:hover {
             background-color: #0056b3;
         }
-        @media (max-width: 768px) {
-    .iframe-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .iframe-container iframe {
-        height: 100vh;
-        width: 100%; /* Full width on small screens */
-    }
-}
-        /* Success message */
-        .success-message {
-            display: none;
-            color: green;
-            background-color: #e6ffe6;
-            border: 1px solid green;
-            padding: 10px;
-            text-align: center;
-            margin-top: 15px;
-            border-radius: 5px;
+        
+        .nav-button.active {
+            background-color: #0056b3;
         }
 
-    
-    /* Wrapper for form and iframes */
-    .content-wrapper {
-        display: flex;
-        gap: 20px;
-        align-items: flex-start;
-        max-width: 1000px;
-        width: 100%;
-    }
-
-    /* Form container */
-    .container {
-        background: white;
-        padding: 10px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 50%;
-    }
-
-    h2 {
-        text-align: center;
-        color: #007BFF;
-    }
-
-    /* Input styles */
-    label {
-        font-weight: bold;
-        display: block;
-        margin-top: 10px;
-    }
-
-    input, select {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-    }
-
-    button {
-        width: 100%;
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    /* Iframe container */
-    .iframe-container {
-        display: flex;
-        flex-direction: column;
-        height: 135vh;
-        gap: 15px;
-        width: 50%;
-    }
-
-    .iframe-container iframe {
-        width: 120%;
-        height: 100vh; /* Full viewport height */
-        border: none;
-        overflow: hidden;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .content-wrapper {
-            flex-direction: column;
-            display: grid;
-                grid-template-columns: 1fr 1fr; /* Two equal columns */
-                gap: 10px;
-                max-width: 1200px;
-                width: 100%;
-                align-items: start;
+        .line-group_dry {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        .container, .iframe-container {
-            background: white;
+        .line-group_dry label {
+            white-space: nowrap;
+        }
+
+        .size_group_dry {
+            display: inline-block;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            min-height: 1000px; /* Ensures equal height */
+            background: #f9f9f9;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+            width: 100%;
         }
 
-        .iframe-container iframe {
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .form-container,
+            .iframe-container {
                 width: 100%;
-                height: 100%;
-                min-height: 1000px; /* Match container height */
+            }
+
+            .iframe-container iframe {
+                height: 500px;
             }
         }
 
-    .line-group_dry {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Adjust spacing between the two fields */
-    margin-bottom: 10px;
-    }
+        .error-feedback {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 4px;
+            display: none;
+        }
 
-    .line-group_dry label {
-    white-space: nowrap; /* Ensures labels stay on one line */
-    }
+        .error .form-control,
+        .error select {
+            border-color: #dc3545;
+        }
 
-    .linen_type_dry {
-        width: max-content;
-    }
+        .error .error-feedback {
+            display: block;
+        }
 
-    #other-linen_dry {
-        display: none; /* Initially hidden */
-    }
-
-    .form-group_dry {
-    margin-bottom: 10px;
-}
-
-.size_group_dry{
-    display: inline-block;
-    padding: 30px;
-    border-radius: 10px;
-    background: #f9f9f9;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-}
-/* Ensure the table takes full width */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-}
-
-/* Adjust table cells to ensure they fit properly */
-td {
-    width: 100%;
-    height: 500px; /* Adjust height as needed */
-    padding: 0;  /* Remove padding */
-    border: 1px solid #ccc;
-    vertical-align: top; /* Aligns iframe to the top */
-    line-height: 0;
-
-}
-th, td {
-    border: none; /* Removes borders from table cells */
-    padding: 10px; /* Optional: Adjust spacing */
-}   
-
-/* Make iframe responsive and fit its container */
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-}
-
-
-
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
     </style>
 </head>
 <body>
+    <div class="nav-container">
+        <div class="nav-buttons">
+            <button class="nav-button active" onclick="window.location.href='drying_proc.html'">Drying Process</button>
+            <button class="nav-button" onclick="window.location.href='electric_proc_2.html'">Electric Submetering</button>
+            <button class="nav-button" onclick="window.location.href='lpg_sub.html'">LPG Submetering</button>
+        </div>
+    </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h2 class="card-title">Drying Process</h2>
+    <div class="main-content">
+        <div class="form-container">
+            <h2>Drying Process</h2>
             <form id="fill_up_dry">
-                <label for="date_dry">DATE:</label>
-                <input type="date" id="date_dry" name="date_dry" required>
-                <span id="dateError" class="error"></span>
+                <div class="form-group">
+                    <label for="date_dry">DATE:</label>
+                    <input type="date" id="date_dry" name="date_dry" class="form-control" required>
+                    <div class="error-feedback">Date is required</div>
+                </div>
             
-                <label for="equipment_dry">EQUIPMENT:</label>
-                <select id="equipment_dry" name="equipment" required>
-                    <option value="">--Select Equipment--</option>
-                    <option value="D#1 - T41200">D#1 - T41200</option>
-                    <option value="D#1 - T4900">D#1 - T4900</option>
-                    <option value="D#3 - T4900">D#3 - T4900</option>
+                <div class="form-group">
+                    <label for="equipment_dry">EQUIPMENT:</label>
+                    <select id="equipment_dry" name="equipment" class="form-control" required>
+                        <option value="">--Select Equipment--</option>
+                        <option value="D#1 - T41200">D#1 - T41200</option>
+                        <option value="D#1 - T4900">D#1 - T4900</option>
+                        <option value="D#3 - T4900">D#3 - T4900</option>
                     </select>
-                <span id="equipment_dryError" class="error"></span>
+                    <div class="error-feedback">Equipment selection is required</div>
+                </div>
             
-                <label for="set_time_dry">SET TIME(minutes):</label>
-                <input type="number" id="set_time_dry" name="set_time_dry" required>
-                <span id="timeError" class="error"></span>
+                <div class="form-group">
+                    <label for="set_time_dry">SET TIME(minutes):</label>
+                    <input type="number" id="set_time_dry" name="set_time_dry" class="form-control" required>
+                    <div class="error-feedback">Set time is required</div>
+                </div>
 
-                <label for="temp">TEMPERATURE(°C):</label>
-                <input type="number" id="temp" name="temp" required>
-                <span id="tempError" class="error"></span>
+                <div class="form-group">
+                    <label for="temp">TEMPERATURE(°C):</label>
+                    <input type="number" id="temp" name="temp" class="form-control" required>
+                    <div class="error-feedback">Temperature is required</div>
+                </div>
             
                 <div class="line-group_dry">
-                    <label for="linen_type_dry">LINEN TYPE:</label>
-                    <select id="linen_type_dry" required onchange="handleLinenChange()">
-                        <option value="">--Select Linen Type--</option>
-                        <option value="DUVET COVER">DUVET COVER</option>
-                        <option value="BEDSHEET">BEDSHEET</option>
-                        <option value="BATH TOWEL">BATH TOWEL</option>
-                        <option value="PILLOW CASE">PILLOW CASE</option>
-                        <option value="INFILL">INFILL</option>
-                        <option value="BED PAD">BED PAD</option>
-                        <option value="OTHERS">OTHERS</option>
-                    </select>
-                    <span id="linenError" class="error"></span>
-    
-                    <label for="quantity_dry">QUANTITY:</label>
-                    <input type="number" id="quantity_dry" name="quantity" required>
-                    <span id="quantityError" class="error"></span>
+                    <div class="form-group">
+                        <label for="linen_type_dry">LINEN TYPE:</label>
+                        <select id="linen_type_dry" class="form-control" required onchange="handleLinenChange()">
+                            <option value="">--Select Linen Type--</option>
+                            <option value="DUVET COVER">DUVET COVER</option>
+                            <option value="BEDSHEET">BEDSHEET</option>
+                            <option value="BATH TOWEL">BATH TOWEL</option>
+                            <option value="PILLOW CASE">PILLOW CASE</option>
+                            <option value="INFILL">INFILL</option>
+                            <option value="BED PAD">BED PAD</option>
+                            <option value="OTHERS">OTHERS</option>
+                        </select>
+                        <div class="error-feedback">Linen type is required</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity_dry">QUANTITY:</label>
+                        <input type="number" id="quantity_dry" name="quantity" class="form-control" required>
+                        <div class="error-feedback">Quantity is required</div>
+                    </div>
                 </div>
-                <input type="text" id="other-linen_dry" name="other-linen" placeholder="Other Linen Type" style="display: none;">
+                <div class="form-group" id="other-linen-container" style="display: none;">
+                    <label for="other-linen_dry">Other Linen Type:</label>
+                    <input type="text" id="other-linen_dry" name="other-linen" class="form-control" placeholder="Please specify the linen type">
+                    <div class="error-feedback">Please specify the other linen type</div>
+                </div>
 
                 <div class="size_group_dry">
                     <label for="linen_sizes_dry">LINEN SIZE:</label>
@@ -323,8 +280,10 @@ iframe {
                 <input type="number" id="aftr_dry" name="aftr_dry" required>
                 <span id="aftrError" class="error"></span>
             
-                <button class="btn btn-primary btn-m" type="submit">Submit Data</button>
-                <button class="btn btn-secondary btn-m" type="button" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
+                <div class="button-container">
+                    <button class="btn btn-secondary" type="button" onclick="clearAllData()" id="backBtn">Back</button>
+                    <button class="btn btn-primary" type="submit" id="submitBtn">Next</button>
+                </div>
             </form>
             
         </div>
@@ -336,26 +295,66 @@ iframe {
 
 <script>
 
+function clearAllData() {
+    // Clear all localStorage items
+    localStorage.removeItem("date_dry");
+    localStorage.removeItem("equipment_dry");
+    localStorage.removeItem("set_time_dry");
+    localStorage.removeItem("other-linen_dry");
+    localStorage.removeItem("linen_sizes_dry");
+    localStorage.removeItem("temp");
+    localStorage.removeItem("linen_type_dry");
+    localStorage.removeItem("quantity_dry");
+    localStorage.removeItem("bfr_dry");
+    localStorage.removeItem("aftr_dry");
+
+    // Clear all form inputs
+    document.getElementById("date_dry").value = "";
+    document.getElementById("equipment_dry").value = "";
+    document.getElementById("set_time_dry").value = "";
+    document.getElementById("other-linen_dry").value = "";
+    document.getElementById("linen_sizes_dry").value = "";
+    document.getElementById("temp").value = "";
+    document.getElementById("linen_type_dry").value = "";
+    document.getElementById("quantity_dry").value = "";
+    document.getElementById("bfr_dry").value = "";
+    document.getElementById("aftr_dry").value = "";
+
+    // Hide other linen input if visible
+    document.getElementById("other-linen-container").style.display = "none";
+    
+    // Disable linen size dropdown
+    document.getElementById("linen_sizes_dry").disabled = true;
+
+    // Clear any error states
+    clearErrors();
+
+    // Navigate to homepage
+    window.location.href = '../index.html';
+}
 
 function handleLinenChange() {
-    var linenType = document.getElementById("linen_type_dry");
-    var otherLinenInput = document.getElementById("other-linen_dry");
-    var sizeDropdown = document.getElementById("linen_sizes_dry");
-
-
-    if (linenType.value === "OTHERS") {
-        otherLinenInput.style.display = "block"; // Show input field
-        otherLinenInput.setAttribute("required", "true"); // Make it required
+    const linenType = document.getElementById('linen_type_dry').value;
+    const otherLinenContainer = document.getElementById('other-linen-container');
+    const otherLinenInput = document.getElementById('other-linen_dry');
+    const linenSizeDropdown = document.getElementById('linen_sizes_dry');
+    
+    // Handle the "Other" linen type input
+    if (linenType === 'OTHERS') {
+        otherLinenContainer.style.display = 'block';
+        otherLinenInput.required = true;
     } else {
-        otherLinenInput.style.display = "none"; // Hide input field
-        otherLinenInput.removeAttribute("required"); // Remove required attribute
-        otherLinenInput.value = ""; // Clear input
+        otherLinenContainer.style.display = 'none';
+        otherLinenInput.required = false;
+        otherLinenInput.value = ''; // Clear the input when hidden
     }
-    if (linenType !== "") {
-        sizeDropdown.disabled = false;
+
+    // Enable/disable linen size dropdown based on selection
+    if (linenType && linenType !== '') {
+        linenSizeDropdown.disabled = false;
     } else {
-        sizeDropdown.disabled = true;
-        sizeDropdown.value = ""; // Reset selection if linen type is deselected
+        linenSizeDropdown.disabled = true;
+        linenSizeDropdown.value = ''; // Reset selection if linen type is deselected
     }
 }
 
@@ -431,8 +430,99 @@ function validateForm() {
 }
 
     document.getElementById("fill_up_dry").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent form submission and page reload
+        event.preventDefault();
 
+        // Store data in localStorage
+        localStorage.setItem("date_dry", document.getElementById("date_dry").value);
+        localStorage.setItem("equipment_dry", document.getElementById("equipment_dry").value);
+        localStorage.setItem("set_time_dry", document.getElementById("set_time_dry").value);
+        localStorage.setItem("other-linen_dry", document.getElementById("other-linen_dry").value);
+        localStorage.setItem("linen_sizes_dry", document.getElementById("linen_sizes_dry").value);
+        localStorage.setItem("temp", document.getElementById("temp").value);
+        localStorage.setItem("linen_type_dry", document.getElementById("linen_type_dry").value);
+        localStorage.setItem("quantity_dry", document.getElementById("quantity_dry").value);
+        localStorage.setItem("bfr_dry", document.getElementById("bfr_dry").value);
+        localStorage.setItem("aftr_dry", document.getElementById("aftr_dry").value);
+
+        alert("Data submitted successfully!");
+
+        // Check if we're in a modal
+        const urlParams = new URLSearchParams(window.location.search);
+        const hideNav = urlParams.get('hideNav');
+        if (hideNav === 'true') {
+            window.parent.location.reload();
+        } else {
+            window.location.href = "electric_proc_2.html";
+        }
+    });
+
+function checkHideNav() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hideNav = urlParams.get('hideNav');
+    if (hideNav === 'true') {
+        document.querySelector('.nav-container').style.display = 'none';
+        document.body.style.paddingTop = '20px';  // Reduce padding since nav is hidden
+        // Update button text and hide back button in edit mode
+        document.getElementById('submitBtn').textContent = 'Done Editing';
+        document.getElementById('backBtn').style.display = 'none';
+    }
+}
+
+// Initialize when document is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    checkHideNav();
+    
+    // Load existing data if available
+    document.getElementById("date_dry").value = localStorage.getItem("date_dry") || "";
+    document.getElementById("equipment_dry").value = localStorage.getItem("equipment_dry") || "";
+    document.getElementById("set_time_dry").value = localStorage.getItem("set_time_dry") || "";
+    document.getElementById("temp").value = localStorage.getItem("temp") || "";
+    document.getElementById("quantity_dry").value = localStorage.getItem("quantity_dry") || "";
+    document.getElementById("bfr_dry").value = localStorage.getItem("bfr_dry") || "";
+    document.getElementById("aftr_dry").value = localStorage.getItem("aftr_dry") || "";
+    
+    const linenType = localStorage.getItem("linen_type_dry");
+    if (linenType) {
+        document.getElementById("linen_type_dry").value = linenType;
+        if (linenType === "OTHERS") {
+            document.getElementById("other-linen_dry").style.display = "block";
+            document.getElementById("other-linen_dry").value = localStorage.getItem("other-linen_dry") || "";
+        }
+    }
+    
+    const linenSize = localStorage.getItem("linen_sizes_dry");
+    if (linenSize) {
+        document.getElementById("linen_sizes_dry").value = linenSize;
+        document.getElementById("linen_sizes_dry").disabled = false;
+    }
+});
+
+function clearErrors() {
+    document.querySelectorAll('.form-group').forEach(group => {
+        group.classList.remove('error');
+    });
+}
+
+document.getElementById("fill_up_dry").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    // Clear previous errors
+    clearErrors();
+
+    // Get all required inputs
+    let isValid = true;
+    const requiredFields = this.querySelectorAll('[required]');
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.closest('.form-group').classList.add('error');
+            isValid = false;
+        }
+    });
+
+    if (!isValid) {
+        return;
+    }
 
     // Store data in localStorage
     localStorage.setItem("date_dry", document.getElementById("date_dry").value);
@@ -446,15 +536,17 @@ function validateForm() {
     localStorage.setItem("bfr_dry", document.getElementById("bfr_dry").value);
     localStorage.setItem("aftr_dry", document.getElementById("aftr_dry").value);
 
-
     alert("Data submitted successfully!");
 
-// Redirect after 2 seconds
-setTimeout(function() {
-    window.open("electric_proc_2.html", "blank"); // Redirect to the output page
-}, 1000);
-    });
-
+    // Check if we're in a modal
+    const urlParams = new URLSearchParams(window.location.search);
+    const hideNav = urlParams.get('hideNav');
+    if (hideNav === 'true') {
+        window.parent.location.reload();
+    } else {
+        window.location.href = "electric_proc_2.html";
+    }
+});
 
 </script>
 

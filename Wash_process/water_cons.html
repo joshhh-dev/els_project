@@ -116,9 +116,63 @@
         tr:nth-child(even) { 
             background-color: #f8f9fa; 
         }   
+
+        /* Navigation bar styles */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #007BFF;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .nav-button {
+            background-color: white;
+            color: #007BFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: auto;
+            margin: 0;
+        }
+
+        .nav-button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .nav-button.active {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        /* Adjust main content to account for fixed nav */
+        body {
+            padding-top: 60px;
+        }
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <div class="nav-container">
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='wash_proc.html'">Washing Process</button>
+            <button class="nav-button" onclick="window.location.href='energy_cons.html'">Electric Submetering</button>
+            <button class="nav-button active" onclick="window.location.href='water_cons.html'">Water Submetering</button>
+        </div>
+    </div>
+
     <div id="readings">
         <div class="container">
             <h2>Water Submetering System</h2>
@@ -169,6 +223,15 @@
     <button class="btn-action" onclick="submitData()">Submit Data</button>
 
     <script>
+        // Check URL parameters for hideNav
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('hideNav') === 'true') {
+                document.querySelector('.nav-container').style.display = 'none';
+                document.body.style.paddingTop = '0'; // Remove the top padding when nav is hidden
+            }
+        });
+
         function calculate(element) {
             let container = element.closest(".container");
             let startRead = parseFloat(container.querySelector(".start_read").value) || 0;
@@ -214,6 +277,7 @@
         return;
     } else {
         alert("Data Submitted Successfully");
+        alert("Data will be displayed in the output page");
     }
 
     let readings = [];

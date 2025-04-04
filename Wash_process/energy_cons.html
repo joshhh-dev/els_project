@@ -3,19 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electric Submetering</title>
+    <title>Energy Consumption</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-body {
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-    padding: 10px;
-    margin: 0; /* Remove default body margin */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 100vh; /* Ensures content fills the screen */
-}
+        /* Navigation bar styles */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #007BFF;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .nav-button {
+            background-color: white;
+            color: #007BFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: auto;
+            margin: 0;
+        }
+
+        .nav-button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .nav-button.active {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        /* Adjust main content to account for fixed nav */
+        body {
+            padding-top: 60px;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0; /* Remove default body margin */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh; /* Ensures content fills the screen */
+        }
 
         h2 {
             color: #19118b; /* Neon Blue */
@@ -32,16 +73,23 @@ body {
             transition: 0.3s;
         }
 
- 
         table { 
             width: 100%; 
             border-collapse: collapse; 
             margin: 20px 0; 
         }
-
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <div class="nav-container">
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='wash_proc.html'">Wash Process</button>
+            <button class="nav-button active" onclick="window.location.href='energy_cons.html'">Electric Submetering</button>
+            <button class="nav-button" onclick="window.location.href='water_cons.html'">Water Submetering</button>
+        </div>
+    </div>
+
     <div class="card mx-auto" style="width: 500px;">
         <div class="card text-white">
             <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
@@ -60,7 +108,7 @@ body {
                     <div class="input-group mb-3">
                         <div class="input-group">
                             <span class="input-group-text" id=""><strong>Cost per kWh:</strong></span>
-                            <input class="form-control" type="number" id="costing" min="0" oninput="calculate()">                  </div>   
+                            <input class="form-control" type="number" id="costing" min="0" oninput="calculate()"></div>   
                         </div>
                     </div>
         
@@ -117,9 +165,6 @@ body {
 
             alert("Data submitted successfully!");
             
-            setTimeout(function() {
-                window.open("water_cons.html", "_blank");
-            }, 1000);
         }
     </script>
 </body>

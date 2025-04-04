@@ -5,93 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electric Submetering</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             color: #00aaff;
             text-align: center;
-            padding: 10px;
-            margin: 0; /* Remove default body margin */
+            margin: 0;
+            padding-top: 80px; /* Add padding to account for fixed nav */
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            min-height: 100vh; /* Ensures content fills the screen */
+            align-items: center;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .button-container button {
+            min-width: 120px;
         }
 
         h2 {
-            color: #19118b; /* Neon Blue */
+            color: #19118b;
             font-size: 28px;
+            margin-bottom: 20px;
         }
-        button {
+
+        .nav-container {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-button {
             padding: 10px 20px;
-            font-size: 18px;
-            font-weight: bold;
+            background-color: #007BFF;
+            color: white;
             border: none;
-
             border-radius: 5px;
-            margin: 10px;
             cursor: pointer;
-            transition: 0.3s;;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: auto;
+            min-width: 150px;
+        }
+        
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .nav-button.active {
+            background-color: #0056b3;
         }
 
- 
         table { 
             width: 100%; 
             border-collapse: collapse; 
             margin: 20px 0; 
         }
 
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            margin-bottom: 20px !important;
+        }
+
+        .error-feedback {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .input-group.error .input-group-text {
+            border-color: #dc3545;
+        }
+
+        .input-group.error .form-control {
+            border-color: #dc3545;
+        }
+
+        .input-group.error + .error-feedback {
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <div class="card mx-auto" style="width: 500px;">
-        <div class="card text-white">
-        <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <span class="input-group-text" id=""><strong>Start Reading (kWh):</strong></span>
-                <input class="form-control" type="number" id="start_reads_dry" min="0" oninput="calculate()">
-            </div>
+    <div class="nav-container">
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='drying_proc.html'">Drying Process</button>
+            <button class="nav-button active" onclick="window.location.href='electric_proc_2.html'">Electric Submetering</button>
+            <button class="nav-button" onclick="window.location.href='lpg_sub.html'">LPG Submetering</button>
         </div>
-        <div class="input-group mb-3">
-            <div class="input-group">
-                <span class="input-group-text" id=""><strong>End Reading (kWh):</strong></span> 
-                <input class="form-control" type="number" id="end_reads_dry" min="0" oninput="calculate()">
-            </div>
-        </div>
-            <div class="input-group mb-3">
-                <div class="input-group">
-                    <span class="input-group-text" id=""><strong>Cost per kWh:</strong></span>
-                    <input class="form-control" type="number" id="cost_dry" min="0" oninput="calculate()">                  </div>   
+    </div>
+
+    <div class="main-content">
+        <div class="card">
+            <div class="card text-white">
+                <h2 class="card-header bg-secondary">Electric Submetering System</h2>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><strong>Start Reading (kWh):</strong></span>
+                        <input class="form-control" type="number" id="start_reads_dry" min="0" oninput="calculate()">
+                        <div class="error-feedback">This field is required</div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><strong>End Reading (kWh):</strong></span> 
+                        <input class="form-control" type="number" id="end_reads_dry" min="0" oninput="calculate()">
+                        <div class="error-feedback">This field is required</div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><strong>Cost per kWh:</strong></span>
+                        <input class="form-control" type="number" id="cost_dry" min="0" oninput="calculate()">
+                        <div class="error-feedback">This field is required</div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-    </div> 
-</div>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col"><p><strong>Total kWh Used</strong>(kWh)</p></th>
+                            <th scope="col"><p><strong>Estimated Cost</strong>(₱)</p></th>               
+                        </tr>
+                    </thead>
+                    <tr>
+                        <th scope="row"><span id="totalUsed_dry">0.0000kWh</span></th>
+                        <th scope="row"><span id="costing_dry">₱0.0000</span></th>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
-</div>
-<div class="card mx-auto border-light">
-    <table class="table table-bordered" style="width: 500px; height: 100px;" >
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col"><p><strong>Total kWh Used</strong>(kWh)</p></th>
-                <th scope="col"><p><strong>Estimated Cost</strong>(₱)</p></th>               
-            </tr>
-        </thead>
-        <tr>
-            <th scope="row"><span id="totalUsed_dry">0.0000kWh</span></th>
-            <th scope="row"><span id="costing_dry">₱0.0000</span></th>
-        </tr>
-
-    </table>
-</div>
-
-<button class="btn btn-primary btn-lg btn-block" onclick="submitData()">Add to template</button>
-<button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='drying_proc.html'">Back</button>
-
-    
+        <div class="button-container">
+            <button class="btn btn-secondary" onclick="window.location.href='drying_proc.html'">Back</button>
+            <button class="btn btn-primary" onclick="submitData()">Next</button>
+        </div>
+    </div>
 
     <script>
+        function checkHideNav() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hideNav = urlParams.get('hideNav');
+            if (hideNav === 'true') {
+                document.querySelector('.nav-container').style.display = 'none';
+                document.body.style.paddingTop = '20px';  // Reduce padding since nav is hidden
+                // Update button text and hide back button in edit mode
+                document.getElementById('submitBtn').textContent = 'Done Editing';
+                document.getElementById('backBtn').style.display = 'none';
+            }
+        }
+
+        // Load existing data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkHideNav();
+            
+            // Load existing data if available
+            document.getElementById("start_reads_dry").value = localStorage.getItem("start_reads_dry") || "";
+            document.getElementById("end_reads_dry").value = localStorage.getItem("end_reads_dry") || "";
+            document.getElementById("cost_dry").value = localStorage.getItem("cost_per_kwh_dry") || "";
+            
+            // Calculate if we have values
+            if (document.getElementById("start_reads_dry").value && 
+                document.getElementById("end_reads_dry").value && 
+                document.getElementById("cost_dry").value) {
+                calculate();
+            }
+        });
+
         function calculate() {
             let startRead = parseFloat(document.getElementById("start_reads_dry").value) || 0;
             let endRead = parseFloat(document.getElementById("end_reads_dry").value) || 0;
@@ -104,25 +223,80 @@
             document.getElementById("costing_dry").textContent = "₱" + estimatedCost.toFixed(4);
         }
 
+        function clearErrors() {
+            document.querySelectorAll('.input-group').forEach(group => {
+                group.classList.remove('error');
+            });
+        }
+
         function submitData() {
             let startRead = document.getElementById("start_reads_dry").value;
             let endRead = document.getElementById("end_reads_dry").value;
-            let costing = document.getElementById("costing_dry").value;
+            let cost = document.getElementById("cost_dry").value;
+            let isValid = true;
 
-            if(startRead === "" || endRead === "" || costing === "") {
-                alert("This field cannot be empty");
+            // Clear previous errors
+            clearErrors();
+
+            // Validate each field
+            if(startRead === "") {
+                document.getElementById("start_reads_dry").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
+            if(endRead === "") {
+                document.getElementById("end_reads_dry").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
+            if(cost === "") {
+                document.getElementById("cost_dry").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
+
+            if(!isValid) {
                 return false;
             }
-            localStorage.setItem("start_reads_dry", document.getElementById("start_reads_dry").value);
-            localStorage.setItem("end_reads_dry", document.getElementById("end_reads_dry").value);
+
+            // Store the cost per kWh separately
+            localStorage.setItem("cost_per_kwh_dry", cost);
+            localStorage.setItem("start_reads_dry", startRead);
+            localStorage.setItem("end_reads_dry", endRead);
             localStorage.setItem("total_used_dry", document.getElementById("totalUsed_dry").textContent);
             localStorage.setItem("cost_dry", document.getElementById("costing_dry").textContent);
 
             alert("Data submitted successfully!");
             
-            setTimeout(function() {
-                window.open("lpg_sub.html");
-            }, 1000);
+            // Check if we're in a modal
+            const urlParams = new URLSearchParams(window.location.search);
+            const hideNav = urlParams.get('hideNav');
+            if (hideNav === 'true') {
+                window.parent.location.reload();
+            } else {
+                window.location.href = "lpg_sub.html";
+            }
+        }
+
+        function clearAllData() {
+            // Clear all localStorage items for electric process
+            localStorage.removeItem("start_reads_dry");
+            localStorage.removeItem("end_reads_dry");
+            localStorage.removeItem("cost_per_kwh_dry");
+            localStorage.removeItem("total_used_dry");
+            localStorage.removeItem("cost_dry");
+
+            // Clear all form inputs
+            document.getElementById("start_reads_dry").value = "";
+            document.getElementById("end_reads_dry").value = "";
+            document.getElementById("cost_dry").value = "";
+
+            // Reset calculated values
+            document.getElementById("totalUsed_dry").textContent = "0.0000kWh";
+            document.getElementById("costing_dry").textContent = "₱0.0000";
+
+            // Clear any error states
+            clearErrors();
+
+            // Navigate to homepage
+            window.location.href = '../index.html';
         }
     </script>
 </body>
