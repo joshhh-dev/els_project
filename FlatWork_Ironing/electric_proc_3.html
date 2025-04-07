@@ -3,23 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electric Submetering - Flatwork Ironing</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <title>Electric Submetering</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            color: #00aaff;
+            text-align: center;
             margin: 0;
-            padding-top: 80px;
+            padding-top: 80px; /* Add padding to account for fixed nav */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -28,55 +22,32 @@
 
         .main-content {
             width: 100%;
-            max-width: 1000px;
+            max-width: 500px;
             margin: 20px auto;
             padding: 0 20px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
         }
 
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        h2 {
-            text-align: center;
-            color: #007BFF;
+        .card {
             margin-bottom: 20px;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .button-container {
             display: flex;
             gap: 10px;
             justify-content: space-between;
-            margin-top: 20px;
+            margin: 20px 0;
             width: 100%;
         }
 
         .button-container button {
             min-width: 120px;
+        }
+
+        h2 {
+            color: #19118b;
+            font-size: 28px;
+            margin-bottom: 20px;
         }
 
         .nav-container {
@@ -120,14 +91,18 @@
             background-color: #0056b3;
         }
 
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+        }
 
-            .form-container {
-                width: 100%;
-            }
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            margin-bottom: 20px !important;
         }
 
         .error-feedback {
@@ -137,57 +112,55 @@
             display: none;
         }
 
-        .error .form-control,
-        .error select {
+        .input-group.error .input-group-text {
             border-color: #dc3545;
         }
 
-        .error .error-feedback {
-            display: block;
+        .input-group.error .form-control {
+            border-color: #dc3545;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-            position: relative;
+        .input-group.error + .error-feedback {
+            display: block;
         }
     </style>
 </head>
 <body>
     <div class="nav-container">
         <div class="nav-buttons">
-            <button class="nav-button" onclick="window.location.href='flatiron_proc.html'">Flatwork Ironing Process</button>
-            <button class="nav-button active" onclick="window.location.href='electric_proc_3.html'">Electric Submetering</button>
-            <button class="nav-button" onclick="window.location.href='lpg_sub_2.html'">LPG Submetering</button>
+            <button class="nav-button" onclick="window.location.href='drying_proc.html'">Drying Process</button>
+            <button class="nav-button active" onclick="window.location.href='electric_proc_2.html'">Electric Submetering</button>
+            <button class="nav-button" onclick="window.location.href='lpg_sub.html'">LPG Submetering</button>
         </div>
     </div>
 
     <div class="main-content">
-        <div class="form-container">
-            <h2>Electric Submetering - Flatwork Ironing</h2>
-            <div class="card mx-auto mb-3" style="width: 500px;">
-                <div class="card text-white">
-                <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
-                <div class="input-group mb-3">
-                    <div class="input-group">
-                        <span class="input-group-text" id=""><strong>Start Reading (kWh):</strong></span>
-                        <input class="form-control" type="number" id="start_reads_iron" min="0" oninput="calculate()">
-                    </div>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group">
-                        <span class="input-group-text" id=""><strong>End Reading (kWh):</strong></span> 
-                        <input class="form-control" type="number" id="end_reads_iron" min="0" oninput="calculate()">
-                    </div>
-                </div>
+        <div class="card">
+            <div class="card text-white">
+                <h2 class="card-header bg-secondary">Electric Submetering System</h2>
+                <div class="card-body">
                     <div class="input-group mb-3">
-                        <div class="input-group">
-                            <span class="input-group-text" id=""><strong>Cost per kWh:</strong></span>
-                            <input class="form-control" type="number" id="cost_iron" min="0" oninput="calculate()">                  </div>   
-                        </div>
+                        <span class="input-group-text"><strong>Start Reading (kWh):</strong></span>
+                        <input class="form-control" type="number" id="start_reads_iron" min="0" oninput="calculate()">
+                        <div class="error-feedback">This field is required</div>
                     </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><strong>End Reading (kWh):</strong></span> 
+                        <input class="form-control" type="number" id="end_reads_iron" min="0" oninput="calculate()">
+                        <div class="error-feedback">This field is required</div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><strong>Cost per kWh:</strong></span>
+                        <input class="form-control" type="number" id="cost_iron" min="0" oninput="calculate()">
+                        <div class="error-feedback">This field is required</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                </div> 
-                <table class="table table-bordered" style="width: 550px; height: 100px;" >
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col"><p><strong>Total kWh Used</strong>(kWh)</p></th>
@@ -198,79 +171,132 @@
                         <th scope="row"><span id="totalUsed_iron">0.0000kWh</span></th>
                         <th scope="row"><span id="costing_iron">₱0.0000</span></th>
                     </tr>
-    
                 </table>
-                    <div class="button-container mt-4">
-                        <button class="btn btn-secondary btn-lg" onclick="window.location.href='flatiron_proc.html'" id="backButton">Back</button>
-                        <button class="btn btn-primary btn-lg" onclick="submitData()" id="nextButton">Next</button>
-                    </div>
             </div>
         </div>
 
-
+        <div class="button-container">
+            <button class="btn btn-secondary" onclick="window.location.href='drying_proc.html'">Back</button>
+            <button class="btn btn-primary" onclick="submitData()">Next</button>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function checkHideNav() {
             const urlParams = new URLSearchParams(window.location.search);
             const hideNav = urlParams.get('hideNav');
-            
             if (hideNav === 'true') {
-                const navContainer = document.querySelector('.nav-container');
-                if (navContainer) {
-                    navContainer.style.display = 'none';
-                }
-                document.body.style.paddingTop = '20px';
-                
-                // Update buttons for edit mode
-                const nextButton = document.getElementById('nextButton');
-                if (nextButton) {
-                    nextButton.textContent = 'Done Editing';
-                    nextButton.onclick = function() {
-                        submitData();
-                        window.parent.location.reload(); // Refresh the parent window
-                    };
-                }
-                // Hide back button in edit mode
-                const backButton = document.getElementById('backButton');
-                if (backButton) {
-                    backButton.style.display = 'none';
-                }
+                document.querySelector('.nav-container').style.display = 'none';
+                document.body.style.paddingTop = '20px';  // Reduce padding since nav is hidden
+                // Update button text and hide back button in edit mode
+                document.getElementById('submitBtn').textContent = 'Done Editing';
+                document.getElementById('backBtn').style.display = 'none';
+            }
+        }
+
+        // Load existing data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkHideNav();
+            
+            // Load existing data if available
+            document.getElementById("start_reads_iron").value = localStorage.getItem("start_reads_iron") || "";
+            document.getElementById("end_reads_iron").value = localStorage.getItem("end_reads_iron") || "";
+            document.getElementById("cost_iron").value = localStorage.getItem("cost_per_kwh_iron") || "";
+            
+            // Calculate if we have values
+            if (document.getElementById("start_reads_iron").value && 
+                document.getElementById("end_reads_iron").value && 
+                document.getElementById("cost_iron").value) {
+                calculate();
             }
         });
 
         function calculate() {
             let startRead = parseFloat(document.getElementById("start_reads_iron").value) || 0;
             let endRead = parseFloat(document.getElementById("end_reads_iron").value) || 0;
-            let costing = parseFloat(document.getElementById("cost_iron").value) || 0;
+            let cost = parseFloat(document.getElementById("cost_iron").value) || 0;
             
             let totalUsed = Math.max(0, endRead - startRead);
-            let estimatedCost = totalUsed * costing;
+            let estimatedCost = totalUsed * cost;
             
             document.getElementById("totalUsed_iron").textContent = totalUsed.toFixed(4)+ "kWh";
             document.getElementById("costing_iron").textContent = "₱" + estimatedCost.toFixed(4);
         }
 
+        function clearErrors() {
+            document.querySelectorAll('.input-group').forEach(group => {
+                group.classList.remove('error');
+            });
+        }
+
         function submitData() {
             let startRead = document.getElementById("start_reads_iron").value;
             let endRead = document.getElementById("end_reads_iron").value;
-            let costing = document.getElementById("costing_iron").value;
+            let cost = document.getElementById("cost_iron").value;
+            let isValid = true;
 
-            if(startRead === "" || endRead === "" || costing === "") {
-                alert("This field cannot be empty");
+            // Clear previous errors
+            clearErrors();
+
+            // Validate each field
+            if(startRead === "") {
+                document.getElementById("start_reads_iron").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
+            if(endRead === "") {
+                document.getElementById("end_reads_iron").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
+            if(cost === "") {
+                document.getElementById("cost_iron").closest('.input-group').classList.add('error');
+                isValid = false;
+            }
+
+            if(!isValid) {
                 return false;
             }
 
-            localStorage.setItem("start_reads_iron", document.getElementById("start_reads_iron").value);
-            localStorage.setItem("end_reads_iron", document.getElementById("end_reads_iron").value);
+            // Store the cost per kWh separately
+            localStorage.setItem("cost_per_kwh_iron", cost);
+            localStorage.setItem("start_reads_iron", startRead);
+            localStorage.setItem("end_reads_iron", endRead);
             localStorage.setItem("total_used_iron", document.getElementById("totalUsed_iron").textContent);
             localStorage.setItem("cost_iron", document.getElementById("costing_iron").textContent);
 
             alert("Data submitted successfully!");
             
-            setTimeout(function() {
-                window.open("lpg_sub_2.html");
-            }, 1000);
+            // Check if we're in a modal
+            const urlParams = new URLSearchParams(window.location.search);
+            const hideNav = urlParams.get('hideNav');
+            if (hideNav === 'true') {
+                window.parent.location.reload();
+            } else {
+                window.location.href = "lpg_sub_2.html";
+            }
+        }
+
+        function clearAllData() {
+            // Clear all localStorage items for electric process
+            localStorage.removeItem("start_reads_iron");
+            localStorage.removeItem("end_reads_iron");
+            localStorage.removeItem("cost_per_kwh_iron");
+            localStorage.removeItem("total_used_iron");
+            localStorage.removeItem("cost_iron");
+
+            // Clear all form inputs
+            document.getElementById("start_reads_iron").value = "";
+            document.getElementById("end_reads_iron").value = "";
+            document.getElementById("cost_iron").value = "";
+
+            // Reset calculated values
+            document.getElementById("totalUsed_iron").textContent = "0.0000kWh";
+            document.getElementById("costing_iron").textContent = "₱0.0000";
+
+            // Clear any error states
+            clearErrors();
+
+            // Navigate to homepage
+            window.location.href = '../index.html';
         }
     </script>
 </body>

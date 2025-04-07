@@ -89,8 +89,8 @@
                     </tr>
                     <tr><td>LINEN SIZE</td><td id="outLinen_sizes_iron"></td></tr>
                     <tr><td>QUANTITY</td><td id="outQuantity_iron"></td></tr>
-                    <tr><td>TOTAL KGS BEFORE DRY</td><td id="outBfr_iron"></td></tr>
-                    <tr><td>TOTAL KGS AFTER DRY</td><td id="outAftr_iron"></td></tr>
+                    <tr><td>TOTAL KGS BEFORE IRONING</td><td id="outBfr_iron"></td></tr>
+                    <tr><td>TOTAL KGS AFTER IRONING</td><td id="outAftr_iron"></td></tr>
                 </table>
                 <div class="text-center mt-3">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ironingModal">Edit Section</button>
@@ -119,7 +119,7 @@
             <div class="card-body">
                 <table class="table table-bordered">
                     <tr><th>Field</th><th>Value</th></tr>
-                    <tr><td>Initial Reading (m³)</td><td id="outInitialReading"></td></tr>
+                    <tr><td>Start Reading (m³)</td><td id="outInitialReading"></td></tr>
                     <tr><td>Final Reading (m³)</td><td id="outFinalReading"></td></tr>
                     <tr><td>Total Gas Used (m³)</td><td id="outGasUsed"></td></tr>
                     <tr><td>LPG Used (kGs)</td><td id="outLpgKgs"></td></tr>
@@ -211,6 +211,7 @@
                 localStorage.removeItem("end_reads_iron");
                 localStorage.removeItem("total_used_iron");
                 localStorage.removeItem("cost_iron");
+                localStorage.removeItem("cost_per_kwh_iron");
 
                 // Clear LPG submetering data
                 localStorage.removeItem("initial_reading_iron");
@@ -315,15 +316,17 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'mm', 'a4');
 
+            // Set initial font styles for title
             doc.setFont("helvetica", "bold");
             doc.setFontSize(16);
             doc.text("ELS Flatwork Ironing Process", 15, 15);
             
+            // Add generation date with smaller font
             doc.setFontSize(10);
             doc.setFont("helvetica", "normal");
-            doc.text("Generated on: " + new Date().toLocaleString(), 15, 25);
+            doc.text("Generated on: " + new Date().toLocaleString(), 15, 20);
 
-            let yPosition = 35;
+            let yPosition = 25;
             let tables = document.querySelectorAll("table");
 
             if (tables.length === 0) {
@@ -331,9 +334,10 @@
                 return;
             }
 
-            tables.forEach((table) => {
+            tables.forEach((table, index) => {
                 let title = table.closest('.card').querySelector('h2').innerText || "Untitled Table";
                 
+                // Add section titles with smaller font
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(12);
                 doc.text(title, 15, yPosition);
@@ -355,14 +359,26 @@
                     startY: yPosition,
                     head: [headers],
                     body: rows,
-                    theme: "striped",
-                    styles: { fontSize: 10, cellPadding: 3 },
-                    headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] },
-                    columnStyles: { 0: { cellWidth: 'auto' } },
-                    margin: { top: 40 },
+                    theme: "grid",
+                    styles: { 
+                        fontSize: 12,
+                        cellPadding: 2,
+                        overflow: 'linebreak',
+                        halign: 'left'
+                    },
+                    headStyles: { 
+                        fillColor: [0, 102, 204], 
+                        textColor: [255, 255, 255],
+                        fontSize: 12
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 'auto' },
+                        1: { cellWidth: 'auto' }
+                    },
+                    margin: { left: 15, right: 15 },
                 });
 
-                yPosition = doc.lastAutoTable.finalY + 10;
+                yPosition = doc.lastAutoTable.finalY + 9;
             });
 
             let filename = `Ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;

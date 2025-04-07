@@ -121,10 +121,13 @@
             <div class="card-body">
                 <table class="table table-bordered">
                     <tr><th>Field</th><th>Value</th></tr>
-                    <tr><th>Initial Reading (kg)</th><td id="outInitialReading"></td></tr>
-                    <tr><th>Final Reading (kg)</th><td id="outFinalReading"></td></tr>
-                    <tr><th>Gas Used (kg)</th><td id="outGasUsed"></td></tr>
-                    <tr><th>Total Cost (₱)</th><td id="outTotalCost"></td></tr>
+                    <tr><td>Start Reading (m³)</td><td id="outInitialReading"></td></tr>
+                    <tr><td>Final Reading (m³)</th><td id="outFinalReading"></td></tr>
+                    <tr><td>Gas Used (m³)</td><td id="outGasUsed"></td></tr>
+                    <tr><td>LPG Used (kGs)</td><td id="outLpgKgs"></td></tr>
+                    <tr><td>Price per kg (₱)</td><td id="outPricePerKg"></td></tr>
+                    <tr><td>Total Cost (₱)</td><td id="outTotalCost"></td></tr>
+
                 </table>
                 <div class="text-center mt-3">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lpgModal">Edit Section</button>
@@ -263,6 +266,18 @@
         document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") + "kg" || "N/A";
         document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading") + "kg" || "N/A";
         document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used") + "kg" || "N/A";
+                // Calculate and display LPG kGs
+                if (localStorage.getItem("gas_used")) {
+            const gasUsed = parseFloat(localStorage.getItem("gas_used"));
+            const lpgKgs = (1.898 * gasUsed).toFixed(4);
+            document.getElementById("outLpgKgs").textContent = lpgKgs + "kGs";
+        } else {
+            document.getElementById("outLpgKgs").textContent = "N/A";
+        }
+        
+        document.getElementById("outPricePerKg").textContent = localStorage.getItem("pricePerKg") ? "₱" + parseFloat(localStorage.getItem("pricePerKg")).toFixed(2) : "N/A";
+        document.getElementById("outTotalCost").textContent = localStorage.getItem("total_cost") ? "₱" + parseFloat(localStorage.getItem("total_cost")).toFixed(4) : "N/A";
+        
         document.getElementById("outTotalCost").textContent = "₱" + localStorage.getItem("total_cost") || "N/A";
 
     function exportToExcel() {
@@ -280,7 +295,7 @@
     ws_data.push([]);
 
     tables.forEach((table) => {
-        let title = table.previousElementSibling?.innerText || "Untitled Table";
+        let title = table.closest('.card').querySelector('h2').innerText || "Untitled Table";
         ws_data.push([title]);
         ws_data.push([]);
 
@@ -315,7 +330,7 @@ function exportToPDF() {
     doc.setFont("helvetica", "normal");
     doc.text("Generated on: " + new Date().toLocaleString(), 15, 25);
 
-    let yPosition = 35; // Starting Y position
+    let yPosition = 25; // Starting Y position
     let tables = document.querySelectorAll("table");
 
     if (tables.length === 0) {
@@ -323,8 +338,8 @@ function exportToPDF() {
         return;
     }
 
-    tables.forEach((table) => {
-        let title = table.previousElementSibling?.innerText || "Untitled Table";
+    tables.forEach((table, index) => {
+        let title = table.closest('.card').querySelector('h2').innerText || "Untitled Table";
         
         // Add Table Title
         doc.setFont("helvetica", "bold");
@@ -350,14 +365,26 @@ function exportToPDF() {
                 startY: yPosition,
                 head: [headers],
                 body: rows,
-                theme: "striped",
-                styles: { fontSize: 10, cellPadding: 3 },
-                headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] }, // Blue header
-                columnStyles: { 0: { cellWidth: 'auto' } },
-                margin: { top: 40 },
+                theme: "grid",
+                styles: { 
+                    fontSize: 10, 
+                    cellPadding: 3, 
+                    overflow: 'linebreak',
+                    halign: 'left'
+                },
+                headStyles: { 
+                    fillColor: [0, 102, 204], 
+                    textColor: [255, 255, 255], 
+                    fontSize: 12
+                }, // Blue header
+                columnStyles: {
+                     0: { cellWidth: 'auto' },
+                     1: { cellWidth: 'auto'} 
+                    },
+                margin: { left: 15, right: 15 },
             });
 
-            yPosition = doc.lastAutoTable.finalY + 10; // Move below last table
+            yPosition = doc.lastAutoTable.finalY + 9; // Move below last table
         } else {
             alert("jsPDF-AutoTable is required for proper formatting.");
             return;
