@@ -187,11 +187,21 @@ button:hover {
 
         <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
         <button class="pdf-btn" onclick="exportToPDF()">Download as PDF</button>
-        <button class="back-btn" onclick="window.location.href='../index.html'">Go to HomePage</button>
+        <button class="back-btn" onclick="clearAllDataAndGoHome()">Go to HomePage</button>
 </div>
 </div>
 
     <script>
+
+        //clear data when Go to HomePage got clicked
+        function clearAllDataAndGoHome() {
+            try{
+                localStorage.clear();
+                window.location.href = '../index.html';
+            } catch (error) {
+                console.error('Error clearing data:', error);
+            }
+        }
         // Function to update display
         function updateDisplay() {
             try {
