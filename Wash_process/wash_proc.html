@@ -296,9 +296,15 @@ iframe {
         <div class="container" style="width: 40rem;">
             <h2 class="card-title">Washing Process</h2>
             <form id="fill_up" >
-                <label for="date">DATE:</label>
-                <input type="date" id="date" name="date" required>
-                <span id="dateError" class="error"></span>
+                <div class="form-group">
+                    <label for="operator_name">Operator Name:</label>
+                    <input type="text" id="operator_name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" class="form-control" required>
+                </div>
             
                 <label for="load_number">LOAD #:</label>
                 <input type="number" id="load_number" name="load_number" required>
@@ -422,7 +428,7 @@ iframe {
             </div>
 
                 
-                <button type="submit">Next</button>
+                <button type="submit" id="nextBtn">Next</button>
                 <button type="button" class="btn btn-secondary" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
             </form>
             
@@ -512,6 +518,7 @@ document.getElementById("fill_up").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent form submission and page reload
 
     // Store data in localStorage
+    localStorage.setItem("operator_name", document.getElementById("operator_name").value);
     localStorage.setItem("date", document.getElementById("date").value);
     localStorage.setItem("load_number", document.getElementById("load_number").value);
     localStorage.setItem("trolley_number", document.getElementById("trolley_number").value);

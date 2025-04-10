@@ -81,6 +81,7 @@
             <div class="card-body">
                 <table class="table table-bordered">
                     <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td>OPERATOR NAME</td><td id="outOperator_dry"></td></tr>
                     <tr><td>DATE</td><td id="outDate_dry"></td></tr>
                     <tr><td>EQUIPMENT</td><td id="outEquipment_dry"></td></tr>
                     <tr><td>SET TIME</td><td id="outSet_time_dry"></td></tr>
@@ -198,6 +199,7 @@
         function clearAllDataAndGoHome() {
             try {
                 // Clear drying process data
+                localStorage.removeItem("operator_name_dry");
                 localStorage.removeItem("date_dry");
                 localStorage.removeItem("equipment_dry");
                 localStorage.removeItem("set_time_dry");
@@ -233,6 +235,7 @@
         }
 
         // Retrieve and display data
+        document.getElementById("outOperator_dry").textContent = localStorage.getItem("operator_name_dry") || "N/A";
         document.getElementById("outDate_dry").textContent = localStorage.getItem("date_dry") || "N/A";
         document.getElementById("outEquipment_dry").textContent = localStorage.getItem("equipment_dry") || "N/A";
         document.getElementById("outSet_time_dry").textContent = localStorage.getItem("set_time_dry") || "N/A";

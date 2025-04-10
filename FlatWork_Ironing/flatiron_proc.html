@@ -204,6 +204,11 @@
         <div class="form-container">
             <h2>Flatwork Ironing Process</h2>
             <form id="fill_up_iron">
+                <div class="form-group">
+                    <label for="operator_name_iron">OPERATOR NAME:</label>
+                    <input type="text" id="operator_name_iron" class="form-control" required>
+                </div>
+
                 <label for="date_iron">DATE:</label>
                 <input type="date" id="date_iron" name="date_iron" required>
                 <span id="dateError" class="error"></span>
@@ -302,6 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('fill_up_iron').onsubmit = function(e) {
             e.preventDefault();
             // Store the data
+            localStorage.setItem("operator_name_iron", document.getElementById("operator_name_iron").value);
             localStorage.setItem("date_iron", document.getElementById("date_iron").value);
             localStorage.setItem("equipment_iron", document.getElementById("equipment_iron").value);
             localStorage.setItem("set_time_iron", document.getElementById("set_time_iron").value);
@@ -417,6 +423,7 @@ function validateForm() {
 
 
     // Store data in localStorage
+    localStorage.setItem("operator_name_iron", document.getElementById("operator_name_iron").value);
     localStorage.setItem("date_iron", document.getElementById("date_iron").value);
     localStorage.setItem("equipment_iron", document.getElementById("equipment_iron").value);
     localStorage.setItem("set_time_iron", document.getElementById("set_time_iron").value);

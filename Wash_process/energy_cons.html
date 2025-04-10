@@ -130,13 +130,22 @@
                 </tr>
     
             </table>
-            <button class="btn btn-primary btn-lg btn-block" onclick="submitData()">Next</button>
-    <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='wash_proc.html'">Back</button>
+            <button class="btn btn-primary btn-lg btn-block" onclick="submitData()" id="nextBtn">Next</button>
+    <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='wash_proc.html'" id="back_bnt">Back</button>
         </div>
 
     
 
     <script>
+           // Check URL parameters for hideNav
+            document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('hideNav') === 'true') {
+                document.querySelector('.nav-container').style.display = 'none';
+                document.body.style.paddingTop = '0'; // Remove the top padding when nav is hidden
+            }
+        });
+        
         function calculate() {
             let startRead = parseFloat(document.getElementById("start_reads").value) || 0;
             let endRead = parseFloat(document.getElementById("end_reads").value) || 0;
@@ -145,7 +154,7 @@
             let totalUsed = Math.max(0, endRead - startRead);
             let estimatedCost = totalUsed * costing;
             
-            document.getElementById("totalUsed").textContent = totalUsed.toFixed(4);
+            document.getElementById("totalUsed").textContent = totalUsed.toFixed(4) + "kWh";
             document.getElementById("cost").textContent = "₱" + estimatedCost.toFixed(4);
         }
 
@@ -155,20 +164,40 @@
             let costing = document.getElementById("costing").value;
 
             if(startRead === "" || endRead === "" || costing === ""){
-                alert("Field can't leave empty");
+                alert("Fields can't be left empty");
                 return false;
             }
 
-            localStorage.setItem("start_reads", document.getElementById("start_reads").value);
-            localStorage.setItem("end_reads", document.getElementById("end_reads").value);
-            localStorage.setItem("total_used", document.getElementById("totalUsed").textContent);
-            localStorage.setItem("cost", document.getElementById("cost").textContent);
+            // Calculate final values
+            let totalUsed = Math.max(0, parseFloat(endRead) - parseFloat(startRead));
+            let estimatedCost = totalUsed * parseFloat(costing);
+
+            // Store the values in localStorage without units for numeric values
+            localStorage.setItem("start_reads", startRead);
+            localStorage.setItem("end_reads", endRead);
+            localStorage.setItem("costing", costing);
+            localStorage.setItem("total_used", totalUsed.toFixed(4));
+            localStorage.setItem("cost", "₱" + estimatedCost.toFixed(4)); // Add ₱ symbol when storing
 
             alert("Data submitted successfully!");
-
             window.location.href = "water_cons.html";
-            
         }
+
+        // Load existing data if available
+        window.addEventListener('DOMContentLoaded', function() {
+            let startRead = localStorage.getItem("start_reads");
+            let endRead = localStorage.getItem("end_reads");
+            let costing = localStorage.getItem("costing");
+
+            if (startRead) document.getElementById("start_reads").value = startRead;
+            if (endRead) document.getElementById("end_reads").value = endRead;
+            if (costing) document.getElementById("costing").value = costing;
+
+            // Calculate initial values if data exists
+            if (startRead || endRead || costing) {
+                calculate();
+            }
+        });
     </script>
 </body>
 </html>

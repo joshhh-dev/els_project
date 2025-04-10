@@ -205,6 +205,10 @@
             <h2>Drying Process</h2>
             <form id="fill_up_dry">
                 <div class="form-group">
+                    <div class="form-group">
+                        <label for="operator_name_dry">OPERATOR NAME:</label>
+                        <input type="text" id="operator_name_dry" class="form-control" required>
+                    </div>
                     <label for="date_dry">DATE:</label>
                     <input type="date" id="date_dry" name="date_dry" class="form-control" required>
                     <div class="error-feedback">Date is required</div>
@@ -297,6 +301,7 @@
 
 function clearAllData() {
     // Clear all localStorage items
+    localStorage.removeItem("operator_name_dry");
     localStorage.removeItem("date_dry");
     localStorage.removeItem("equipment_dry");
     localStorage.removeItem("set_time_dry");
@@ -362,6 +367,7 @@ function handleLinenChange() {
         event.preventDefault();
 
         // Store data in localStorage
+        localStorage.setItem("operator_name_dry", document.getElementById("operator_name_dry").value);
         localStorage.setItem("date_dry", document.getElementById("date_dry").value);
         localStorage.setItem("equipment_dry", document.getElementById("equipment_dry").value);
         localStorage.setItem("set_time_dry", document.getElementById("set_time_dry").value);
@@ -402,6 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
     checkHideNav();
     
     // Load existing data if available
+    document.getElementById("operator_name_dry").value = localStorage.getItem("operator_name_dry") || "";
     document.getElementById("date_dry").value = localStorage.getItem("date_dry") || "";
     document.getElementById("equipment_dry").value = localStorage.getItem("equipment_dry") || "";
     document.getElementById("set_time_dry").value = localStorage.getItem("set_time_dry") || "";
@@ -454,6 +461,7 @@ document.getElementById("fill_up_dry").addEventListener("submit", function(event
     }
 
     // Store data in localStorage
+    localStorage.setItem("operator_name_dry", document.getElementById("operator_name_dry").value);
     localStorage.setItem("date_dry", document.getElementById("date_dry").value);
     localStorage.setItem("equipment_dry", document.getElementById("equipment_dry").value);
     localStorage.setItem("set_time_dry", document.getElementById("set_time_dry").value);

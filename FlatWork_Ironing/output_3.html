@@ -79,6 +79,7 @@
             <div class="card-body">
                 <table class="table table-bordered">
                     <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td>OPERATOR NAME</td><td id="outOperator_iron"></td></tr>
                     <tr><td>DATE</td><td id="outDate_iron"></td></tr>
                     <tr><td>EQUIPMENT</td><td id="outEquipment_iron"></td></tr>
                     <tr><td>SET SPEED</td><td id="outSet_time_iron"></td></tr>
@@ -195,6 +196,7 @@
         function clearAllDataAndGoHome() {
             try {
                 // Clear ironing process data
+                localStorage.removeItem("operator_name_iron");
                 localStorage.removeItem("date_iron");
                 localStorage.removeItem("equipment_iron");
                 localStorage.removeItem("set_time_iron");

@@ -128,6 +128,7 @@ button:hover {
         <table>
             <h2 class="table-title">Submitted Laundry Data</h2>
             <tr><th>Field</th><th>Value</th></tr>
+            <tr><td>OPERATOR NAME</td><td id="outOperator"></td></tr>
             <tr><td>DATE</td><td id="outDate"></td></tr>
             <tr><td>LOAD #</td><td id="outLoad_number"></td></tr>
             <tr><td>TROLLEY #</td><td id="outTrolley_number"></td></tr>
@@ -163,6 +164,7 @@ button:hover {
     </table>        
     </div>
     <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#energyConsModal">Edit Section</button>
+
 </div>
 <div class="card">
     <div id="outputContainer">
@@ -190,44 +192,384 @@ button:hover {
 </div>
 
     <script>
-        // Modal event handlers
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get all modals
-            const modals = ['washProcessModal', 'energyConsModal', 'waterConsModal'];
-            
-            modals.forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                
-                // Handle modal hidden event
-                modal.addEventListener('hidden.bs.modal', function () {
-                    // Refresh the page to show updated data
-                    location.reload();
-                });
+        // Function to update display
+        function updateDisplay() {
+            try {
+                console.log("Updating display...");
+                console.log("Current localStorage data:", JSON.stringify(localStorage, null, 2));
 
-                // Handle iframe load event
-                const iframe = modal.querySelector('iframe');
-                iframe.addEventListener('load', function() {
-                    try {
-                        // Add event listener to the iframe's form submit event
-                        const iframeDoc = iframe.contentWindow.document;
-                        const form = iframeDoc.querySelector('form');
-                        if (form) {
-                            form.addEventListener('submit', function() {
-                                // Close the modal after form submission
-                                setTimeout(() => {
-                                    const modalInstance = bootstrap.Modal.getInstance(modal);
-                                    modalInstance.hide();
-                                }, 500);
-                            });
-                        }
-                    } catch (e) {
-                        console.error('Error accessing iframe content:', e);
+                // Update all displayed values from localStorage
+                const elements = {
+                    "outOperator": "operator_name",
+                    "outDate": "date",
+                    "outLoad_number": "load_number",
+                    "outTrolley_number": "trolley_number",
+                    "outEquipment": "equipment",
+                    "outSet_time": "set_time",
+                    "outProgram": "program",
+                    "outLinen_sizes": "linen_sizes",
+                    "outQuantity": "quantity",
+                    "outBfr_wash": "bfr_wash",
+                    "outAftr_wash": "aftr_wash",
+                    "outRMC": "rmc_total",
+                    "outStartReadings": "start_reads",
+                    "outEndReadings": "end_reads",
+                    "outTotalUseds": "total_used",
+                    "outCosts": "cost",
+                    "outDetergent": "detergent",
+                    "outMixType": "mixType",
+                    "outDosage": "dosage",
+                };
+
+                // Update each element with debug logging
+                Object.entries(elements).forEach(([elementId, storageKey]) => {
+                    const element = document.getElementById(elementId);
+                    const value = localStorage.getItem(storageKey);
+                    console.log(`Updating ${elementId} with ${storageKey}:`, value);
+                    if (element) {
+                        element.textContent = value || "N/A";
+                    } else {
+                        console.warn(`Element not found: ${elementId}`);
                     }
                 });
+
+                // Handle special cases
+                handleLinenType();
+                handleMixtureType();
+                updateWaterReadings();
+            } catch (error) {
+                console.error("Error in updateDisplay:", error);
+            }
+        }
+
+        // Function to handle linen type display
+        function handleLinenType() {
+            try {
+                let linenType = localStorage.getItem("linen-type");
+                let otherLinen = localStorage.getItem("other-linen");
+                console.log("Linen type:", linenType, "Other linen:", otherLinen);
+
+                let linenTypeElement = document.getElementById("outLinen-type");
+                let otherLinenElement = document.getElementById("outOtherLinen");
+                
+                if (linenType && linenType.toLowerCase() === "others" && otherLinen) {
+                    if (linenTypeElement) linenTypeElement.textContent = otherLinen;
+                    if (otherLinenElement) otherLinenElement.style.display = "none";
+                } else {
+                    if (linenTypeElement) linenTypeElement.textContent = linenType || "N/A";
+                    if (otherLinenElement) otherLinenElement.style.display = "none";
+                }
+            } catch (error) {
+                console.error("Error in handleLinenType:", error);
+            }
+        }
+
+        // Function to handle mixture type display
+        function handleMixtureType() {
+            try {
+                let mixType = localStorage.getItem("mixType");
+                let dosage = localStorage.getItem("dosage");
+                console.log("Mix type:", mixType, "Dosage:", dosage);
+                
+                if (mixType && dosage) {
+                    if (mixType.toLowerCase() === "liquid") {
+                        dosage += "mL";
+                    } else if (mixType.toLowerCase() === "powdered") {
+                        dosage += "mG";
+                    }
+                } else {
+                    mixType = "N/A";
+                    dosage = "N/A";
+                }
+                
+                const mixTypeElement = document.getElementById("outMixType");
+                const dosageElement = document.getElementById("outDosage");
+                
+                if (mixTypeElement) mixTypeElement.textContent = mixType;
+                if (dosageElement) dosageElement.textContent = dosage;
+            } catch (error) {
+                console.error("Error in handleMixtureType:", error);
+            }
+        }
+
+        // Function to update water readings display
+        function updateWaterReadings() {
+            try {
+                console.log("Updating water readings...");
+                // Retrieve stored readings data
+                let waterReadings = JSON.parse(localStorage.getItem("waterReadings") || "[]");
+                console.log("Water readings from localStorage:", waterReadings);
+
+                let outputContainer = document.getElementById("outputContainer");
+                if (!outputContainer) {
+                    console.error("Output container not found");
+                    return;
+                }
+                outputContainer.innerHTML = ''; // Clear existing content
+
+                if (waterReadings && waterReadings.length > 0) {
+                    // Group readings by waterType (Program)
+                    let groupedData = {};
+                    waterReadings.forEach(reading => {
+                        if (!groupedData[reading.waterType]) {
+                            groupedData[reading.waterType] = [];
+                        }
+                        groupedData[reading.waterType].push(reading);
+                    });
+
+                    // Create tables for each program
+                    Object.keys(groupedData).forEach(waterType => {
+                        let programTable = document.createElement("div");
+                        programTable.innerHTML = `
+                            <h2>Water Submetering System</h2>
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Temperature</th>
+                                        <th>Start Reading (m³)</th>
+                                        <th>End Reading (m³)</th>
+                                        <th>Total Water Used (m³)</th>
+                                        <th>Estimated Cost (₱)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody_${waterType.replace(/\s+/g, '_')}">
+                                </tbody>
+                            </table>
+                        `;
+
+                        outputContainer.appendChild(programTable);
+
+                        // Insert rows for this program
+                        let tableBody = document.getElementById(`tableBody_${waterType.replace(/\s+/g, '_')}`);
+                        if (tableBody) {
+                            groupedData[waterType].forEach(reading => {
+                                let row = document.createElement("tr");
+                                row.innerHTML = `
+                                    <td>${reading.temp || "N/A"}</td>
+                                    <td>${reading.startRead || "N/A"}</td>
+                                    <td>${reading.endRead || "N/A"}</td>
+                                    <td>${reading.totalUsed || "N/A"}</td>
+                                    <td>${reading.cost || "N/A"}</td>
+                                `;
+                                tableBody.appendChild(row);
+                            });
+                        }
+                    });
+
+                    // Update summary totals
+                    let totalUsed = waterReadings.reduce((sum, reading) => sum + (parseFloat(reading.totalUsed) || 0), 0);
+                    let totalCost = waterReadings.reduce((sum, reading) => sum + (parseFloat(reading.cost) || 0), 0);
+                    
+                    const sumUsedElement = document.getElementById("sumUsed");
+                    const sumCostElement = document.getElementById("sumCost");
+                    
+                    if (sumUsedElement) sumUsedElement.textContent = totalUsed.toFixed(2);
+                    if (sumCostElement) sumCostElement.textContent = totalCost.toFixed(2);
+                    
+                    // Store the updated totals
+                    localStorage.setItem("sumUsed", totalUsed.toFixed(2));
+                    localStorage.setItem("sumCost", totalCost.toFixed(2));
+                } else {
+                    console.log("No water readings data found");
+                    outputContainer.innerHTML = '<p>No water consumption data available.</p>';
+                }
+            } catch (error) {
+                console.error("Error updating water readings:", error);
+                console.error("Error details:", error.message);
+                console.error("Error stack:", error.stack);
+            }
+        }
+
+        // Modal event handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM Content Loaded");
+            
+            // Clear any existing event listeners
+            const existingModals = document.querySelectorAll('.modal');
+            existingModals.forEach(modal => {
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                if (modalInstance) {
+                    modalInstance.dispose();
+                }
             });
+
+            const modals = {
+                'washProcessModal': { url: 'wash_proc.html', title: 'Edit Washing Process' },
+                'energyConsModal': { url: 'energy_cons.html', title: 'Edit Energy Consumption' },
+                'waterConsModal': { url: 'water_cons.html', title: 'Edit Water Consumption' }
+            };
+
+            Object.entries(modals).forEach(([modalId, config]) => {
+                const modal = document.getElementById(modalId);
+                if (!modal) {
+                    console.warn(`Modal not found: ${modalId}`);
+                    return;
+                }
+
+                // Create iframe when modal is shown
+                modal.addEventListener('show.bs.modal', function() {
+                    console.log(`Showing modal: ${modalId}`);
+                    const modalBody = this.querySelector('.modal-body');
+                    const timestamp = new Date().getTime();
+                    modalBody.innerHTML = `<iframe src="${config.url}?t=${timestamp}" style="width: 100%; height: 80vh; border: none;"></iframe>`;
+                    
+                    const iframe = modalBody.querySelector('iframe');
+                    iframe.addEventListener('load', function() {
+                        try {
+                            console.log(`Iframe loaded for ${modalId}`);
+                            const iframeDoc = this.contentWindow.document;
+                            const iframeWin = this.contentWindow;
+
+                            // Hide navigation and adjust padding
+                            const navContainer = iframeDoc.querySelector('.nav-container');
+                            if (navContainer) {
+                                navContainer.style.display = 'none';
+                                iframeDoc.body.style.paddingTop = '20px';
+                            }
+
+                            // Wait for the form to be fully loaded
+                            setTimeout(() => {
+                                try {
+                                    console.log("Loading form data...");
+                                    // Load existing data into form fields
+                                    const inputs = iframeDoc.querySelectorAll('input, select');
+                                    inputs.forEach(input => {
+                                        let value;
+                                        if (modalId === 'energyConsModal') {
+                                            value = localStorage.getItem(input.id) || '';
+                                            if (input.id === 'costing') {
+                                                value = localStorage.getItem('costing') || '';
+                                            }
+                                            console.log(`Loading energy data for ${input.id}:`, value);
+                                        } else if (modalId === 'waterConsModal') {
+                                            // For water consumption, we need to handle the readings array
+                                            const waterReadings = JSON.parse(localStorage.getItem("waterReadings") || "[]");
+                                            if (waterReadings.length > 0) {
+                                                // Find the matching reading for this input
+                                                const reading = waterReadings.find(r => r.id === input.id);
+                                                value = reading ? reading[input.name] : '';
+                                            }
+                                            console.log(`Loading water data for ${input.id}:`, value);
+                                        } else {
+                                            value = localStorage.getItem(input.id) || '';
+                                        }
+                                        
+                                        if (value) {
+                                            if (input.type === 'radio') {
+                                                if (input.value === value) input.checked = true;
+                                            } else {
+                                                input.value = value;
+                                            }
+                                        }
+                                    });
+
+                                    // Modify the Next/Submit button
+                                    const nextButton = iframeDoc.querySelector('#nextBtn, button[type="submit"]');
+                                    if (nextButton) {
+                                        nextButton.textContent = 'Done Editing';
+                                        nextButton.onclick = function(e) {
+                                            e.preventDefault();
+                                            console.log("Saving form data...");
+                                            
+                                            if (modalId === 'energyConsModal') {
+                                                // Special handling for energy consumption
+                                                const startRead = iframeDoc.getElementById('start_reads').value;
+                                                const endRead = iframeDoc.getElementById('end_reads').value;
+                                                const costing = iframeDoc.getElementById('costing').value;
+
+                                                if (startRead && endRead && costing) {
+                                                    const totalUsed = Math.max(0, parseFloat(endRead) - parseFloat(startRead));
+                                                    const estimatedCost = totalUsed * parseFloat(costing);
+
+                                                    localStorage.setItem('start_reads', startRead);
+                                                    localStorage.setItem('end_reads', endRead);
+                                                    localStorage.setItem('costing', costing);
+                                                    localStorage.setItem('total_used', totalUsed.toFixed(4));
+                                                    localStorage.setItem('cost', '₱' + estimatedCost.toFixed(4));
+                                                }
+                                            } else if (modalId === 'waterConsModal') {
+                                                // For water consumption, call the iframe's submitData function
+                                                if (typeof iframeWin.submitData === 'function') {
+                                                    iframeWin.submitData();
+                                                }
+                                            } else {
+                                                // Regular form data saving
+                                                const formInputs = iframeDoc.querySelectorAll('input, select');
+                                                formInputs.forEach(input => {
+                                                    if (input.type === 'radio') {
+                                                        if (input.checked) {
+                                                            localStorage.setItem(input.name, input.value);
+                                                        }
+                                                    } else {
+                                                        localStorage.setItem(input.id, input.value);
+                                                    }
+                                                });
+                                            }
+
+                                            const modalInstance = bootstrap.Modal.getInstance(modal);
+                                            modalInstance.hide();
+                                            updateDisplay();
+                                        };
+                                    }
+
+                                    // Hide back button
+                                    const backButton = iframeDoc.querySelector('#back_bnt');
+                                    if (backButton) {
+                                        backButton.style.display = 'none';
+                                    }
+
+                                    // For water consumption, load existing data
+                                    if (modalId === 'waterConsModal') {
+                                        const waterReadings = JSON.parse(localStorage.getItem('waterReadings') || '[]');
+                                        if (waterReadings.length > 0 && typeof iframeWin.loadExistingData === 'function') {
+                                            iframeWin.loadExistingData(waterReadings);
+                                        }
+                                    }
+
+                                    // Add input event listeners for real-time calculations
+                                    inputs.forEach(input => {
+                                        input.addEventListener('input', function() {
+                                            if (typeof iframeWin.calculate === 'function') {
+                                                iframeWin.calculate();
+                                            }
+                                        });
+                                    });
+
+                                    // Trigger initial calculation if data exists
+                                    if (typeof iframeWin.calculate === 'function') {
+                                        iframeWin.calculate();
+                                    }
+
+                                } catch (e) {
+                                    console.error('Error setting up form:', e);
+                                    console.error('Error details:', e.message);
+                                    console.error('Error stack:', e.stack);
+                                }
+                            }, 500);
+
+                        } catch (e) {
+                            console.error('Error modifying iframe content:', e);
+                            console.error('Error details:', e.message);
+                            console.error('Error stack:', e.stack);
+                        }
+                    });
+                });
+
+                // Update display when modal is hidden
+                modal.addEventListener('hidden.bs.modal', function() {
+                    console.log(`Modal hidden: ${modalId}`);
+                    setTimeout(() => {
+                        updateDisplay();
+                    }, 100);
+                });
+            });
+
+            // Initial display update
+            updateDisplay();
         });
 
         // Retrieve and display data
+        document.getElementById("outOperator").textContent = localStorage.getItem("operator_name") || "N/A";
         document.getElementById("outDate").textContent = localStorage.getItem("date") || "N/A";
         document.getElementById("outLoad_number").textContent = localStorage.getItem("load_number") || "N/A";
         document.getElementById("outTrolley_number").textContent = localStorage.getItem("trolley_number") || "N/A";
@@ -255,72 +597,10 @@ button:hover {
         document.getElementById("outRMC").textContent = localStorage.getItem("rmc_total") || "N/A"; 
 
         // Retrieve and display electric metering data from localStorage
-        document.getElementById("outStartReadings").textContent = localStorage.getItem("start_reads") || "N/A";
-        document.getElementById("outEndReadings").textContent = localStorage.getItem("end_reads") || "N/A";
-        document.getElementById("outTotalUseds").textContent = localStorage.getItem("total_used") || "N/A";
-        document.getElementById("outCosts").textContent = localStorage.getItem("cost") || "N/A";
-
-// Retrieve stored readings data
-let waterReadings = JSON.parse(localStorage.getItem("waterReadings")) || [];
-
-// Check if data exists
-if (waterReadings.length > 0) {
-    let outputContainer = document.getElementById("outputContainer");
-
-    // Group readings by waterType (Program)
-    let groupedData = {};
-    waterReadings.forEach(reading => {
-        if (!groupedData[reading.waterType]) {
-            groupedData[reading.waterType] = [];
-        }
-        groupedData[reading.waterType].push(reading);
-    });
-
-    // Loop through each program and create a table
-    Object.keys(groupedData).forEach(temp=> {
-        let programTable = document.createElement("div");
-        programTable.innerHTML = `
-        <h2>Water Submetering System</h2>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Temperature</th>
-                        <th>Start Reading (m³)</th>
-                        <th>End Reading (m³)</th>
-                        <th>Total Water Used (m³)</th>
-                        <th>Estimated Cost (₱)</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody_${temp}">
-                </tbody>
-            </table>
-        `;
-
-        outputContainer.appendChild(programTable);
-
-        // Insert rows into the respective table
-        let tableBody = document.getElementById(`tableBody_${temp}`);
-        groupedData[temp].forEach((reading,temp) => {
-            let row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${reading.temp}</td>
-                <td>${reading.startRead || "N/A"}</td>
-                <td>${reading.endRead || "N/A"}</td>
-                <td>${reading.totalUsed || "N/A"}</td>
-                <td>${reading.cost || "N/A"}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-    });
-} else {
-    console.log("No readings data found.");
-}
-console.log(JSON.parse(localStorage.getItem("waterReadings")));
-    //Displays the overall total of all water readings
-    //Retrieve and display total values
-    document.getElementById("sumUsed").textContent = localStorage.getItem("sumUsed") || "0";
-    document.getElementById("sumCost").textContent = localStorage.getItem("sumCost") || "0";
-
+        document.getElementById("outStartReadings").textContent = localStorage.getItem("start_reads") ? localStorage.getItem("start_reads") + " kWh" : "N/A";
+        document.getElementById("outEndReadings").textContent = localStorage.getItem("end_reads") ? localStorage.getItem("end_reads") + " kWh" : "N/A";
+        document.getElementById("outTotalUseds").textContent = localStorage.getItem("total_used") ? localStorage.getItem("total_used") + " kWh" : "N/A";
+        document.getElementById("outCosts").textContent = localStorage.getItem("cost") ? localStorage.getItem("cost") : "N/A";
 
         document.getElementById("outDetergent").textContent = localStorage.getItem("detergent") || "N/A";
         document.addEventListener("DOMContentLoaded", function () {
@@ -533,8 +813,8 @@ function exportToPDF() {
                 <h5 class="modal-title" id="washProcessModalLabel">Edit Washing Process</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <iframe src="wash_proc.html?hideNav=true"></iframe>
+            <div class="modal-body p-0">
+                <iframe src="wash_proc.html?hideNav=true" style="width: 100%; height: 80vh; border: none;"></iframe>
             </div>
         </div>
     </div>
@@ -548,8 +828,8 @@ function exportToPDF() {
                 <h5 class="modal-title" id="energyConsModalLabel">Edit Energy Consumption</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <iframe src="energy_cons.html?hideNav=true"></iframe>
+            <div class="modal-body p-0">
+                <iframe src="energy_cons.html?hideNav=true" style="width: 100%; height: 80vh; border: none;"></iframe>
             </div>
         </div>
     </div>
@@ -563,8 +843,8 @@ function exportToPDF() {
                 <h5 class="modal-title" id="waterConsModalLabel">Edit Water Consumption</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <iframe src="water_cons.html?hideNav=true"></iframe>
+            <div class="modal-body p-0">
+                <iframe src="water_cons.html?hideNav=true" style="width: 100%; height: 80vh; border: none;"></iframe>
             </div>
         </div>
     </div>

@@ -216,11 +216,9 @@
             </table>            
             </div>
         </div>
+        <button class="btn-action" onclick="submitData()" id="nextBtn">Submit Data</button>
         <button class="btn-secondary" onclick="addProgram()">Add Reading</button>
-        <button class="btn-action" onclick="submitData()">Submit Data</button>
     </div>
-
-
 
     <script>
         // Check URL parameters for hideNav
@@ -230,7 +228,50 @@
                 document.querySelector('.nav-container').style.display = 'none';
                 document.body.style.paddingTop = '0'; // Remove the top padding when nav is hidden
             }
+
+            // Load existing data if available
+            const waterReadings = JSON.parse(localStorage.getItem('waterReadings') || '[]');
+            if (waterReadings.length > 0) {
+                loadExistingData(waterReadings);
+            }
         });
+
+        function loadExistingData(readings) {
+            // Remove any existing containers except the first one
+            const containers = document.querySelectorAll('.container');
+            for (let i = 1; i < containers.length; i++) {
+                containers[i].remove();
+            }
+
+            // Clear the first container's values
+            const firstContainer = containers[0];
+            if (firstContainer) {
+                firstContainer.querySelector('.waterType').value = '';
+                firstContainer.querySelector('.start_read').value = '';
+                firstContainer.querySelector('.endReading').value = '';
+                firstContainer.querySelector('.totalCost').value = '';
+                firstContainer.querySelector('.totalUsed').textContent = '0.0000m³';
+                firstContainer.querySelector('.cost').textContent = '₱0.0000';
+            }
+
+            // Add containers and populate data for each reading
+            readings.forEach((reading, index) => {
+                if (index > 0) {
+                    addProgram();
+                }
+                const container = document.querySelectorAll('.container')[index];
+                if (container) {
+                    container.querySelector('.waterType').value = reading.temp;
+                    container.querySelector('.start_read').value = reading.startRead;
+                    container.querySelector('.endReading').value = reading.endRead;
+                    container.querySelector('.totalCost').value = reading.costPerM3;
+                    calculate(container.querySelector('.start_read')); // Trigger calculation
+                }
+            });
+
+            // Update summary
+            updateSummary();
+        }
 
         function calculate(element) {
             let container = element.closest(".container");
@@ -251,68 +292,78 @@
             let totalUsage = 0, totalCost = 0;
 
             document.querySelectorAll(".container").forEach(container => {
-                totalUsage += parseFloat(container.querySelector(".totalUsed").textContent) || 0;
-                totalCost += parseFloat(container.querySelector(".cost").textContent.replace("₱", "")) || 0;
+                let totalUsedText = container.querySelector(".totalUsed").textContent;
+                let costText = container.querySelector(".cost").textContent;
+                
+                totalUsage += parseFloat(totalUsedText.replace('m³', '')) || 0;
+                totalCost += parseFloat(costText.replace('₱', '')) || 0;
             });
 
             document.getElementById("sumUsed").textContent = totalUsage.toFixed(4);
-            document.getElementById("sumCost").textContent = totalCost.toFixed(4);
+            document.getElementById("sumCost").textContent = "₱" + totalCost.toFixed(4);
         }
 
         function addProgram() {
             let newDiv = document.createElement("div");
             newDiv.className = "container";
             newDiv.innerHTML = document.querySelector(".container").innerHTML;
+            
+            // Clear the values in the new container
+            const inputs = newDiv.querySelectorAll('input, select');
+            inputs.forEach(input => input.value = '');
+            newDiv.querySelector('.totalUsed').textContent = '0.0000m³';
+            newDiv.querySelector('.cost').textContent = '₱0.0000';
+            
             document.getElementById("readings").appendChild(newDiv);
         }
 
         function submitData() {
-    let startRead = document.getElementById("start_reads").value.trim();
-    let endRead = document.getElementById("end_reads").value.trim();
-    let costing = document.getElementById("costing").value.trim();
+            let readings = [];
+            let totalUsage = 0, totalCost = 0;
 
-    // Check if any field is empty
-    if (startRead === "" || endRead === "" || costing === "") {
-        alert("Please fill in all fields before submitting.");
-        return;
-    } else {
-        alert("Data Submitted Successfully");
-        alert("Data will be displayed");
-    }
+            document.querySelectorAll(".container").forEach(container => {
+                const temp = container.querySelector(".waterType").value;
+                const startRead = parseFloat(container.querySelector(".start_read").value) || 0;
+                const endRead = parseFloat(container.querySelector(".endReading").value) || 0;
+                const costPerM3 = parseFloat(container.querySelector(".totalCost").value) || 0;
 
-    let readings = [];
-    let totalUsage = 0, totalCost = 0;
+                if (temp && !isNaN(startRead) && !isNaN(endRead) && !isNaN(costPerM3)) {
+                    const totalUsed = Math.max(0, endRead - startRead);
+                    const cost = totalUsed * costPerM3;
 
-    document.querySelectorAll(".container").forEach(container => {
-        let temp = container.querySelector(".waterType").value;
-        let startRead = parseFloat(container.querySelector(".start_read").value) || 0;
-        let endRead = parseFloat(container.querySelector(".endReading").value) || 0;
-        let costPerM3 = parseFloat(container.querySelector(".totalCost").value) || 0;
-        let totalUsed = endRead - startRead;
-        let cost = totalUsed * costPerM3;
+                    readings.push({
+                        temp,
+                        startRead,
+                        endRead,
+                        costPerM3,
+                        totalUsed: totalUsed.toFixed(4),
+                        cost: cost.toFixed(4)
+                    });
 
-        readings.push({
-            temp,
-            startRead,
-            endRead,
-            costPerM3,
-            totalUsed: totalUsed.toFixed(4),
-            cost: cost.toFixed(4)
-        });
+                    totalUsage += totalUsed;
+                    totalCost += cost;
+                }
+            });
 
-        totalUsage += totalUsed;
-        totalCost += cost;
-    });
+            if (readings.length === 0) {
+                alert("Please fill in at least one complete set of readings.");
+                return;
+            }
 
-    localStorage.setItem("waterReadings", JSON.stringify(readings));
-    localStorage.setItem("sumUsed", totalUsage.toFixed(4));
-    localStorage.setItem("sumCost", totalCost.toFixed(4));
+            localStorage.setItem("waterReadings", JSON.stringify(readings));
+            localStorage.setItem("sumUsed", totalUsage.toFixed(4));
+            localStorage.setItem("sumCost", totalCost.toFixed(4));
 
-    setTimeout(() => {
-        window.open("output.html", "_blank");
-    }, 1000);
-}
- 
+            // If we're in a modal (hideNav=true), don't redirect
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.get('hideNav')) {
+                setTimeout(() => {
+                    window.location.href = "output.html";
+                }, 1000);
+            }
+
+            return true;
+        }
     </script>
 </body>
 </html>
