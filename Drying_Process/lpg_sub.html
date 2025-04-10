@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LPG Submetering - Flatwork Ironing</title>
+    <title>LPG Submetering - Drying Process</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -155,9 +155,9 @@
 <body>
     <div class="nav-container">
         <div class="nav-buttons">
-            <button class="nav-button" onclick="window.location.href='flatiron_proc.html'">Flatwork Ironing Process</button>
-            <button class="nav-button" onclick="window.location.href='electric_proc_3.html'">Electric Submetering</button>
-            <button class="nav-button active" onclick="window.location.href='lpg_sub_2.html'">LPG Submetering</button>
+            <button class="nav-button" onclick="window.location.href='drying_proc.html'">Drying Process</button>
+            <button class="nav-button" onclick="window.location.href='electric_proc_2.html'">Electric Submetering</button>
+            <button class="nav-button active" onclick="window.location.href='lpg_sub.html'">LPG Submetering</button>
         </div>
     </div>
 
@@ -168,21 +168,21 @@
             <div class="input-group mb-3">
                 <div class="input-group">
                     <span class="input-group-text "><strong> Start Reading (m³):</strong></span>
-                    <input class="form-control" type="number" id="initialReading" step="0.01">
+                    <input class="form-control" type="number" id="initialReading" step="0.01" oninput="calculate()">
                 </div>
             </div>
         
             <div class="input-group mb-3">
                 <div class="input-group">
                     <span class="input-group-text"><strong> Final Reading (m³):</strong></span>
-                    <input class="form-control" type="number" id="finalReading" step="0.01">
+                    <input class="form-control" type="number" id="finalReading" step="0.01" oninput="calculate()">
                 </div>
             </div>
         
             <div class="input-group mb-3">
                 <div class="input-group">
                     <span class="input-group-text"><strong>Price per kg (₱): </strong></span>
-                    <input class="form-control" type="number" id="pricePerKg" step="0.01">
+                    <input class="form-control" type="number" id="pricePerKg" step="0.01" oninput="calculate()">
                 </div>
             </div>
         
@@ -213,7 +213,13 @@
     </div>
 
     <script>
+
     document.addEventListener('DOMContentLoaded', function() {
+        const inputs = ['initialReading', 'finalReading', 'pricePerKg'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', calculate);
+        });
+
         const urlParams = new URLSearchParams(window.location.search);
         const hideNav = urlParams.get('hideNav');
         
@@ -252,14 +258,6 @@
             return;
         }
 
-        let gasUsed = finalReading - initialReading;
-        let lpgKgs = 1.898 * gasUsed;
-        let totalCost = pricePerKg * lpgKgs;
-
-        document.getElementById("lpgKgs").innerHTML = lpgKgs.toFixed(4) + "kGs";
-        document.getElementById("totalConsump").innerHTML = gasUsed.toFixed(4) + "m³";
-        document.getElementById("totalPrice").innerHTML ="₱" + totalCost.toFixed(4);
-
         // Save with correct keys
         localStorage.setItem("initial_reading", initialReading);
         localStorage.setItem("final_reading", finalReading);
@@ -278,24 +276,29 @@
         }
     }
 
-    function viewReport() {
-        let initialReading = document.getElementById("initialReading").value;
-        let finalReading = document.getElementById("finalReading").value;
-        let pricePerKg = document.getElementById("pricePerKg").value;
+    function calculate() {
+        let initialReading = parseFloat(document.getElementById("initialReading").value) || 0;
+        let finalReading = parseFloat(document.getElementById("finalReading").value) || 0;
+        let pricePerKg = parseFloat(document.getElementById("pricePerKg").value) || 0;
+        
+        let gasUsed = finalReading - initialReading;
+        let lpgKgs = 1.898 * gasUsed;
+        let totalCost = pricePerKg * lpgKgs;
 
-        if(initialReading === "" || finalReading === "" || pricePerKg === ""){
-            alert("All fields must be filled out");
-            return false;
-        }
+        // Update display with calculated values
+        document.getElementById("lpgKgs").textContent = lpgKgs.toFixed(4) + "kGs";
+        document.getElementById("totalConsump").textContent = gasUsed.toFixed(4) + "m³";
+        document.getElementById("totalPrice").textContent = "₱" + totalCost.toFixed(4);
 
-        saveData(); // Call saveData first to ensure data is saved
+        // Store the calculated values for later use
+        window.gasUsed = gasUsed;
+        window.totalCost = totalCost;
     }
 
-    // Add function to load existing data
     function loadExistingData() {
         const initialReading = localStorage.getItem("initial_reading");
         const finalReading = localStorage.getItem("final_reading");
-        const pricePerKg = localStorage.getItem("pricePerKg"); // Default price per kg
+        const pricePerKg = localStorage.getItem("pricePerKg");
         
         if (initialReading) {
             document.getElementById("initialReading").value = initialReading;
@@ -303,20 +306,12 @@
         if (finalReading) {
             document.getElementById("finalReading").value = finalReading;
         }
-        
-        // Set default price per kg
-        document.getElementById("pricePerKg").value = pricePerKg;
-        
-        // Trigger calculation if both values exist
-        if (initialReading && finalReading) {
-            let gasUsed = parseFloat(finalReading) - parseFloat(initialReading);
-            let lpgKgs = 1.898 * gasUsed;
-            let totalCost = parseFloat(pricePerKg) * lpgKgs;
-
-            document.getElementById("lpgKgs").innerHTML = lpgKgs.toFixed(4) + "kGs";
-            document.getElementById("totalConsump").innerHTML = gasUsed.toFixed(4) + "m³";
-            document.getElementById("totalPrice").innerHTML ="₱" + totalCost.toFixed(4);
+        if (pricePerKg) {
+            document.getElementById("pricePerKg").value = pricePerKg;
         }
+        
+        // Calculate initial values
+        calculate();
     }
     </script>
 

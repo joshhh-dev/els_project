@@ -221,7 +221,7 @@
                 localStorage.removeItem("final_reading");
                 localStorage.removeItem("gas_used");
                 localStorage.removeItem("total_cost");
-                localStorage.removeItem("price_per_kg");
+                localStorage.removeItem("pricePerKg");
 
                 console.log("All data cleared successfully");
                 // Navigate to homepage
@@ -263,9 +263,9 @@
         document.getElementById("outCosts_dry").textContent = localStorage.getItem("cost_dry") || "N/A";
 
         // Retrieve and display stored data
-        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") + "kg" || "N/A";
-        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading") + "kg" || "N/A";
-        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used") + "kg" || "N/A";
+        document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") + "m³" || "N/A";
+        document.getElementById("outFinalReading").textContent = localStorage.getItem("final_reading") + "m³" || "N/A";
+        document.getElementById("outGasUsed").textContent = localStorage.getItem("gas_used") + "m³" || "N/A";
                 // Calculate and display LPG kGs
                 if (localStorage.getItem("gas_used")) {
             const gasUsed = parseFloat(localStorage.getItem("gas_used"));
