@@ -232,6 +232,7 @@
         }
 
         // Retrieve and display data
+        document.getElementById("outOperator_iron").textContent= localStorage.getItem("operator_name_iron") || "N/A";
         document.getElementById("outDate_iron").textContent = localStorage.getItem("date_iron") || "N/A";
         document.getElementById("outEquipment_iron").textContent = localStorage.getItem("equipment_iron") || "N/A";
         document.getElementById("outSet_time_iron").textContent = localStorage.getItem("set_time_iron") || "N/A";
