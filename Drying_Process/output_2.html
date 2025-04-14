@@ -331,7 +331,7 @@ function exportToPDF() {
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text("Generated on: " + new Date().toLocaleString(), 15, 25);
+    doc.text("Generated on: " + new Date().toLocaleString(), 15, 20);
 
     let yPosition = 25; // Starting Y position
     let tables = document.querySelectorAll("table");
@@ -362,42 +362,36 @@ function exportToPDF() {
             else rows.push(rowData);
         });
 
-        // Generate a table using autoTable plugin
-        if (typeof doc.autoTable === "function") {
-            doc.autoTable({
-                startY: yPosition,
-                head: [headers],
-                body: rows,
-                theme: "grid",
-                styles: { 
-                    fontSize: 10, 
-                    cellPadding: 3, 
-                    overflow: 'linebreak',
-                    halign: 'left'
-                },
-                headStyles: { 
-                    fillColor: [0, 102, 204], 
-                    textColor: [255, 255, 255], 
-                    fontSize: 12
-                }, // Blue header
-                columnStyles: {
-                     0: { cellWidth: 'auto' },
-                     1: { cellWidth: 'auto'} 
+  
+        doc.autoTable({
+                    startY: yPosition,
+                    head: [headers],
+                    body: rows,
+                    theme: "grid",
+                    styles: { 
+                        fontSize: 12,
+                        cellPadding: 2,
+                        overflow: 'linebreak',
+                        halign: 'left'
                     },
-                margin: { left: 15, right: 15 },
+                    headStyles: { 
+                        fillColor: [0, 102, 204], 
+                        textColor: [255, 255, 255],
+                        fontSize: 12
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 'auto' },
+                        1: { cellWidth: 'auto' }
+                    },
+                    margin: { left: 15, right: 15 },
+                });
+
+                yPosition = doc.lastAutoTable.finalY + 9;
             });
 
-            yPosition = doc.lastAutoTable.finalY + 9; // Move below last table
-        } else {
-            alert("jsPDF-AutoTable is required for proper formatting.");
-            return;
+            let filename = `Ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+            doc.save(filename);
         }
-    });
-
-    // Save as a downloadable PDF
-    let filename = `Drying_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
-    doc.save(filename);
-}
     </script>
 </body>
 </html>
