@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,24 +80,47 @@
         <div class="card">
             <h2>Submitted Drying Data</h2>
             <div class="card-body">
-                <table class="table table-bordered">
-                    <tr><th>Field</th><th>Value</th></tr>
-                    <tr><td>OPERATOR NAME</td><td id="outOperator_dry"></td></tr>
-                    <tr><td>DATE</td><td id="outDate_dry"></td></tr>
-                    <tr><td>EQUIPMENT</td><td id="outEquipment_dry"></td></tr>
-                    <tr><td>SET TIME</td><td id="outSet_time_dry"></td></tr>
-                    <tr><td>TEMPERATURE(°C)</td><td id="outTemperature"></td></tr>
-                    <tr><td>LINEN TYPE</td>
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>OPERATOR NAME</th>
+                            <th>DATE</th>
+                            <th>EQUIPMENT</th>
+                            <th>SET TIME</th>
+                            <th>TEMPERATURE(°C)</th>
+                            <th>LINEN TYPE</th>
+                            <th>OTHER LINEN</th>
+                            <th>LINEN SIZE</th>
+                            <th>QUANTITY</th>
+                            <th>TOTAL KGS BEFORE DRY</th>
+                            <th>TOTAL KGS AFTER DRY</th>
+                        </tr>
+                    </thead>
+             
+                        <tbody id="dryerTable">
+                            <!-- The output goes here -->
+                        </tbody>
+                        
+            
+
+                    <!-- <td id="outOperator_dry"></td>
+                    <td id="outDate_dry"></td>
+                    <td id="outEquipment_dry"></td>
+                    <td id="outSet_time_dry"></td>
+                    <td id="outTemperature"></td>
+                    
                         <td id="outLinen_type_dry"></td>
                         <td id="outOtherLinen_dry"></td>
-                    </tr>
-                    <tr><td>LINEN SIZE</td><td id="outLinen_sizes_dry"></td></tr>
-                    <tr><td>QUANTITY</td><td id="outQuantity_dry"></td></tr>
-                    <tr><td>TOTAL KGS BEFORE DRY</td><td id="outBfr_dry"></td></tr>
-                    <tr><td>TOTAL KGS AFTER DRY</td><td id="outAftr_dry"></td></tr>
+                    
+                    <td id="outLinen_sizes_dry"></td>
+                    <td id="outQuantity_dry"></td>
+                    <td id="outBfr_dry"></td>
+                    <td id="outAftr_dry"></td>
+                    </tr> -->
                 </table>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dryingModal">Edit Section</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dryingModal">Add Data</button>
                 </div>
             </div>
         </div>
@@ -105,14 +129,24 @@
             <h2>Submitted Electric Submetering Data</h2>
             <div class="card-body">
                 <table class="table table-bordered">
-                    <tr><th>Field</th><th>Value</th></tr>
-                    <tr><td>Start Reading (kWh)</td><td id="outStartReadings_dry"></td></tr>
-                    <tr><td>End Reading (kWh)</td><td id="outEndReadings_dry"></td></tr>
-                    <tr><td>Total kWh Used</td><td id="outTotalUseds_dry"></td></tr>
-                    <tr><td>Estimated Cost (₱)</td><td id="outCosts_dry"></td></tr>
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Start Reading (kWh)</th>
+                            <th>End Reading (kWh)</th>
+                            <th>Total kWh Used</th>
+                            <th>Estimated Cost (₱)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eSubDataTable">
+
+                    </tbody>
+                    <!-- <td id="outStartReadings_dry"></td>
+                    <td id="outEndReadings_dry"></td>
+                    <td id="outTotalUseds_dry"></td>
+                    <td id="outCosts_dry"></td> -->
                 </table>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#electricModal">Edit Section</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#electricModal">Add Data</button>
                 </div>
             </div>
         </div>
@@ -120,18 +154,33 @@
         <div class="card">
             <h2>LPG Gas Submetering Report</h2>
             <div class="card-body">
-                <table class="table table-bordered">
-                    <tr><th>Field</th><th>Value</th></tr>
-                    <tr><td>Start Reading (m³)</td><td id="outInitialReading"></td></tr>
-                    <tr><td>Final Reading (m³)</th><td id="outFinalReading"></td></tr>
-                    <tr><td>Gas Used (m³)</td><td id="outGasUsed"></td></tr>
-                    <tr><td>LPG Used (kGs)</td><td id="outLpgKgs"></td></tr>
-                    <tr><td>Price per kg (₱)</td><td id="outPricePerKg"></td></tr>
-                    <tr><td>Total Cost (₱)</td><td id="outTotalCost"></td></tr>
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Start Reading (m³)</th>
+                            <th>Final Reading (m³)</th>
+                            <th>Gas Used (m³)</th>
+                            <th>LPG Used (kGs)</th>
+                            <th>Price per kg (₱)</th>
+                            <th>Total Cost (₱)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="lpgDryerData"> 
+
+                    </tbody>
+                    <!-- <tr>
+                        <td id="outInitialReading"></td>
+                        <td id="outFinalReading"></td>
+                        <td id="outGasUsed"></td>
+                        <td id="outLpgKgs"></td>
+                        <td id="outPricePerKg"></td>
+                        <td id="outTotalCost"></td>
+                    </tr> -->
 
                 </table>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lpgModal">Edit Section</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lpgModal">Add Data</button>
                 </div>
             </div>
         </div>
@@ -166,8 +215,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    
                     <iframe src="electric_proc_2.html?hideNav=true"></iframe>
+                    
                 </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="saveElectricEdit()">Done</button>
+                  </div> -->
             </div>
         </div>
     </div>
@@ -187,6 +241,162 @@
     </div>
 
     <script>
+
+
+
+        function deleteDryerData(index){
+            const storeData = JSON.parse(localStorage.getItem('dryer_data') || '[]');
+            storeData.splice(index, 1);
+            localStorage.setItem('dryer_data', JSON.stringify(storeData));
+            renderDryerData();
+        }
+        function renderDryerData() {
+        //codes for retrieving the output of fill_up_dry
+        const dryerData = document.getElementById('dryerTable');
+        const storeData = JSON.parse(localStorage.getItem('dryer_data') || '[]');
+        dryerData.innerHTML = '';
+        if (storeData.length === 0){
+            dryerData.innerHTML = '<tr><td colspan="12" class="text-center">No data available.</td></tr>';
+        } else {
+            storeData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.operator_name}</td>
+                <td>${item.date}</td>
+                <td>${item.eqp}</td>
+                <td>${item.time}</td>
+                <td>${item.tmpe}</td>
+                <td>${item.type}</td>
+                <td>${item.others}</td>
+                <td>${item.sizes}</td>
+                <td>${item.quant}</td>
+                <td>${item.bfr}</td>
+                <td>${item.aftr}</td>
+                <td>
+                     <button class="btn btn-sm btn-danger" onclick="deleteDryerData(${index})">Delete</button>
+                     <button class="btn btn-sm btn-warning" onclick="editDryerData(${index})">Edit</button>
+
+                </td>
+                `;
+                dryerData.appendChild(row); // <-- This line was missing!
+
+                console.log("Dryer Data:", storeData);
+             });
+        }
+        }
+        function editDryerData(index) {
+    window.location.href = `drying_proc.html?editIndex=${index}`;
+}
+
+
+        // Update Electric Submetering Data
+function updateDryerData(updatedDryerData) {
+    // Update the dryer data
+    const storeData = JSON.parse(localStorage.getItem('dryerTable') || '[]');
+    storeData.push(updatedDryerData);  // Add new entry to the list
+    localStorage.setItem('dryerTable', JSON.stringify(storeData));  // Save updated data to localStorage
+    renderDryerData();
+}
+// Call this function to render data on page load
+renderDryerData();
+
+
+    function deleteElectricData(index) {
+    const eStoreData = JSON.parse(localStorage.getItem('eData') || '[]');
+    eStoreData.splice(index, 1);
+    localStorage.setItem('eData', JSON.stringify(eStoreData));
+    renderElectricSubmeteringData();
+}
+
+// Render Electric Submetering Data
+    function renderElectricSubmeteringData() {
+    const eSubData = document.getElementById('eSubDataTable');
+    const eStoreData = JSON.parse(localStorage.getItem('eData') || '[]');
+
+    eSubData.innerHTML = '';  // Clear the table before rendering new data
+
+    if (eStoreData.length === 0) {
+        eSubData.innerHTML = '<tr><td colspan="4" class="text-center">No data available.</td></tr>';
+    } else {
+        eStoreData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.startRead}</td>
+                <td>${item.endRead}</td>
+                <td>${item.totalUsed}</td>
+                <td>${item.estimatedCost}</td>
+                <td>
+                     <button class="btn btn-sm btn-danger" onclick="deleteElectricData(${index})">Delete</button>
+                    <button class="btn btn-sm btn-warning" onclick="editElectricData(${index})">Edit</button>
+
+                </td>
+            `;
+            eSubData.appendChild(row); // Add the row to the table
+        });
+    }
+}
+function editElectricData(index) {
+    window.location.href = `electric_proc_2.html?editIndex=${index}`;
+}
+// Update Electric Submetering Data
+function updateElectricSubmeteringData(updatedData, editIndex = null) {
+    // Update the electric submetering data
+    if (editIndex !== null && eStoreData[editIndex]) {
+        // ✅ Replace existing entry if in edit mode
+        eStoreData[editIndex] = updatedData;
+    } else {
+        // ➕ Otherwise, push new entry
+        eStoreData.push(updatedData);
+    }
+    localStorage.setItem('eData', JSON.stringify(eStoreData));
+    renderElectricSubmeteringData();
+}
+// Call this function to render data on page load
+renderElectricSubmeteringData();
+
+
+function deleteLpgData(index) {
+    const storeLpgData = JSON.parse(localStorage.getItem('lpgData') || '[]');
+    storeLpgData.splice(index, 1);
+    localStorage.setItem('lpgData', JSON.stringify(storeLpgData));
+    renderLpgSubmetering();
+}
+
+function renderLpgSubmetering() {
+    const storeLpgTable = document.getElementById('lpgDryerData');
+    const storeLpgData = JSON.parse(localStorage.getItem('lpgData') || '[]');
+
+    storeLpgTable.innerHTML = ''; // Clear the table
+
+    if (storeLpgData.length === 0) {
+        storeLpgTable.innerHTML = '<tr><td colspan="7" class="text-center">No data available.</td></tr>';
+
+    } else {
+        storeLpgData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.initialReading}</td>
+                <td>${item.finalReading}</td>
+                <td>${item.pricePerKg}</td>
+                <td>${item.gasUsed}</td>
+                <td>${item.lpgKgs}</td>
+                <td>${item.totalCost}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="deleteLpgData(${index})">Delete</button>
+                    <button class="btn btn-sm btn-warning" onclick="editLpgData(${index})">Edit</button>
+                </td>
+            `;
+            storeLpgTable.appendChild(row);
+        });
+    }
+}
+function editLpgData(index) {
+    window.location.href = `lpg_sub.html?editIndex=${index}`;
+}
+
+renderLpgSubmetering();
+        
         // Refresh page when modal is closed to update data
         const modals = document.querySelectorAll('.modal');
         modals.forEach(modal => {
@@ -195,45 +405,54 @@
             });
         });
 
-        // Function to clear all data and go to homepage
-        function clearAllDataAndGoHome() {
-            try {
-                // Clear drying process data
-                localStorage.removeItem("operator_name_dry");
-                localStorage.removeItem("date_dry");
-                localStorage.removeItem("equipment_dry");
-                localStorage.removeItem("set_time_dry");
-                localStorage.removeItem("temp");
-                localStorage.removeItem("linen_type_dry");
-                localStorage.removeItem("other-linen_dry");
-                localStorage.removeItem("linen_sizes_dry");
-                localStorage.removeItem("quantity_dry");
-                localStorage.removeItem("bfr_dry");
-                localStorage.removeItem("aftr_dry");
+        
+     // Function to clear all data and go to homepage
+     function clearAllDataAndGoHome() {
+    try {
+        console.log("Clearing data..."); // Log to confirm the function is being called
+        // Clear drying process data
+        localStorage.removeItem("operator_name_dry");
+        localStorage.removeItem("date_dry");
+        localStorage.removeItem("equipment_dry");
+        localStorage.removeItem("set_time_dry");
+        localStorage.removeItem("temp");
+        localStorage.removeItem("linen_type_dry");
+        localStorage.removeItem("other-linen_dry");
+        localStorage.removeItem("linen_sizes_dry");
+        localStorage.removeItem("quantity_dry");
+        localStorage.removeItem("bfr_dry");
+        localStorage.removeItem("aftr_dry");
 
-                // Clear electric submetering data
-                localStorage.removeItem("start_reads_dry");
-                localStorage.removeItem("end_reads_dry");
-                localStorage.removeItem("total_used_dry");
-                localStorage.removeItem("cost_dry");
-                localStorage.removeItem("cost_per_kwh_dry");
+        // Clear electric submetering data
+        localStorage.clear();
+        localStorage.removeItem("start_reads_dry");
+        localStorage.removeItem("end_reads_dry");
+        localStorage.removeItem("total_used_dry");
+        localStorage.removeItem("cost_dry");
+        localStorage.removeItem("costing_dry");
 
-                // Clear LPG submetering data
-                localStorage.removeItem("initial_reading");
-                localStorage.removeItem("final_reading");
-                localStorage.removeItem("gas_used");
-                localStorage.removeItem("total_cost");
-                localStorage.removeItem("pricePerKg");
+        // Clear LPG submetering data
+        localStorage.removeItem("initial_reading");
+        localStorage.removeItem("final_reading");
+        localStorage.removeItem("gas_used");
+        localStorage.removeItem("total_cost");
+        localStorage.removeItem("pricePerKg");
 
-                console.log("All data cleared successfully");
-                // Navigate to homepage
-                window.location.href = '../index.html';
-            } catch (error) {
-                console.error("Error clearing data:", error);
-                alert("There was an error clearing the data. Please try again.");
-            }
-        }
+        // Clear dryer table array data
+        localStorage.clear();
 
+        console.log("All data cleared successfully");
+
+        // Force the page to refresh the data display
+        location.reload(); // This reloads the page and forces a re-render of all data.
+
+        console.log("All data cleared successfully");
+        window.location.href = '../index.html';
+    } catch (error) {
+        console.error("Error clearing data:", error);
+        alert("There was an error clearing the data. Please try again.");
+    }
+}
         // Retrieve and display data
         document.getElementById("outOperator_dry").textContent = localStorage.getItem("operator_name_dry") || "N/A";
         document.getElementById("outDate_dry").textContent = localStorage.getItem("date_dry") || "N/A";
@@ -264,6 +483,7 @@
         document.getElementById("outEndReadings_dry").textContent = localStorage.getItem("end_reads_dry") || "N/A";
         document.getElementById("outTotalUseds_dry").textContent = localStorage.getItem("total_used_dry") || "N/A";
         document.getElementById("outCosts_dry").textContent = localStorage.getItem("cost_dry") || "N/A";
+
 
         // Retrieve and display stored data
         document.getElementById("outInitialReading").textContent = localStorage.getItem("initial_reading") + "m³" || "N/A";

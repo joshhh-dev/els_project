@@ -328,19 +328,20 @@
         <div class="card-container">
             <h2>ELS Laundry Process</h2>
             <div class="card-body"> 
-                <button type="button" class="process-btn wash" onclick="navigateTo('Wash_process/wash_proc.html', this)" aria-label="Go to Washing Process">
+                <button type="button" class="process-btn wash" onclick="navigateTo('Wash_process/output.html', this)" aria-label="Go to Washing Process">
                     <span class="btn-text">Washing Process</span>
                 </button>
-                <button type="button" class="process-btn dry" onclick="navigateTo('Drying_Process/drying_proc.html', this)" aria-label="Go to Drying Process">
+                <button type="button" class="process-btn dry" onclick="navigateTo('Drying_Process/output_2.html', this)" aria-label="Go to Drying Process">
                     <span class="btn-text">Drying Process</span>
                 </button>
-                <button type="button" class="process-btn iron" onclick="navigateTo('FlatWork_Ironing/flatiron_proc.html', this)" aria-label="Go to Flatwork Ironing">
+                <button type="button" class="process-btn iron" onclick="navigateTo('FlatWork_Ironing/output_3.html', this)" aria-label="Go to Flatwork Ironing">
                     <span class="btn-text">Flatwork Ironing</span>
                 </button>    
             </div>
         </div>
 
         <script>
+
             function navigateTo(url, button) {
                 // Add loading state
                 button.classList.add('loading');

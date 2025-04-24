@@ -153,13 +153,13 @@
     </style>
 </head>
 <body>
-    <div class="nav-container">
+    <!-- <div class="nav-container">
         <div class="nav-buttons">
             <button class="nav-button" onclick="window.location.href='drying_proc.html'">Drying Process</button>
             <button class="nav-button" onclick="window.location.href='electric_proc_2.html'">Electric Submetering</button>
             <button class="nav-button active" onclick="window.location.href='lpg_sub.html'">LPG Submetering</button>
         </div>
-    </div>
+    </div> -->
 
     <div class="main-content">
         <div class="form-container">
@@ -205,14 +205,45 @@
                 </table>
        
                 <div class="button-container mt-4">
-                    <button class="btn btn-secondary btn-lg" onclick="window.location.href='electric_proc_2.html'" id="backButton">Back</button>
-                    <button class="btn btn-primary btn-lg" onclick="saveData()" id="nextButton">Next</button>
+                    <button class="btn btn-secondary btn-lg" onclick="window.location.href='output_2.html'" id="saveBtn">Done Editing</button>
+                    <button class="btn btn-primary btn-lg" onclick="saveData()" id="nextButton">Add Load</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+    window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIndex = urlParams.get('editIndex');
+    const eData = JSON.parse(localStorage.getItem('lpgData') || '[]');
+
+    if (editIndex !== null && eData[editIndex]) {
+        const item = eData[editIndex];
+        document.getElementById('initialReading').value = item.initialReading;
+        document.getElementById('finalReading').value = item.finalReading;
+        document.getElementById('pricePerKg').value = item.pricePerKg;
+        
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', function () {
+        const initialReading = parseFloat(document.getElementById("initialReading").value) || 0;
+        const finalReading = parseFloat(document.getElementById("finalReading").value) || 0;
+        const pricePerKg = parseFloat(document.getElementById("pricePerKg").value) || 0;
+        
+        let gasUsed = finalReading - initialReading;
+        let lpgKgs = 1.898 * gasUsed;
+        let totalCost = pricePerKg * lpgKgs;
+
+        const updatedData = { initialReading, finalReading, pricePerKg, gasUsed, lpgKgs, totalCost };
+
+        if (editIndex !== null && eData[editIndex]) {
+            eData[editIndex] = updatedData;
+            localStorage.setItem('lpgData', JSON.stringify(eData));
+            window.location.href = 'output_2.html';
+        }
+    });
+};    
 
     document.addEventListener('DOMContentLoaded', function() {
         const inputs = ['initialReading', 'finalReading', 'pricePerKg'];
@@ -235,7 +266,7 @@
             const nextButton = document.getElementById('nextButton');
             if (backButton && nextButton) {
                 backButton.style.display = 'none';
-                nextButton.textContent = 'Done Editing';
+                nextButton.textContent = 'Add data';
             }
         }
 
@@ -244,37 +275,45 @@
     });
 
     function saveData() {
-        let initialReading = parseFloat(document.getElementById("initialReading").value);
-        let finalReading = parseFloat(document.getElementById("finalReading").value);
-        let pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
+    let initialReading = parseFloat(document.getElementById("initialReading").value);
+    let finalReading = parseFloat(document.getElementById("finalReading").value);
+    let pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
 
-        if (isNaN(initialReading) || isNaN(finalReading) || isNaN(pricePerKg)) {
-            alert("Please enter valid values.");
-            return;
-        }
 
-        if (finalReading < initialReading) {
-            alert("Error: Final reading cannot be lower than the initial reading.");
-            return;
-        }
+    let gasUsed = finalReading - initialReading;
+    let lpgKgs = 1.898 * gasUsed;
+    let totalCost = pricePerKg * lpgKgs;
 
-        // Save with correct keys
-        localStorage.setItem("initial_reading", initialReading);
-        localStorage.setItem("final_reading", finalReading);
-        localStorage.setItem("gas_used", gasUsed.toFixed(4));
-        localStorage.setItem("total_cost", totalCost.toFixed(4));
-        localStorage.setItem("pricePerKg", document.getElementById("pricePerKg").value);
+    const lpgData = JSON.parse(localStorage.getItem('lpgData') || '[]');
+    lpgData.push({
+        initialReading: initialReading.toFixed(2),
+        finalReading: finalReading.toFixed(2),
+        pricePerKg: pricePerKg.toFixed(2),
+        gasUsed: gasUsed.toFixed(4),
+        lpgKgs: lpgKgs.toFixed(4),
+        totalCost: totalCost.toFixed(4),
+    });
 
-        // Check if in edit mode
-        const urlParams = new URLSearchParams(window.location.search);
-        const hideNav = urlParams.get('hideNav');
-        
-        if (hideNav === 'true') {
-            window.parent.location.reload(); // Refresh parent window in edit mode
-        } else {
-            window.location.href = 'output_2.html';
-        }
+    localStorage.setItem('lpgData', JSON.stringify(lpgData));
+
+    // Store individually if needed
+    localStorage.setItem("initial_reading", initialReading.toFixed(2));
+    localStorage.setItem("final_reading", finalReading.toFixed(2));
+    localStorage.setItem("gas_used", gasUsed.toFixed(4));
+    localStorage.setItem("total_cost", totalCost.toFixed(4));
+    localStorage.setItem("pricePerKg", pricePerKg.toFixed(2));
+
+    // Check if in edit mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const hideNav = urlParams.get('hideNav');
+    
+    if (hideNav === 'true') {
+        window.parent.location.reload(); // Refresh parent window in edit mode
+    } else {
+        window.location.href = 'output_2.html';
     }
+}
+
 
     function calculate() {
         let initialReading = parseFloat(document.getElementById("initialReading").value) || 0;

@@ -192,13 +192,13 @@
     </style>
 </head>
 <body>
-    <div class="nav-container">
+    <!-- <div class="nav-container">
         <div class="nav-buttons">
             <button class="nav-button active" onclick="window.location.href='flatiron_proc.html'">Flatwork Ironing Process</button>
             <button class="nav-button" onclick="window.location.href='electric_proc_3.html'">Electric Submetering</button>
             <button class="nav-button" onclick="window.location.href='lpg_sub_2.html'">LPG Submetering</button>
         </div>
-    </div>
+    </div> -->
 
     <div class="main-content">
         <div class="form-container">
@@ -220,7 +220,7 @@
                     </select>
                 <span id="equipment_ironError" class="error"></span>
             
-                <label for="set_time_iron">SET SPEED(seconds):</label>
+                <label for="set_time_iron">SET SPEED(minutes):</label>
                 <input type="number" id="set_time_iron" name="set_time_iron" required>
                 <span id="timeError" class="error"></span>
 
@@ -255,6 +255,7 @@
                         <option value="King Size">King Size</option>
                         <option value="Queen size">Queen size</option>
                         <option value="Single">Single</option>
+                        <option value="Mixed Sizes">Mixed Sizes</option>
                     </select>
                 </div> 
                 
@@ -269,6 +270,7 @@
             
                 <div class="button-container mt-4">
                     <button class="btn btn-secondary btn-lg" type="button" id="back_btn" onclick="window.location.href='../index.html'">Back</button>
+                    <button class="btn btn-success" onclick="addLoad()">Add Load</button>
                     <button class="btn btn-primary btn-lg" type="submit" id="submit_btn">Next</button>
                 </div>
             </form>
@@ -281,6 +283,10 @@
     
 
 <script>
+function addLoad() {
+
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check if hideNav parameter exists in URL
     const urlParams = new URLSearchParams(window.location.search);

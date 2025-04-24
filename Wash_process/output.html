@@ -123,68 +123,96 @@ button:hover {
 
 </head>
 <body> 
-    <div class="card" style="width: 750px; height: 960px;">
+    <div class="card" style="width: 750px; height: 960px;" id="dataForm">
         <div class="card-body">
-        <table>
-            <h2 class="table-title">Submitted Laundry Data</h2>
-            <tr><th>Field</th><th>Value</th></tr>
-            <tr><td>OPERATOR NAME</td><td id="outOperator"></td></tr>
-            <tr><td>DATE</td><td id="outDate"></td></tr>
-            <tr><td>LOAD #</td><td id="outLoad_number"></td></tr>
-            <tr><td>TROLLEY #</td><td id="outTrolley_number"></td></tr>
-            <tr><td>EQUIPMENT</td><td id="outEquipment"></td></tr>
-            <tr><td>SET TIME</td><td id="outSet_time"></td></tr>
-            <tr><td>PROGRAM</td><td id="outProgram"></td> </tr>
-            <tr><td>LINEN TYPE</td><td id="outLinen-type"></td><td id="outOtherLinen"></td></tr>
-            <tr><td>LINEN SIZE</td><td id="outLinen_sizes"></td></tr>
-            <tr><td>QUANTITY</td><td id="outQuantity"></td></tr>
-            <tr><td>TOTAL KGS BEFORE WASH</td><td id="outBfr_wash"></td></tr>
-            <tr><td>TOTAL KGS AFTER WASH</td><td id="outAftr_wash"></td></tr>
-            <tr><td>RMC(Residual Moisture Content)</td><td id="outRMC"></td></tr>
-        </table>
-            <h2 table="table-title">DETERGENT DOSING</h2>
-            <table>
-                <tr><th>Field<th>Value</th></th></tr>
-                <tr><td>Laundry Chemical</td><td id="outDetergent"></td></tr>
-                <tr><td>Mixture Type</td><td id="outMixType"></td></tr>
-                <tr><td>Dosage</td><td id="outDosage"></td></tr>
-            </table>
+            <h2 class="mb-4">Washing Load Records</h2>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                  <tr>
+                    <th>#</th>
+                    <th>Operator</th>
+                    <th>Date</th>
+                    <th>Trolley Number</th>
+                    <th>Load Number</th>
+                    <th>Equipment</th>
+                    <th>Set Time</th>
+                    <th>Program</th>
+                    <th>Linen Type</th>
+                    <th>Other Linen</th>
+                    <th>Linen Size</th>
+                    <th>Detergent</th>
+                    <th>Dosage</th>
+                    <th>Mix Type</th>
+                    <th>Before Wash (kg)</th>
+                    <th>After Wash (kg)</th>
+                    <th>RMC</th>
+                  </tr>
+                </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be injected here -->
+                    </tbody>
+              </table>
+            </div>
         </div>
-        <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#washProcessModal">Edit Section</button>
+        <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#washProcessModal">Add Load</button>
 
 <div class="card">
     <div class="card-body">
-    <h2>Submitted Electric Submetering Data</h2>
+    <h2>Electric Submetering Data</h2>
     <table>
-        <tr><th>Field</th><th>Value</th></tr>
-        <tr><td>Start Reading (kWh)</td><td id="outStartReadings"></td></tr>
-        <tr><td>End Reading (kWh)</td><td id="outEndReadings"></td></tr>
-        <tr><td>Total kWh Used</td><td id="outTotalUseds"></td></tr>
-        <tr><td>Estimated Cost (₱)</td><td id="outCosts"></td></tr>
+        <tr>
+            <th>Start Reading (kWh)</th>
+            <th>End Reading (kWh)</th>
+            <th>Total kWh Used</th>
+            <th>Estimated Cost (₱)</th>
+        </tr>
+
+        <tr>
+            <td id="outStartReadings"></td>
+            <td id="outEndReadings"></td>
+            <td id="outTotalUseds"></td>
+            <td id="outCosts"></td>
+        </tr>
     </table>        
     </div>
-    <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#energyConsModal">Edit Section</button>
+    <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#energyConsModal">Add Readings</button>
 
 </div>
 <div class="card">
-    <div id="outputContainer">
-        <table>
+   <table class="table-dark table-striped">
+    <h2>Water Submetering System</h2>
 
-        </table> 
-    </div>
-  
-        <table>
+    <tbody id="outputContainer">
+
+    </tbody>
+   </table> 
+
+    <table>
+        <thead>
             <h2>Water Submetering Overall Total</h2>
-            <tr><th>Field</th><th>Value</th></tr>
-            <tr><td>Overall Total Consumption (m³)</td><td id="sumUsed"></td></tr>
-            <tr><td>Overall Total Cost (₱)</td><td id="sumCost"></td></tr>
-         </table>
+            <tr>
+                <th>Overall Total Consumption (m³)</th>
+                <th>Overall Total Cost (₱)</th>
+            </tr>
+        </thead>
 
-        <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#waterConsModal">Edit Section</button>
+        <tr>
+            <tbody>
+                <td id="sumUsed">
+
+                </td>
+                <td id="sumCost">
+    
+                </td>
+            </tbody>
+ 
+        </tr>
+     </table>
+  
+
+        <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#waterConsModal">Add Readings</button>
 </div>
-
-
-
         <button class="excel-btn" onclick="exportToExcel()">Download as Excel</button>
         <button class="pdf-btn" onclick="exportToPDF()">Download as PDF</button>
         <button class="back-btn" onclick="clearAllDataAndGoHome()">Go to HomePage</button>
@@ -192,6 +220,47 @@ button:hover {
 </div>
 
     <script>
+    const storedData = JSON.parse(localStorage.getItem("loadData")) || [];
+    const tableBody = document.getElementById("tableBody");
+
+    if (storedData.length === 0) {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td colspan="11" class="text-center">No data available</td>`;
+      tableBody.appendChild(row);
+    } else {
+      storedData.forEach((load, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${load.operator_name}</td>
+          <td>${load.date}</td>
+          <td>${load.trolley_number}</td>
+          <td>${load.load_number}</td>
+          <td>${load.equipment}</td>
+          <td>${load.set_time}</td>
+          <td>${load.program}</td>
+          <td>${load.linen_type}</td>
+          <td>${load.other_linen}</td>
+          <td>${load.linen_sizes}</td>
+          <td>${load.detergent}</td>
+          <td>${load.dosage}</td>
+          <td>${load.mixType}</td>
+          <td>${load.bfr_wash}</td>
+          <td>${load.aftr_wash}</td>
+          <td>${load.rmc}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+            // Refresh page when modal is closed to update data
+            const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            modal.addEventListener('hidden.bs.modal', function () {
+                location.reload();
+                
+            });
+        });
+        
 
         //clear data when Go to HomePage got clicked
         function clearAllDataAndGoHome() {
@@ -331,7 +400,6 @@ button:hover {
                     Object.keys(groupedData).forEach(waterType => {
                         let programTable = document.createElement("div");
                         programTable.innerHTML = `
-                            <h2>Water Submetering System</h2>
                             <table border="1">
                                 <thead>
                                     <tr>
@@ -351,7 +419,7 @@ button:hover {
 
                         // Insert rows for this program
                         let tableBody = document.getElementById(`tableBody_${waterType.replace(/\s+/g, '_')}`);
-                        if (tableBody) {
+                        if (tableBody !== 0 ) {
                             groupedData[waterType].forEach(reading => {
                                 let row = document.createElement("tr");
                                 row.innerHTML = `
@@ -363,6 +431,8 @@ button:hover {
                                 `;
                                 tableBody.appendChild(row);
                             });
+                        } else {
+                            outputContainer.innerHTML = '';
                         }
                     });
 
@@ -380,8 +450,7 @@ button:hover {
                     localStorage.setItem("sumUsed", totalUsed.toFixed(2));
                     localStorage.setItem("sumCost", totalCost.toFixed(2));
                 } else {
-                    console.log("No water readings data found");
-                    outputContainer.innerHTML = '<p>No water consumption data available.</p>';
+                    outputContainer.innerHTML = '';
                 }
             } catch (error) {
                 console.error("Error updating water readings:", error);
@@ -670,8 +739,8 @@ button:hover {
 function exportToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('l', 'mm', 'a4'); // Landscape A4
+    const pageHeight = doc.internal.pageSize.height;
 
-    // Title & Timestamp
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.text("ELS Washing Process", 10, 15);
@@ -680,136 +749,162 @@ function exportToPDF() {
     doc.setFont("helvetica", "normal");
     doc.text("Generated on: " + new Date().toLocaleString(), 10, 25);
 
-    let tables = document.querySelectorAll("table");
+    let yPosition = 35;
+    const leftX = 10, rightX = 150;
+    let leftHeight = yPosition, rightHeight = yPosition;
 
-    if (tables.length === 0) {
-        alert("No table data found to export.");
-        return;
-    }
+    const sections = {
+        "Washing Load Records": [],
+        "Water Submetering": [],
+        "Electric Submetering": [],
+        "Detergent Dosing": [],
+        "Other": []
+    };
 
-    let yPosition = 35; 
-    let leftX = 10, rightX = 150;
-    let leftColumnHeight = 35, rightColumnHeight = 35; // Track left & right heights
-    let waterSubmeteringTables = [];
-    let electricSubmeteringTables = [];
-    let detergentDosingTables = [];
-    let otherTables = [];
+    document.querySelectorAll("table").forEach((table) => {
+        const heading = table.previousElementSibling?.innerText?.toLowerCase() || "";
 
-    // Categorize tables
-    tables.forEach((table) => {
-        let titleElement = table.previousElementSibling;
-        let title = titleElement && titleElement.tagName === "H2" ? titleElement.innerText : "";
-
-        if (title.toLowerCase().includes("electric submetering")) {
-            electricSubmeteringTables.push(table);
-        } else if (title.toLowerCase().includes("water submetering")) {
-            waterSubmeteringTables.push(table);
-        } else if (title.toLowerCase().includes("detergent dosing")) {
-            detergentDosingTables.push(table);
+        if (heading.includes("washing load records")) {
+            sections["Washing Load Records"].push({ table, title: heading });
+        } else if (heading.includes("water submetering")) {
+            sections["Water Submetering"].push({ table, title: heading });
+        } else if (heading.includes("electric submetering")) {
+            sections["Electric Submetering"].push({ table, title: heading });
+        } else if (heading.includes("detergent dosing")) {
+            sections["Detergent Dosing"].push({ table, title: heading });
         } else {
-            otherTables.push(table);
+            sections["Other"].push({ table, title: heading });
         }
     });
 
-    // Function to add tables while aligning them properly
-    function addTablesToPDF(tablesArray, groupTitle) {
-        if (tablesArray.length === 0) return;
+    // Render full-width sections (default)
+    function renderFullWidthTables(tablesArray, sectionTitle) {
+        if (!tablesArray.length) return;
 
-        // Section Title
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
-        doc.text(groupTitle, 10, yPosition);
+        doc.text(sectionTitle, 10, yPosition);
         yPosition += 8;
 
-        tablesArray.forEach((table, index) => {
-            let titleElement = table.previousElementSibling;
-            let title = titleElement && titleElement.tagName === "H2" ? titleElement.innerText : "";
-
+        tablesArray.forEach(({ table, title }) => {
             let headers = [];
             let rows = [];
 
-            table.querySelectorAll("tr").forEach((row, rowIndex) => {
-                let cells = row.querySelectorAll("th, td");
-                let rowData = Array.from(cells).map(cell => cell.innerText);
+            table.querySelectorAll("tr").forEach((tr, i) => {
+                const cells = tr.querySelectorAll("th, td");
+                const rowData = Array.from(cells).map(cell => cell.innerText);
 
-                if (rowIndex === 0) headers = rowData; // First row = headers
+                if (i === 0) headers = rowData;
                 else rows.push(rowData);
             });
 
-            // Determine position for left or right column based on height
-            let startX, startY;
-            if (leftColumnHeight <= rightColumnHeight) {
-                startX = leftX;
-                startY = leftColumnHeight;
-            } else {
-                startX = rightX;
-                startY = rightColumnHeight;
-            }
-
-            // Print Table Title
             if (title) {
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(12);
-                doc.text(title, startX, startY);
-                startY += 5;
+                doc.text(title, 10, yPosition);
+                yPosition += 6;
             }
 
-            // Generate the table
-            if (typeof doc.autoTable === "function") {
+            doc.autoTable({
+                startY: yPosition,
+                head: [headers],
+                body: rows,
+                theme: "grid",
+                styles: { fontSize: 9, cellPadding: 2, valign: 'middle' },
+                headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255], halign: 'center' },
+                margin: { left: 10, right: 10 },
+                tableWidth: 'auto',
+                didDrawPage: (data) => {
+                    yPosition = data.cursor.y + 10;
+                }
+            });
+        });
+    }
+
+    // Render side-by-side tables (Electric & Water)
+    function renderSideBySideTables(waterTables, electricTables) {
+        let leftIndex = 0, rightIndex = 0;
+        const maxLen = Math.max(waterTables.length, electricTables.length);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Water & Electric Submetering", 10, yPosition);
+        yPosition += 8;
+        leftHeight = yPosition;
+        rightHeight = yPosition;
+
+        for (let i = 0; i < maxLen; i++) {
+            const positions = [
+                { side: "left", x: leftX, tables: waterTables, height: leftHeight },
+                { side: "right", x: rightX, tables: electricTables, height: rightHeight }
+            ];
+
+            positions.forEach(({ side, x, tables }, index) => {
+                const tableObj = tables[i];
+                if (!tableObj) return;
+
+                let headers = [];
+                let rows = [];
+
+                tableObj.table.querySelectorAll("tr").forEach((tr, idx) => {
+                    const cells = tr.querySelectorAll("th, td");
+                    const rowData = Array.from(cells).map(cell => cell.innerText);
+                    if (idx === 0) headers = rowData;
+                    else rows.push(rowData);
+                });
+
+                let heightRef = (side === "left") ? leftHeight : rightHeight;
+
+                // Check if we need new page
+                if (heightRef + 40 > pageHeight) {
+                    doc.addPage();
+                    leftHeight = 10;
+                    rightHeight = 10;
+                    heightRef = (side === "left") ? leftHeight : rightHeight;
+                }
+
+                // Draw section title
+                if (tableObj.title) {
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(12);
+                    doc.text(tableObj.title, x, heightRef);
+                    heightRef += 6;
+                }
+
                 doc.autoTable({
-                    startY: startY,
-                    startX: startX,
+                    startY: heightRef,
+                    startX: x,
                     head: [headers],
                     body: rows,
                     theme: "grid",
-                    styles: { fontSize: 9, cellPadding: 1.5, valign: 'middle' },
-                    headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] },
-                    tableWidth: 130,
-                    columnStyles: { 0: { cellWidth: 'auto', halign: 'center' } },
-                    margin: { left: startX, right: 10 },
-                    willDrawPage: function (data) {
-                        if (data.cursor.y + 30 > doc.internal.pageSize.height) {
-                            doc.addPage();
-                            leftColumnHeight = 35;
-                            rightColumnHeight = 35;
-                        }
+                    styles: { fontSize: 8, cellPadding: 2, valign: 'middle' },
+                    headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255], halign: 'center' },
+                    tableWidth: 125,
+                    margin: { left: x },
+                    didDrawPage: (data) => {
+                        if (side === "left") leftHeight = data.cursor.y + 10;
+                        else rightHeight = data.cursor.y + 10;
                     }
                 });
+            });
+        }
 
-                let tableHeight = doc.lastAutoTable.finalY + 8; // Capture height
-
-                // Adjust column height
-                if (startX === leftX) {
-                    leftColumnHeight = tableHeight;
-                } else {
-                    rightColumnHeight = tableHeight;
-                }
-            } else {
-                alert("jsPDF-AutoTable is required for proper formatting.");
-                return;
-            }
-        });
-
-        // Ensure next section starts on a new line
-        yPosition = Math.max(leftColumnHeight, rightColumnHeight) + 10;
+        yPosition = Math.max(leftHeight, rightHeight) + 10;
     }
-    // Add other tables
-    addTablesToPDF(otherTables, "");
 
-    // Add **Water Submetering** next
-    addTablesToPDF(waterSubmeteringTables, "");
+    renderFullWidthTables(sections["Washing Load Records"], "Washing Load Records");
+    renderFullWidthTables(sections["Other"], "Washing Load");
+    renderSideBySideTables(sections["Electric Submetering"],sections["Water Submetering"]);
     
-    // Add **Detergent Dosing** next
-    addTablesToPDF(detergentDosingTables, "");
-
-    // Add **Electric Submetering** first
-    addTablesToPDF(electricSubmeteringTables, "");
-
 
     // Save as PDF
     let filename = `Laundry_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
     doc.save(filename);
+
+    const pdfDataUri = doc.output('datauristring');
+    window.open(pdfDataUri);
 }
+
 
 
     </script>

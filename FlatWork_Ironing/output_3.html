@@ -78,20 +78,35 @@
             <h2>Submitted Ironing Data</h2>
             <div class="card-body">
                 <table class="table table-bordered">
-                    <tr><th>Field</th><th>Value</th></tr>
-                    <tr><td>OPERATOR NAME</td><td id="outOperator_iron"></td></tr>
-                    <tr><td>DATE</td><td id="outDate_iron"></td></tr>
-                    <tr><td>EQUIPMENT</td><td id="outEquipment_iron"></td></tr>
-                    <tr><td>SET SPEED</td><td id="outSet_time_iron"></td></tr>
-                    <tr><td>TEMPERATURE(°C)</td><td id="outTemperature"></td></tr>
-                    <tr><td>LINEN TYPE</td>
+                    <tr>
+                        <th>OPERATOR NAME</th>    
+                        <th>DATE</th>
+                        <th>EQUIPMENT</th>
+                        <th>SET SPEED</th>
+                        <th>TEMPERATURE(°C)</th>
+                        <th>LINEN TYPE</th>
+                        <th>LINEN SIZE</th>
+                        <th>QUANTITY</th>
+                        <th>TOTAL KGS BEFORE IRONING</th>
+                        <th>TOTAL KGS AFTER IRONING</th>   
+                    </tr>
+                    <tr>
+                        <td id="outOperator_iron">
+                            
+                        </td>
+                        <td id="outDate_iron"></td>
+                        <td id="outEquipment_iron"></td>
+                        <td id="outSet_time_iron"></td>
+                        <td id="outTemperature"></td>
+            
                         <td id="outLinen_type_iron"></td>
                         <td id="outOtherLinen_iron"></td>
+             
+                        <td id="outLinen_sizes_iron"></td>
+                        <td id="outQuantity_iron"></td>
+                        <td id="outBfr_iron"></td>
+                        <td id="outAftr_iron"></td>
                     </tr>
-                    <tr><td>LINEN SIZE</td><td id="outLinen_sizes_iron"></td></tr>
-                    <tr><td>QUANTITY</td><td id="outQuantity_iron"></td></tr>
-                    <tr><td>TOTAL KGS BEFORE IRONING</td><td id="outBfr_iron"></td></tr>
-                    <tr><td>TOTAL KGS AFTER IRONING</td><td id="outAftr_iron"></td></tr>
                 </table>
                 <div class="text-center mt-3">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ironingModal">Edit Section</button>
@@ -103,11 +118,18 @@
             <h2>Submitted Electric Submetering Data</h2>
             <div class="card-body">
                 <table class="table table-bordered">
-                    <tr><th>Field</th><th>Value</th></tr>
-                    <tr><td>Start Reading (kWh)</td><td id="outStartReadings_iron"></td></tr>
-                    <tr><td>End Reading (kWh)</td><td id="outEndReadings_iron"></td></tr>
-                    <tr><td>Total kWh Used</td><td id="outTotalUseds_iron"></td></tr>
-                    <tr><td>Estimated Cost (₱)</td><td id="outCosts_iron"></td></tr>
+                    <tr>
+                        <th>Start Reading (kWh)</th>
+                        <th>End Reading (kWh)</th>
+                        <th>Total kWh Used</th>
+                        <th>Estimated Cost (₱)</th>
+                    </tr>
+                    <tr>
+                        <td id="outStartReadings_iron"></td>
+                        <td id="outEndReadings_iron"></td>
+                        <td id="outTotalUseds_iron"></td>
+                        <td id="outCosts_iron"></td>
+                    </tr>
                 </table>
                 <div class="text-center mt-3">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#electricModal">Edit Section</button>
@@ -119,13 +141,22 @@
             <h2>LPG Gas Submetering Report</h2>
             <div class="card-body">
                 <table class="table table-bordered">
-                    <tr><th>Field</th><th>Value</th></tr>
-                    <tr><td>Start Reading (m³)</td><td id="outInitialReading"></td></tr>
-                    <tr><td>Final Reading (m³)</td><td id="outFinalReading"></td></tr>
-                    <tr><td>Total Gas Used (m³)</td><td id="outGasUsed"></td></tr>
-                    <tr><td>LPG Used (kGs)</td><td id="outLpgKgs"></td></tr>
-                    <tr><td>Price per kg (₱)</td><td id="outPricePerKg"></td></tr>
-                    <tr><td>Total Cost (₱)</td><td id="outTotalCost"></td></tr>
+                    <tr>
+                        <th>Start Reading (m³)</th>
+                        <th>Final Reading (m³)</th>
+                        <th>Total Gas Used (m³)</th>
+                        <th>LPG Used (kGs)</th>
+                        <th>Price per kg (₱)</th>
+                        <th>Total Cost (₱)</th>
+                    </tr>
+                <tr>
+                    <td id="outInitialReading"></td>
+                    <td id="outFinalReading"></td>
+                    <td id="outGasUsed"></td>
+                    <td id="outLpgKgs"></td>
+                    <td id="outPricePerKg"></td>
+                    <td id="outTotalCost"></td>
+                </tr>
                 </table>
                 <div class="text-center mt-3">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lpgModal">Edit Section</button>

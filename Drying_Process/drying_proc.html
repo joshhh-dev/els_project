@@ -192,13 +192,13 @@
     </style>
 </head>
 <body>
-    <div class="nav-container">
+    <!-- <div class="nav-container">
         <div class="nav-buttons">
             <button class="nav-button active" onclick="window.location.href='drying_proc.html'">Drying Process</button>
             <button class="nav-button" onclick="window.location.href='electric_proc_2.html'">Electric Submetering</button>
             <button class="nav-button" onclick="window.location.href='lpg_sub.html'">LPG Submetering</button>
         </div>
-    </div>
+    </div> -->
 
     <div class="main-content">
         <div class="form-container">
@@ -285,8 +285,8 @@
                 <span id="aftrError" class="error"></span>
             
                 <div class="button-container">
-                    <button class="btn btn-secondary" type="button" onclick="clearAllData()" id="backBtn">Back</button>
-                    <button class="btn btn-primary" type="submit" id="submitBtn">Next</button>
+                    <button class="btn btn-secondary" type="button" id="saveBtn" onclick="window.location.href='output_2.html'">Done Editing</button>
+                    <button class="btn btn-success" type="button" id="submitBtn" onclick="addLoad()">Add Load</button>
                 </div>
             </form>
             
@@ -298,44 +298,78 @@
     
 
 <script>
+window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIndex = urlParams.get('editIndex');
+    const eData = JSON.parse(localStorage.getItem('dryer_data') || '[]');
 
-function clearAllData() {
-    // Clear all localStorage items
-    localStorage.removeItem("operator_name_dry");
-    localStorage.removeItem("date_dry");
-    localStorage.removeItem("equipment_dry");
-    localStorage.removeItem("set_time_dry");
-    localStorage.removeItem("other-linen_dry");
-    localStorage.removeItem("linen_sizes_dry");
-    localStorage.removeItem("temp");
-    localStorage.removeItem("linen_type_dry");
-    localStorage.removeItem("quantity_dry");
-    localStorage.removeItem("bfr_dry");
-    localStorage.removeItem("aftr_dry");
+    if (editIndex !== null && eData[editIndex]) {
+        const item = eData[editIndex];
+        document.getElementById("operator_name_dry").value = item.operator_name;
+        document.getElementById("date_dry").value = item.date;
+        document.getElementById("equipment_dry").value = item.eqp;
+        document.getElementById("set_time_dry").value = item.time;
+        document.getElementById("other-linen_dry").value = item.others;
+        document.getElementById("linen_sizes_dry").value = item.linen;
+        document.getElementById("temp").value = item.tmpe;
+        document.getElementById("linen_type_dry").value = item.type;
+        document.getElementById("quantity_dry").value = item.quant;
+        document.getElementById("bfr_dry").value = item.bfr;
+        document.getElementById("aftr_dry").value = item.aftr;
+    }
 
-    // Clear all form inputs
-    document.getElementById("date_dry").value = "";
-    document.getElementById("equipment_dry").value = "";
-    document.getElementById("set_time_dry").value = "";
-    document.getElementById("other-linen_dry").value = "";
-    document.getElementById("linen_sizes_dry").value = "";
-    document.getElementById("temp").value = "";
-    document.getElementById("linen_type_dry").value = "";
-    document.getElementById("quantity_dry").value = "";
-    document.getElementById("bfr_dry").value = "";
-    document.getElementById("aftr_dry").value = "";
+    document.getElementById('saveBtn').addEventListener('click', function () {
+        const data = document.getElementById("fill_up_dry");
+        const operator_name = document.getElementById("operator_name_dry");
+        const date = document.getElementById("date_dry");
+        const eqp = document.getElementById("equipment_dry");
+        const time = document.getElementById("set_time_dry");
+        const others = document.getElementById("other-linen_dry");
+        const sizes = document.getElementById("linen_sizes_dry");
+        const tmpe = document.getElementById("temp");
+        const type = document.getElementById("linen_type_dry");
+        const quant = document.getElementById("quantity_dry");
+        const bfr = document.getElementById("bfr_dry");
+        const aftr = document.getElementById("aftr_dry");
 
-    // Hide other linen input if visible
-    document.getElementById("other-linen-container").style.display = "none";
+    const updatedData = {operator_name, date, eqp, time, others, sizes, tmpe, type, quant, bfr, aftr};
+
+        if (editIndex !== null && eData[editIndex]) {
+            eData[editIndex] = updatedData;
+            localStorage.setItem('dryer_data', JSON.stringify(eData));
+            window.location.href = 'output_2.html';
+        }
+    });
+};
+
+function addLoad() { 
+
+const dryerData = {
+        operator_name: document.getElementById("operator_name_dry").value,
+        date: document.getElementById("date_dry").value,
+        eqp: document.getElementById("equipment_dry").value,
+        time: document.getElementById("set_time_dry").value,
+        tmpe: document.getElementById("temp").value,
+        others: document.getElementById("other-linen_dry").value,
+        sizes: document.getElementById("linen_sizes_dry").value,
+        type: document.getElementById("linen_type_dry").value,
+        quant: document.getElementById("quantity_dry").value,
+        bfr: document.getElementById("bfr_dry").value,
+        aftr: document.getElementById("aftr_dry").value
+    };
+
+    const storeData = JSON.parse(localStorage.getItem('dryer_data') || '[]');
+    storeData.push(dryerData);
+    localStorage.setItem('dryer_data',JSON.stringify(storeData));
+
     
-    // Disable linen size dropdown
-    document.getElementById("linen_sizes_dry").disabled = true;
 
-    // Clear any error states
-    clearErrors();
+    window.location.href = "output_2.html";
 
-    // Navigate to homepage
-    window.location.href = '../index.html';
+}    
+
+function saveData() {
+    window.location.href = 'output_2.html';
 }
 
 function handleLinenChange() {
@@ -362,10 +396,10 @@ function handleLinenChange() {
         linenSizeDropdown.value = ''; // Reset selection if linen type is deselected
     }
 }
+    
 
     document.getElementById("fill_up_dry").addEventListener("submit", function(event) {
         event.preventDefault();
-
         // Store data in localStorage
         localStorage.setItem("operator_name_dry", document.getElementById("operator_name_dry").value);
         localStorage.setItem("date_dry", document.getElementById("date_dry").value);
@@ -438,10 +472,28 @@ function clearErrors() {
         group.classList.remove('error');
     });
 }
+const data = document.getElementById("fill_up_dry");
+const operator_name = document.getElementById("operator_name_dry");
+const date = document.getElementById("date_dry");
+const eqp = document.getElementById("equipment_dry");
+const time = document.getElementById("set_time_dry");
+const others = document.getElementById("other-linen_dry");
+const sizes = document.getElementById("linen_sizes_dry");
+const tmpe = document.getElementById("temp");
+const type = document.getElementById("linen_type_dry");
+const quant = document.getElementById("quantity_dry");
+const bfr = document.getElementById("bfr_dry");
+const aftr = document.getElementById("aftr_dry");
 
 document.getElementById("fill_up_dry").addEventListener("submit", function(event) {
     event.preventDefault();
-    
+    const dryerData = {
+        operator_name, date, eqp, time, others, sizes, tmpe, type, quant, bfr, aftr
+    }
+    const storeData = JSON.parse(localStorage.getItem('dryer_data') || '[]');
+    storeData.push(dryerData);
+    localStorage.setItem('dryer_data',JSON.stringify(stored));
+
     // Clear previous errors
     clearErrors();
 
@@ -481,9 +533,10 @@ document.getElementById("fill_up_dry").addEventListener("submit", function(event
     if (hideNav === 'true') {
         window.parent.location.reload();
     } else {
-        window.location.href = "electric_proc_2.html";
+        window.location.href = "output_2.html";
     }
 });
+
 
 </script>
 

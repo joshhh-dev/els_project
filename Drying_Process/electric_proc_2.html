@@ -126,13 +126,13 @@
     </style>
 </head>
 <body>
-    <div class="nav-container">
+    <!-- <div class="nav-container">
         <div class="nav-buttons">
             <button class="nav-button" onclick="window.location.href='drying_proc.html'">Drying Process</button>
             <button class="nav-button active" onclick="window.location.href='electric_proc_2.html'">Electric Submetering</button>
             <button class="nav-button" onclick="window.location.href='lpg_sub.html'">LPG Submetering</button>
         </div>
-    </div>
+    </div> -->
 
     <div class="main-content">
         <div class="card">
@@ -176,12 +176,42 @@
         </div>
 
         <div class="button-container">
-            <button class="btn btn-secondary" onclick="window.location.href='drying_proc.html'">Back</button>
-            <button class="btn btn-primary" onclick="submitData()">Next</button>
+            <button class="btn btn-secondary" id="saveBtn" onclick="window.location.href='output_2.html'">Done Editing</button>
+            <button class="btn btn-success" id="submitBtn" onclick="submitData()">Add Data</button>
         </div>
     </div>
 
     <script>
+    window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIndex = urlParams.get('editIndex');
+    const eData = JSON.parse(localStorage.getItem('eData') || '[]');
+
+    if (editIndex !== null && eData[editIndex]) {
+        const item = eData[editIndex];
+        document.getElementById('start_reads_dry').value = item.startRead;
+        document.getElementById('end_reads_dry').value = item.endRead;
+        document.getElementById('cost_dry').textContent = item.cost;
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', function () {
+        const startRead = parseFloat(document.getElementById('start_reads_dry').value);
+        const endRead = parseFloat(document.getElementById('end_reads_dry').value);
+        const cost = parseFloat(document.getElementById('cost_dry').value);
+
+        const totalUsed = endRead - startRead;
+        const estimatedCost = totalUsed * cost;
+        const updatedData = { startRead, endRead, cost, totalUsed, estimatedCost };
+
+        if (editIndex !== null && eData[editIndex]) {
+            eData[editIndex] = updatedData;
+            localStorage.setItem('eData', JSON.stringify(eData));
+            window.location.href = 'output_2.html';
+        }
+    });
+};
+
+
         function checkHideNav() {
             const urlParams = new URLSearchParams(window.location.search);
             const hideNav = urlParams.get('hideNav');
@@ -189,7 +219,7 @@
                 document.querySelector('.nav-container').style.display = 'none';
                 document.body.style.paddingTop = '20px';  // Reduce padding since nav is hidden
                 // Update button text and hide back button in edit mode
-                document.getElementById('submitBtn').textContent = 'Done Editing';
+                document.getElementById('submitBtn').textContent = 'Add Data';
                 document.getElementById('backBtn').style.display = 'none';
             }
         }
@@ -201,7 +231,7 @@
             // Load existing data if available
             document.getElementById("start_reads_dry").value = localStorage.getItem("start_reads_dry") || "";
             document.getElementById("end_reads_dry").value = localStorage.getItem("end_reads_dry") || "";
-            document.getElementById("cost_dry").value = localStorage.getItem("cost_per_kwh_dry") || "";
+            document.getElementById("cost_dry").value = localStorage.getItem("cost_dry") || "";
             
             // Calculate if we have values
             if (document.getElementById("start_reads_dry").value && 
@@ -222,7 +252,6 @@
             document.getElementById("totalUsed_dry").textContent = totalUsed.toFixed(4)+ "kWh";
             document.getElementById("costing_dry").textContent = "₱" + estimatedCost.toFixed(4);
         }
-
         function clearErrors() {
             document.querySelectorAll('.input-group').forEach(group => {
                 group.classList.remove('error');
@@ -233,37 +262,26 @@
             let startRead = document.getElementById("start_reads_dry").value;
             let endRead = document.getElementById("end_reads_dry").value;
             let cost = document.getElementById("cost_dry").value;
-            let isValid = true;
 
-            // Clear previous errors
-            clearErrors();
-
-            // Validate each field
-            if(startRead === "") {
-                document.getElementById("start_reads_dry").closest('.input-group').classList.add('error');
-                isValid = false;
-            }
-            if(endRead === "") {
-                document.getElementById("end_reads_dry").closest('.input-group').classList.add('error');
-                isValid = false;
-            }
-            if(cost === "") {
-                document.getElementById("cost_dry").closest('.input-group').classList.add('error');
-                isValid = false;
-            }
-
-            if(!isValid) {
+            if(startRead === "" || endRead === "" || cost === ""){
+                alert("Fields can't be left empty");
                 return false;
             }
+            // Calculate final values
+            let totalUsed = Math.max(0, parseFloat(endRead) - parseFloat(startRead));
+            let estimatedCost = totalUsed * parseFloat(cost);
 
-            // Store the cost per kWh separately
-            localStorage.setItem("cost_per_kwh_dry", cost);
+            const eSubData = JSON.parse(localStorage.getItem('eData') || '[]');
+            eSubData.push({startRead, endRead, cost, totalUsed, estimatedCost});
+            localStorage.setItem('eData', JSON.stringify(eSubData));
+
             localStorage.setItem("start_reads_dry", startRead);
             localStorage.setItem("end_reads_dry", endRead);
-            localStorage.setItem("total_used_dry", document.getElementById("totalUsed_dry").textContent);
-            localStorage.setItem("cost_dry", document.getElementById("costing_dry").textContent);
+            localStorage.setItem("cost_dry", cost);
+            localStorage.setItem("total_used_dry", totalUsed.toFixed(4));
+            localStorage.setItem("costing_dry", "₱" + estimatedCost.toFixed(4));
 
-            alert("Data submitted successfully!");
+            alert("Electric submetering data saved!");
             
             // Check if we're in a modal
             const urlParams = new URLSearchParams(window.location.search);
@@ -271,7 +289,7 @@
             if (hideNav === 'true') {
                 window.parent.location.reload();
             } else {
-                window.location.href = "lpg_sub.html";
+                window.location.href = "output_2.html";
             }
         }
 
@@ -298,6 +316,20 @@
             // Navigate to homepage
             window.location.href = '../index.html';
         }
+        window.addEventListener('DOMContentLoaded', function() {
+            let startRead = localStorage.getItem("start_reads_dry");
+            let endRead = localStorage.getItem("end_reads_dry");
+            let costing = localStorage.getItem("cost_dry");
+
+            if (startRead) document.getElementById("start_reads_dry").value = startRead;
+            if (endRead) document.getElementById("end_reads_dry").value = endRead;
+            if (costing) document.getElementById("cost_dry").value = costing;
+
+            // Calculate initial values if data exists
+            if (startRead || endRead || costing) {
+                calculate();
+            }
+        });
     </script>
 </body>
 </html>

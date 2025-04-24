@@ -82,13 +82,13 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <div class="nav-container">
+    <!-- <div class="nav-container">
         <div class="nav-buttons">
             <button class="nav-button" onclick="window.location.href='wash_proc.html'">Wash Process</button>
             <button class="nav-button active" onclick="window.location.href='energy_cons.html'">Electric Submetering</button>
             <button class="nav-button" onclick="window.location.href='water_cons.html'">Water Submetering</button>
         </div>
-    </div>
+    </div> -->
 
     <div class="card mx-auto" style="width: 500px;">
         <div class="card text-white">
@@ -131,7 +131,7 @@
     
             </table>
             <button class="btn btn-primary btn-lg btn-block" onclick="submitData()" id="nextBtn">Next</button>
-    <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='wash_proc.html'" id="back_bnt">Back</button>
+            <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='wash_proc.html'" id="back_bnt">Back</button>
         </div>
 
     
@@ -163,10 +163,6 @@
             let endRead = document.getElementById("end_reads").value;
             let costing = document.getElementById("costing").value;
 
-            if(startRead === "" || endRead === "" || costing === ""){
-                alert("Fields can't be left empty");
-                return false;
-            }
 
             // Calculate final values
             let totalUsed = Math.max(0, parseFloat(endRead) - parseFloat(startRead));
