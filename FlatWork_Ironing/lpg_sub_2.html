@@ -206,7 +206,7 @@
        
                 <div class="button-container mt-4">
                     <button class="btn btn-secondary btn-lg" onclick="window.location.href='output_3.html'" id="saveBtn">Done Editing</button>
-                    <button class="btn btn-primary btn-lg" onclick="saveData()" id="nextButton">Add Data</button>
+                    <button class="btn btn-primary btn-lg" onclick="saveData()" id="nextButton">Add Readings</button>
                 </div>
             </div>
         </div>
@@ -292,16 +292,24 @@
     }
 
     function saveData() {
-        let initialReading = parseFloat(document.getElementById("initialReading_iron").value);
-        let finalReading = parseFloat(document.getElementById("finalReading_iron").value);
-        let pricePerKg = parseFloat(document.getElementById("pricePerKg_iron").value);
+    let initialReading = parseFloat(document.getElementById("initialReading_iron").value);
+    let finalReading = parseFloat(document.getElementById("finalReading_iron").value);
+    let pricePerKg = parseFloat(document.getElementById("pricePerKg_iron").value);
 
+    // Validate Inputs (prevent NaN issues)
+    if (isNaN(initialReading) || isNaN(finalReading) || isNaN(pricePerKg)) {
+        alert("Please enter valid numbers for all fields.");
+        return;
+    }
 
-        let gasUsed = finalReading - initialReading;
-        let lpgKgs = 1.898 * gasUsed;
-        let totalCost = pricePerKg * lpgKgs;
+    let gasUsed = finalReading - initialReading;
+    let lpgKgs = 1.898 * gasUsed;
+    let totalCost = pricePerKg * lpgKgs;
 
-        const lpgData = JSON.parse(localStorage.getItem('lpgData_iron') || '[]');
+    // Retrieve stored data
+    const lpgData = JSON.parse(localStorage.getItem('lpgData_iron') || '[]');
+
+    // Add new entry
     lpgData.push({
         initialReading: initialReading.toFixed(2),
         finalReading: finalReading.toFixed(2),
@@ -311,25 +319,30 @@
         totalCost: totalCost.toFixed(4),
     });
 
+    // Save updated data
     localStorage.setItem('lpgData_iron', JSON.stringify(lpgData));
+    localStorage.setItem("initial_reading_iron", initialReading.toFixed(2));
+    localStorage.setItem("final_reading_iron", finalReading.toFixed(2));
+    localStorage.setItem("gas_used_iron", gasUsed.toFixed(4));
+    localStorage.setItem("total_cost_iron", totalCost.toFixed(4));
+    localStorage.setItem("pricePerKg_iron", parseFloat(pricePerKg).toFixed(2));
 
-        // Save with correct keys
-        localStorage.setItem("initial_reading_iron", initialReading.toFixed(2));
-        localStorage.setItem("final_reading_iron", finalReading.toFixed(2));
-        localStorage.setItem("gas_used_iron", gasUsed.toFixed(4));
-        localStorage.setItem("total_cost_iron", totalCost.toFixed(4));
-        localStorage.setItem("pricePerKg_iron", document.getElementById("pricePerKg_iron").value).toFixed(2);
+    // Check if in edit mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const hideNav = urlParams.get('hideNaDatav');
 
-        // Check if in edit mode
-        const urlParams = new URLSearchParams(window.location.search);
-        const hideNav = urlParams.get('hideNav');
-        
-        if (hideNav === 'true') {
-            window.parent.location.reload(); // Refresh parent window in edit mode
+    if (hideNav === 'true') {
+        // Check if inside an iframe before trying to reload parent
+        if (window.self !== window.top) {
+            window.parent.location.reload();
         } else {
-            window.location.href = 'output_3.html';
+            window.location.reload();
         }
+    } else {
+        window.location.href = 'output_3.html';
     }
+}
+
 
     function loadExistingData() {
         const initialReading = localStorage.getItem("initial_reading_iron");

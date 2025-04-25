@@ -362,9 +362,10 @@ function renderLpgSubmetering() {
             row.innerHTML = `
                 <td>${item.initialReading}</td>
                 <td>${item.finalReading}</td>
-                <td>${item.pricePerKg}</td>
                 <td>${item.gasUsed}</td>
                 <td>${item.lpgKgs}</td>
+                <td>${item.pricePerKg}</td>
+                
                 <td>${item.totalCost}</td>
                 <td>
                     <button class="btn btn-sm btn-danger" onclick="deleteLpgData(${index})">Delete</button>
