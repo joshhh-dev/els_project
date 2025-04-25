@@ -77,20 +77,30 @@
         <div class="card">
             <h2>Submitted Ironing Data</h2>
             <div class="card-body">
-                <table class="table table-bordered">
-                    <tr>
-                        <th>OPERATOR NAME</th>    
-                        <th>DATE</th>
-                        <th>EQUIPMENT</th>
-                        <th>SET SPEED</th>
-                        <th>TEMPERATURE(°C)</th>
-                        <th>LINEN TYPE</th>
-                        <th>LINEN SIZE</th>
-                        <th>QUANTITY</th>
-                        <th>TOTAL KGS BEFORE IRONING</th>
-                        <th>TOTAL KGS AFTER IRONING</th>   
-                    </tr>
-                    <tr>
+                <table class="table table-bordered table-stripe">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>OPERATOR NAME</th>    
+                            <th>DATE</th>
+                            <th>EQUIPMENT</th>
+                            <th>SET SPEED</th>
+                            <th>TEMPERATURE(°C)</th>
+                            <th>LINEN TYPE</th>
+                            <th>OTHER LINEN</th>
+                            <th>LINEN SIZE</th>
+                            <th>QUANTITY</th>
+                            <th>TOTAL KGS BEFORE IRONING</th>
+                            <th>TOTAL KGS AFTER IRONING</th>   
+                        </tr>
+                    </thead>
+
+                    
+                    <tbody id="ironingDataTable">
+
+                    </tbody>
+                    
+                    <!-- <tr>
                         <td id="outOperator_iron">
                             
                         </td>
@@ -106,10 +116,10 @@
                         <td id="outQuantity_iron"></td>
                         <td id="outBfr_iron"></td>
                         <td id="outAftr_iron"></td>
-                    </tr>
+                    </tr> -->
                 </table>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ironingModal">Edit Section</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ironingModal">Add Load</button>
                 </div>
             </div>
         </div>
@@ -118,21 +128,28 @@
             <h2>Submitted Electric Submetering Data</h2>
             <div class="card-body">
                 <table class="table table-bordered">
-                    <tr>
-                        <th>Start Reading (kWh)</th>
-                        <th>End Reading (kWh)</th>
-                        <th>Total kWh Used</th>
-                        <th>Estimated Cost (₱)</th>
-                    </tr>
-                    <tr>
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Start Reading (kWh)</th>
+                            <th>End Reading (kWh)</th>
+                            <th>Total kWh Used</th>
+                            <th>Estimated Cost (₱)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="eSubData_iron">
+
+                    </tbody>
+                    
+                    <!-- <tr>
                         <td id="outStartReadings_iron"></td>
                         <td id="outEndReadings_iron"></td>
                         <td id="outTotalUseds_iron"></td>
                         <td id="outCosts_iron"></td>
-                    </tr>
+                    </tr> -->
                 </table>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#electricModal">Edit Section</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#electricModal">Add Readings</button>
                 </div>
             </div>
         </div>
@@ -141,25 +158,31 @@
             <h2>LPG Gas Submetering Report</h2>
             <div class="card-body">
                 <table class="table table-bordered">
-                    <tr>
-                        <th>Start Reading (m³)</th>
-                        <th>Final Reading (m³)</th>
-                        <th>Total Gas Used (m³)</th>
-                        <th>LPG Used (kGs)</th>
-                        <th>Price per kg (₱)</th>
-                        <th>Total Cost (₱)</th>
-                    </tr>
-                <tr>
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Start Reading (m³)</th>
+                            <th>Final Reading (m³)</th>
+                            <th>Total Gas Used (m³)</th>
+                            <th>LPG Used (kGs)</th>
+                            <th>Price per kg (₱)</th>
+                            <th>Total Cost (₱)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="lpgIroningData"> 
+
+                    </tbody>
+                    <!-- <tr>
                     <td id="outInitialReading"></td>
                     <td id="outFinalReading"></td>
                     <td id="outGasUsed"></td>
                     <td id="outLpgKgs"></td>
                     <td id="outPricePerKg"></td>
                     <td id="outTotalCost"></td>
-                </tr>
+                </tr> -->
                 </table>
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lpgModal">Edit Section</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lpgModal">Add Readings</button>
                 </div>
             </div>
         </div>
@@ -215,6 +238,149 @@
     </div>
 
     <script>
+ function renderIroningData() {
+    const dryerData = document.getElementById('ironingDataTable');
+    const storeData = JSON.parse(localStorage.getItem('ironingData') || '[]');
+    dryerData.innerHTML = '';
+
+    if (storeData.length === 0) {
+        dryerData.innerHTML = '<tr><td colspan="13" class="text-center">No data available.</td></tr>';
+    } else {
+        storeData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.operator_name}</td>
+                <td>${item.date}</td>
+                <td>${item.eqp}</td>
+                <td>${item.time}</td>
+                <td>${item.tmpe}</td>
+                <td>${item.type}</td>
+                <td>${item.others}</td>
+                <td>${item.sizes}</td>
+                <td>${item.quant}</td>
+                <td>${item.bfr}</td>
+                <td>${item.aftr}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="deleteIroningData(${index})">Delete</button>
+                    <button class="btn btn-sm btn-warning" onclick="editIroningData(${index})">Edit</button>
+                </td>
+            `;
+            dryerData.appendChild(row);
+        });
+    }
+}
+
+function deleteIroningData(index) {
+    const storeData = JSON.parse(localStorage.getItem('ironingData') || '[]');
+    storeData.splice(index, 1);
+    localStorage.setItem('ironingData', JSON.stringify(storeData));
+    renderIroningData();
+}
+
+function editIroningData(index) {
+    window.location.href = `flatiron_proc.html?editIndex=${index}`;
+}
+
+renderIroningData();
+
+//Delete Electric Submetering Data
+function deleteElectricData(index) {
+    const eStoreData = JSON.parse(localStorage.getItem('eData_iron') || '[]');
+    eStoreData.splice(index, 1);
+    localStorage.setItem('eData_iron', JSON.stringify(eStoreData));
+    renderElectricSubmeteringData();
+}
+// Render Electric Submetering Data
+function renderElectricSubmeteringData() {
+    const eSubData = document.getElementById('eSubData_iron');
+    const eStoreData = JSON.parse(localStorage.getItem('eData_iron') || '[]');
+
+    eSubData.innerHTML = '';  // Clear the table before rendering new data
+
+    if (eStoreData.length === 0) {
+        eSubData.innerHTML = '<tr><td colspan="4" class="text-center">No data available.</td></tr>';
+    } else {
+        eStoreData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.startRead}</td>
+                <td>${item.endRead}</td>
+                <td>${item.totalUsed}</td>
+                <td>${item.estimatedCost}</td>
+                <td>
+                     <button class="btn btn-sm btn-danger" onclick="deleteElectricData(${index})">Delete</button>
+                    <button class="btn btn-sm btn-warning" onclick="editElectricData(${index})">Edit</button>
+
+                </td>
+            `;
+            eSubData.appendChild(row); // Add the row to the table
+        });
+    }
+}
+function editElectricData(index) {
+    window.location.href = `electric_proc_3.html?editIndex=${index}`;
+}
+renderElectricSubmeteringData();
+
+// Update Electric Submetering Data
+function updateElectricSubmeteringData(updatedData, editIndex = null) {
+    // Update the electric submetering data
+    if (editIndex !== null && eStoreData[editIndex]) {
+        // ✅ Replace existing entry if in edit mode
+        eStoreData[editIndex] = updatedData;
+    } else {
+        // ➕ Otherwise, push new entry
+        eStoreData.push(updatedData);
+    }
+    localStorage.setItem('eData_iron', JSON.stringify(eStoreData));
+    renderElectricSubmeteringData();
+}
+// Call this function to render data on page load
+renderElectricSubmeteringData();
+
+
+function deleteLpgData(index) {
+    const storeLpgData = JSON.parse(localStorage.getItem('lpgData_iron') || '[]');
+    storeLpgData.splice(index, 1);
+    localStorage.setItem('lpgData_iron', JSON.stringify(storeLpgData));
+    renderLpgSubmetering();
+}
+
+function renderLpgSubmetering() {
+    const storeLpgTable = document.getElementById('lpgIroningData');
+    const storeLpgData = JSON.parse(localStorage.getItem('lpgData_iron') || '[]');
+
+    storeLpgTable.innerHTML = ''; // Clear the table
+
+    if (storeLpgData.length === 0) {
+        storeLpgTable.innerHTML = '<tr><td colspan="7" class="text-center">No data available.</td></tr>';
+
+    } else {
+        storeLpgData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.initialReading}</td>
+                <td>${item.finalReading}</td>
+                <td>${item.pricePerKg}</td>
+                <td>${item.gasUsed}</td>
+                <td>${item.lpgKgs}</td>
+                <td>${item.totalCost}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="deleteLpgData(${index})">Delete</button>
+                    <button class="btn btn-sm btn-warning" onclick="editLpgData(${index})">Edit</button>
+                </td>
+            `;
+            storeLpgTable.appendChild(row);
+        });
+    }
+}
+function editLpgData(index) {
+    window.location.href = `lpg_sub_2.html?editIndex=${index}`;
+}
+
+renderLpgSubmetering();
+        
         // Refresh page when modal is closed to update data
         const modals = document.querySelectorAll('.modal');
         modals.forEach(modal => {
@@ -222,7 +388,6 @@
                 location.reload();
             });
         });
-
         // Function to clear all data and go to homepage
         function clearAllDataAndGoHome() {
             try {

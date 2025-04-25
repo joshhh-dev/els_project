@@ -126,13 +126,13 @@
     </style>
 </head>
 <body>
-    <div class="nav-container">
+    <!-- <div class="nav-container">
         <div class="nav-buttons">
             <button class="nav-button" onclick="window.location.href='flatiron_proc.html'">FlatWork Ironing Process</button>
             <button class="nav-button active" onclick="window.location.href='electric_proc_3.html'">Electric Submetering</button>
             <button class="nav-button" onclick="window.location.href='lpg_sub_2.html'">LPG Submetering</button>
         </div>
-    </div>
+    </div> -->
 
     <div class="main-content">
         <div class="card">
@@ -176,12 +176,42 @@
         </div>
 
         <div class="button-container">
-            <button class="btn btn-secondary" onclick="window.location.href='flatiron_proc.html'">Back</button>
-            <button class="btn btn-primary" onclick="submitData()">Next</button>
+            <button class="btn btn-secondary" id="saveBtn" onclick="window.location.href='output_3.html'">Done Editing</button>
+            <button class="btn btn-primary" id="submitBtn" onclick="submitData()">Add Data</button>
         </div>
     </div>
 
     <script>
+    window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIndex = urlParams.get('editIndex');
+    const eData = JSON.parse(localStorage.getItem('eData_iron') || '[]');
+
+    if (editIndex !== null && eData[editIndex]) {
+        const item = eData[editIndex];
+        document.getElementById('start_reads_iron').value = item.startRead;
+        document.getElementById('end_reads_iron').value = item.endRead;
+        document.getElementById('cost_iron').textContent = item.cost;
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', function () {
+        const startRead = parseFloat(document.getElementById('start_reads_iron').value);
+        const endRead = parseFloat(document.getElementById('end_reads_iron').value);
+        const cost = parseFloat(document.getElementById('cost_iron').value);
+
+        const totalUsed = endRead - startRead;
+        const estimatedCost = totalUsed * cost;
+        const updatedData = { startRead, endRead, cost, totalUsed, estimatedCost };
+
+        if (editIndex !== null && eData[editIndex]) {
+            eData[editIndex] = updatedData;
+            localStorage.setItem('eData_iron', JSON.stringify(eData));
+            window.location.href = 'output_3.html';
+        }
+    });
+};
+
+
         function checkHideNav() {
             const urlParams = new URLSearchParams(window.location.search);
             const hideNav = urlParams.get('hideNav');
@@ -233,29 +263,26 @@
             let startRead = document.getElementById("start_reads_iron").value;
             let endRead = document.getElementById("end_reads_iron").value;
             let cost = document.getElementById("cost_iron").value;
-            let isValid = true;
 
-            // Clear previous errors
-            clearErrors();
-
-            // Validate each field
-            if(startRead === "") {
-                document.getElementById("start_reads_iron").closest('.input-group').classList.add('error');
-                isValid = false;
-            }
-            if(endRead === "") {
-                document.getElementById("end_reads_iron").closest('.input-group').classList.add('error');
-                isValid = false;
-            }
-            if(cost === "") {
-                document.getElementById("cost_iron").closest('.input-group').classList.add('error');
-                isValid = false;
-            }
-
-            if(!isValid) {
+            if (startRead === "" || endRead === "" || cost === ""){
+                alert("Fields can't be empy");
                 return false;
             }
 
+            let totalUsed = Math.max(0, parseFloat(endRead) - parseFloat(startRead));
+            let estimatedCost = totalUsed * parseFloat(cost);
+
+            const eSubData = JSON.parse(localStorage.getItem('eData_iron') || '[]');
+            eSubData.push({startRead, endRead, cost, totalUsed, estimatedCost});
+            localStorage.setItem('eData_iron', JSON.stringify(eSubData));
+            
+            
+            
+            
+            
+            
+            
+            
             // Store the cost per kWh separately
             localStorage.setItem("cost_per_kwh_iron", cost);
             localStorage.setItem("start_reads_iron", startRead);
@@ -263,7 +290,7 @@
             localStorage.setItem("total_used_iron", document.getElementById("totalUsed_iron").textContent);
             localStorage.setItem("cost_iron", document.getElementById("costing_iron").textContent);
 
-            alert("Data submitted successfully!");
+            alert("LPG data submetering is saved");
             
             // Check if we're in a modal
             const urlParams = new URLSearchParams(window.location.search);
@@ -271,7 +298,7 @@
             if (hideNav === 'true') {
                 window.parent.location.reload();
             } else {
-                window.location.href = "lpg_sub_2.html";
+                window.location.href = "output_3.html";
             }
         }
 

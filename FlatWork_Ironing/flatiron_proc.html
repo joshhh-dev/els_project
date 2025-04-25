@@ -269,7 +269,7 @@
                 <span id="aftrError" class="error"></span>
             
                 <div class="button-container mt-4">
-                    <button class="btn btn-secondary btn-lg" type="button" id="back_btn" onclick="window.location.href='../index.html'">Back</button>
+                    <button class="btn btn-secondary btn-lg" type="button" id="saveBtn" onclick="window.location.href='output_3.html'">Done Editing</button>
                     <button class="btn btn-success" onclick="addLoad()">Add Load</button>
                     <button class="btn btn-primary btn-lg" type="submit" id="submit_btn">Next</button>
                 </div>
@@ -283,8 +283,73 @@
     
 
 <script>
-function addLoad() {
+window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIndex = urlParams.get('editIndex');
+    const ironingData = JSON.parse(localStorage.getItem('ironingData') || '[]');
 
+    if (editIndex !== null && ironingData[editIndex]) {
+        const item = ironingData[editIndex];
+        document.getElementById("operator_name_iron").value = item.operator_name;
+        document.getElementById("date_iron").value = item.date;
+        document.getElementById("equipment_iron").value = item.eqp;
+        document.getElementById("set_time_iron").value = item.time;
+        document.getElementById("temp").value = item.tmpe;
+        document.getElementById("other-linen_iron").value = item.others;
+        document.getElementById("linen_sizes_iron").value = item.sizes;
+        document.getElementById("linen_type_iron").value = item.type;
+        document.getElementById("quantity_iron").value = item.quant;
+        document.getElementById("bfr_iron").value = item.bfr;
+        document.getElementById("aftr_iron").value = item.aftr;
+    }
+
+    document.getElementById("saveBtn").addEventListener("click", function () {
+        const ironingData = {
+            operator_name: document.getElementById("operator_name_iron").value,
+            date: document.getElementById("date_iron").value,
+            eqp: document.getElementById("equipment_iron").value,
+            time: document.getElementById("set_time_iron").value,
+            tmpe: document.getElementById("temp").value,
+            others: document.getElementById("other-linen_iron").value,
+            sizes: document.getElementById("linen_sizes_iron").value,
+            type: document.getElementById("linen_type_iron").value,
+            quant: document.getElementById("quantity_iron").value,
+            bfr: document.getElementById("bfr_iron").value,
+            aftr: document.getElementById("aftr_iron").value,
+        };
+
+        let storeData = JSON.parse(localStorage.getItem("ironingData") || "[]");
+        if (editIndex !== null && storeData[editIndex]) {
+            storeData[editIndex] = ironingData;
+        } else {
+            storeData.push(ironingData);
+        }
+
+        localStorage.setItem("ironingData", JSON.stringify(storeData));
+        window.location.href = "output_3.html";
+    });
+};
+
+function addLoad() {
+    const ironingData = {
+        operator_name: document.getElementById("operator_name_iron").value,
+        date: document.getElementById("date_iron").value,
+        eqp: document.getElementById("equipment_iron").value,
+        time: document.getElementById("set_time_iron").value,
+        tmpe: document.getElementById("temp").value,
+        others: document.getElementById("other-linen_iron").value,
+        sizes: document.getElementById("linen_sizes_iron").value,
+        type: document.getElementById("linen_type_iron").value,
+        quant: document.getElementById("quantity_iron").value,
+        bfr: document.getElementById("bfr_iron").value,
+        aftr: document.getElementById("aftr_iron").value
+    }
+    const storeData = JSON.parse(localStorage.getItem('ironingData') || '[]');
+    storeData.push(ironingData);
+    localStorage.setItem('ironingData',JSON.stringify(storeData));
+
+    window.location.href = "output_3.html";
+    console.log(storeData);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
