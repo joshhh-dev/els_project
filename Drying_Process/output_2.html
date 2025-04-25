@@ -539,76 +539,98 @@ renderLpgSubmetering();
 
 function exportToPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4'); // A4 Portrait
+    const doc = new jsPDF('l', 'mm', 'a4'); // A4 Portrait
 
     // Title & Timestamp
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.text("ELS Drying Process", 15, 15);
-    
-    doc.setFontSize(10);
+
+    doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
     doc.text("Generated on: " + new Date().toLocaleString(), 15, 20);
 
-    let yPosition = 25; // Starting Y position
-    let tables = document.querySelectorAll("table");
+    let yPosition = 30; // Starting Y position
+    const tables = document.querySelectorAll("table");
 
     if (tables.length === 0) {
         alert("No table data found to export.");
         return;
     }
 
-    tables.forEach((table, index) => {
-        let title = table.closest('.card').querySelector('h2').innerText || "Untitled Table";
-        
-        // Add Table Title
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(12);
-        doc.text(title, 15, yPosition);
-        yPosition += 5;
+    tables.forEach((table) => {
+    let title = table.closest('.card')?.querySelector('h2')?.innerText || "Untitled Table";
 
-        let headers = [];
-        let rows = [];
+    // Add Table Title
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text(title, 15, yPosition);
+    yPosition += 5;
 
-        let tableRows = table.querySelectorAll("tr");
-        tableRows.forEach((row, rowIndex) => {
-            let cells = row.querySelectorAll("th, td");
-            let rowData = Array.from(cells).map(cell => cell.innerText);
+    let headers = [];
+    let rows = [];
 
-            if (rowIndex === 0) headers = rowData; // First row as headers
-            else rows.push(rowData);
-        });
+    table.querySelectorAll("tr").forEach((row, rowIndex) => {
+        const cells = row.querySelectorAll("th, td");
+        const rowData = Array.from(cells).map(cell => cell.innerText.trim());
 
-  
-        doc.autoTable({
-                    startY: yPosition,
-                    head: [headers],
-                    body: rows,
-                    theme: "grid",
-                    styles: { 
-                        fontSize: 12,
-                        cellPadding: 2,
-                        overflow: 'linebreak',
-                        halign: 'left'
-                    },
-                    headStyles: { 
-                        fillColor: [0, 102, 204], 
-                        textColor: [255, 255, 255],
-                        fontSize: 12
-                    },
-                    columnStyles: {
-                        0: { cellWidth: 'auto' },
-                        1: { cellWidth: 'auto' }
-                    },
-                    margin: { left: 15, right: 15 },
-                });
+        if (rowIndex === 0) headers = rowData;
+        else rows.push(rowData);
+    });
 
-                yPosition = doc.lastAutoTable.finalY + 9;
-            });
+    // Force multi-line header by replacing spaces with newlines
+        headers = headers.map(h => h.replace(/\s+/g, '\n'));
 
-            let filename = `Drying_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
-            doc.save(filename);
-        }
+    // Determine alignment
+    const isIroningTable = title.toLowerCase().includes("ironing");
+
+    doc.autoTable({
+    startY: yPosition,
+    head: [headers],
+    body: rows,
+    theme: "grid",
+    styles: { 
+        fontSize: 10,
+        cellPadding: 2,
+        overflow: 'linebreak', // or 'ellipsize'
+        halign: 'center'
+    },
+ headStyles: {
+    fillColor: [0, 102, 204],
+    textColor: [255, 255, 255],
+    fontSize: 10,
+    halign: 'center',
+    valign: 'middle',
+    cellPadding: 2
+},
+columnStyles: {
+    0: { cellWidth: 'wrap' },
+    1: { cellWidth: 'wrap' },
+    2: { cellWidth: 'wrap' },
+    3: { cellWidth: 'wrap' },
+    // Continue for more columns
+},
+    tableWidth: 'wrap',
+    margin: { left: 15, right: 15 },
+    didDrawPage: function (data) {
+        // Optional: add page number on each page
+        const pageCount = doc.internal.getNumberOfPages();
+        const pageSize = doc.internal.pageSize;
+        const pageHeight = pageSize.height;
+        doc.setFontSize(9);
+        doc.text(`Page ${doc.internal.getCurrentPageInfo().pageNumber} of ${pageCount}`, 195, pageHeight - 10, { align: 'right' });
+    }
+});
+
+    yPosition = doc.lastAutoTable.finalY + 9;
+});
+    const filename = `Drying_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(filename);
+
+    const pdfDataUri = doc.output('datauristring');
+    window.open(pdfDataUri);
+}
+
     </script>
 </body>
 </html>

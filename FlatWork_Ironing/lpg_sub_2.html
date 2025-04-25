@@ -206,7 +206,7 @@
        
                 <div class="button-container mt-4">
                     <button class="btn btn-secondary btn-lg" onclick="window.location.href='output_3.html'" id="saveBtn">Done Editing</button>
-                    <button class="btn btn-primary btn-lg" onclick="saveData()" id="nextButton">Add Readings</button>
+                    <button class="btn btn-primary btn-lg" onclick="saveData()" id="nextButton">Add Data</button>
                 </div>
             </div>
         </div>
@@ -246,6 +246,11 @@
 };    
 
     document.addEventListener('DOMContentLoaded', function() {
+        const inputs = ['initialReading', 'finalReading', 'pricePerKg'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', calculate);
+        });
+
         const urlParams = new URLSearchParams(window.location.search);
         const hideNav = urlParams.get('hideNav');
         
@@ -264,13 +269,6 @@
                 nextButton.textContent = 'Add Data';
             }
         }
-
-        // Add event listeners for real-time calculation
-        const inputs = ['initialReading_iron', 'finalReading_iron', 'pricePerKg_iron'];
-        inputs.forEach(id => {
-            document.getElementById(id).addEventListener('input', calculate);
-        });
-
         // Load existing data
         loadExistingData();
     });
@@ -315,10 +313,6 @@
 
     localStorage.setItem('lpgData_iron', JSON.stringify(lpgData));
 
-        document.getElementById("lpgKgs_iron").innerHTML = lpgKgs.toFixed(4) + "kGs";
-        document.getElementById("totalConsump_iron").innerHTML = gasUsed.toFixed(4) + "m³";
-        document.getElementById("totalPrice_iron").innerHTML ="₱" + totalCost.toFixed(4);
-
         // Save with correct keys
         localStorage.setItem("initial_reading_iron", initialReading.toFixed(2));
         localStorage.setItem("final_reading_iron", finalReading.toFixed(2));
@@ -335,19 +329,6 @@
         } else {
             window.location.href = 'output_3.html';
         }
-    }
-
-    function viewReport() {
-        let initialReading = document.getElementById("initialReading_iron").value;
-        let finalReading = document.getElementById("finalReading_iron").value;
-        let pricePerKg = document.getElementById("pricePerKg_iron").value;
-
-        if(initialReading === "" || finalReading === "" || pricePerKg === ""){
-            alert("All fields must be filled out");
-            return false;
-        }
-
-        saveData(); // Call saveData first to ensure data is saved
     }
 
     function loadExistingData() {

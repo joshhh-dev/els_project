@@ -420,6 +420,8 @@ renderLpgSubmetering();
 
                 console.log("All data cleared successfully");
                 // Navigate to homepage
+                location.reload(); // This reloads the page and forces a re-render of all data.
+
                 window.location.href = '../index.html';
             } catch (error) {
                 console.error("Error clearing data:", error);
@@ -475,6 +477,8 @@ renderLpgSubmetering();
         document.getElementById("outPricePerKg").textContent = localStorage.getItem("pricePerKg_iron") ? "₱" + parseFloat(localStorage.getItem("pricePerKg_iron")).toFixed(2) : "N/A";
         document.getElementById("outTotalCost").textContent = localStorage.getItem("total_cost_iron") ? "₱" + parseFloat(localStorage.getItem("total_cost_iron")).toFixed(4) : "N/A";
 
+
+
         function exportToExcel() {
             let tables = document.querySelectorAll("table");
             if (tables.length === 0) {
@@ -513,7 +517,7 @@ renderLpgSubmetering();
 
         function exportToPDF() {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4');
+            const doc = new jsPDF('l', 'mm', 'a4');
 
             // Set initial font styles for title
             doc.setFont("helvetica", "bold");
@@ -553,6 +557,9 @@ renderLpgSubmetering();
                     if (rowIndex === 0) headers = rowData;
                     else rows.push(rowData);
                 });
+                   // Force multi-line header by replacing spaces with newlines
+        headers = headers.map(h => h.replace(/\s+/g, '\n'));
+
 
                 doc.autoTable({
                     startY: yPosition,
@@ -568,12 +575,19 @@ renderLpgSubmetering();
                     headStyles: { 
                         fillColor: [0, 102, 204], 
                         textColor: [255, 255, 255],
-                        fontSize: 12
+                        fontSize: 12,
+                        halign: 'center',
+                        valign: 'middle',
+                        cellPadding: 2
                     },
                     columnStyles: {
-                        0: { cellWidth: 'auto' },
-                        1: { cellWidth: 'auto' }
+                        0: { cellWidth: 'wrap' },
+                        1: { cellWidth: 'wrap' },
+                        2: { cellWidth: 'wrap' },
+                        3: { cellWidth: 'wrap' },
+                         // Continue for more columns
                     },
+                    tableWidth: 'wrap',
                     margin: { left: 15, right: 15 },
                 });
 
@@ -582,6 +596,9 @@ renderLpgSubmetering();
 
             let filename = `Ironing_Process_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
             doc.save(filename);
+
+            const pdfDataUri = doc.output('datauristring');
+            window.open(pdfDataUri);
         }
     </script>
 </body>
