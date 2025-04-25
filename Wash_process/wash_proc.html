@@ -60,7 +60,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
-    padding-top: 70px;
+    padding-top: 10px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -435,7 +435,7 @@ iframe {
             <div class="fixed-buttons">
                 <!-- <button type="submit" id="nextBtn">Next</button> -->
                 <button type="button" class="btn btn-success" onclick="addLoad()">Add Load</button>
-                <button type="button" class="btn btn-secondary" id="back_bnt" onclick="window.location.href='../index.html'">Back</button>
+                <button type="button" class="btn btn-secondary" id="saveBtn" onclick="window.location.href='output.html'">Done Editing</button>
             </div>
             </form>
             
@@ -446,10 +446,70 @@ iframe {
     
 
 <script>
+window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIndex = urlParams.get('editIndex');
+    const eData = JSON.parse(localStorage.getItem('loadData') || '[]');
+
+    if (editIndex !== null && eData[editIndex]) {
+        const item = eData[editIndex];
+        document.getElementById("operator_name").value = item.operator_name;
+        document.getElementById("date").value = item.date;
+        document.getElementById("load_number").value = item.load_number;
+        document.getElementById("trolley_number").value = item.trolley_number;
+        document.getElementById("equipment").value = item.equipment;
+        document.getElementById("set_time").value = item.set_time;
+        document.getElementById("programs").value = item.program;
+        document.getElementById("linen-type").value = item.linen_type;
+
+        // Show "Other Linen" field if needed
+        if (item.linen_type === "OTHERS") {
+            document.getElementById("other-linen").style.display = "block";
+        }
+        document.getElementById("other-linen").value = item.other_linen || "";
+
+        document.getElementById("linen_sizes").value = item.linen_sizes || "";
+        document.getElementById("quantity").value = item.quantity;
+        document.getElementById("detergent").value = item.detergent;
+        document.getElementById("dosage").value = item.dosage;
+        document.getElementById("mixType").value = item.mixType;
+
+        // ✅ Fix: Correct field IDs
+        document.getElementById("bfr_wash").value = item.bfr_wash;
+        document.getElementById("aftr_wash").value = item.aftr_wash;
+        document.getElementById("RMC_Total").textContent = item.rmc;
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', function () {
+        const updatedData = {
+            operator_name: document.getElementById("operator_name").value,
+            date: document.getElementById("date").value,
+            load_number: document.getElementById("load_number").value,
+            trolley_number: document.getElementById("trolley_number").value,
+            equipment: document.getElementById("equipment").value,
+            set_time: document.getElementById("set_time").value,
+            program: document.getElementById("programs").value,
+            linen_type: document.getElementById("linen-type").value,
+            other_linen: document.getElementById("other-linen").value,
+            linen_sizes: document.getElementById("linen_sizes").value,
+            quantity: document.getElementById("quantity").value,
+            bfr_wash: document.getElementById("bfr_wash").value,
+            aftr_wash: document.getElementById("aftr_wash").value,
+            detergent: document.getElementById("detergent").value,
+            dosage: document.getElementById("dosage").value,
+            mixType: document.getElementById("mixType").value,
+            rmc: document.getElementById("RMC_Total").textContent
+        };
+
+        if (editIndex !== null && eData[editIndex]) {
+            eData[editIndex] = updatedData;
+            localStorage.setItem('loadData', JSON.stringify(eData));
+            window.location.href = 'output.html';
+        }
+    });
+};
 
 let loadCount = 0;
-
-
 function addLoad() {
     const formData = {
         operator_name: document.getElementById("operator_name").value,
@@ -459,9 +519,10 @@ function addLoad() {
         equipment: document.getElementById("equipment").value,
         set_time: document.getElementById("set_time").value,
         program: document.getElementById("programs").value,
-        other_linen: document.getElementById("other-linen").value,
         linen_type: document.getElementById("linen-type").value,
+        other_linen: document.getElementById("other-linen").value,
         linen_sizes: document.getElementById("linen_sizes").value,
+        quantity: document.getElementById("quantity").value,
         bfr_wash: document.getElementById("bfr_wash").value,
         aftr_wash: document.getElementById("aftr_wash").value,
         detergent: document.getElementById("detergent").value,
@@ -470,19 +531,11 @@ function addLoad() {
         rmc: document.getElementById("RMC_Total").textContent
     };
 
-    // Retrieve existing data or initialize empty array
     const existingData = JSON.parse(localStorage.getItem("loadData")) || [];
-    
-    // Add new form data
     existingData.push(formData);
-
-    // Save back to localStorage
     localStorage.setItem("loadData", JSON.stringify(existingData));
-
-    // Open output.html to show data
     window.open("output.html", "_blank");
 }
-
 
     // Check URL parameters for hideNav
     document.addEventListener('DOMContentLoaded', function() {

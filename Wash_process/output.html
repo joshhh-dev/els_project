@@ -21,7 +21,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column; /* Changed from row to column */
-    height: 85vh;
+    height: 130vh;
 }
 
 .container {
@@ -141,6 +141,7 @@ button:hover {
                     <th>Linen Type</th>
                     <th>Other Linen</th>
                     <th>Linen Size</th>
+                    <th>Quantity</th>
                     <th>Detergent</th>
                     <th>Dosage</th>
                     <th>Mix Type</th>
@@ -160,13 +161,16 @@ button:hover {
 <div class="card">
     <div class="card-body">
     <h2>Electric Submetering Data</h2>
-    <table>
-        <tr>
-            <th>Start Reading (kWh)</th>
-            <th>End Reading (kWh)</th>
-            <th>Total kWh Used</th>
-            <th>Estimated Cost (₱)</th>
-        </tr>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Start Reading (kWh)</th>
+                <th>End Reading (kWh)</th>
+                <th>Total kWh Used</th>
+                <th>Estimated Cost (₱)</th>
+            </tr>
+        </thead>
+
 
         <tr>
             <td id="outStartReadings"></td>
@@ -188,9 +192,9 @@ button:hover {
     </tbody>
    </table> 
 
-    <table>
-        <thead>
-            <h2>Water Submetering Overall Total</h2>
+    <table class="table table-bordered table-striped">
+        <h2>Water Submetering Overall Total</h2>
+        <thead class="table-dark"> 
             <tr>
                 <th>Overall Total Consumption (m³)</th>
                 <th>Overall Total Cost (₱)</th>
@@ -220,38 +224,76 @@ button:hover {
 </div>
 
     <script>
+
+function renderWashingData() {
     const storedData = JSON.parse(localStorage.getItem("loadData")) || [];
     const tableBody = document.getElementById("tableBody");
+    tableBody.innerHTML = ""; // Clear old rows first
 
     if (storedData.length === 0) {
-      const row = document.createElement("tr");
-      row.innerHTML = `<td colspan="11" class="text-center">No data available</td>`;
-      tableBody.appendChild(row);
-    } else {
-      storedData.forEach((load, index) => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${load.operator_name}</td>
-          <td>${load.date}</td>
-          <td>${load.trolley_number}</td>
-          <td>${load.load_number}</td>
-          <td>${load.equipment}</td>
-          <td>${load.set_time}</td>
-          <td>${load.program}</td>
-          <td>${load.linen_type}</td>
-          <td>${load.other_linen}</td>
-          <td>${load.linen_sizes}</td>
-          <td>${load.detergent}</td>
-          <td>${load.dosage}</td>
-          <td>${load.mixType}</td>
-          <td>${load.bfr_wash}</td>
-          <td>${load.aftr_wash}</td>
-          <td>${load.rmc}</td>
-        `;
+        row.innerHTML = `<td colspan="18" class="text-center">No data available</td>`;
         tableBody.appendChild(row);
-      });
+    } else {
+        storedData.forEach((load, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${load.operator_name}</td>
+                <td>${load.date}</td>
+                <td>${load.trolley_number}</td>
+                <td>${load.load_number}</td>
+                <td>${load.equipment}</td>
+                <td>${load.set_time}</td>
+                <td>${load.program}</td>
+                <td>${load.linen_type}</td>
+                <td>${load.other_linen}</td>
+                <td>${load.linen_sizes}</td>
+                <td>${load.quantity}</td>
+                <td>${load.detergent}</td>
+                <td>${load.dosage}</td>
+                <td>${load.mixType}</td>
+                <td>${load.bfr_wash}</td>
+                <td>${load.aftr_wash}</td>
+                <td>${load.rmc}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="deleteWashingData(${index})">Delete</button>
+                    <button class="btn btn-sm btn-warning" onclick="editWashingData(${index})">Edit</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
     }
+}
+
+function editWashingData(index) {
+    window.location.href = `wash_proc.html?editIndex=${index}`;
+}
+
+function deleteWashingData(index) {
+    const storeData = JSON.parse(localStorage.getItem('loadData') || '[]');
+    storeData.splice(index, 1);
+    localStorage.setItem('loadData', JSON.stringify(storeData));
+    renderWashingData(); // Refresh the table after deletion
+}
+
+function updateWashingData(updatedData, index = null) {
+    const storeData = JSON.parse(localStorage.getItem('loadData') || '[]');
+
+    if (index !== null && index >= 0) {
+        storeData[index] = updatedData; // Update existing data
+    } else {
+        storeData.push(updatedData); // Add new entry
+    }
+
+    localStorage.setItem('loadData', JSON.stringify(storeData));
+    renderWashingData();
+}
+
+// Call this on page load
+renderWashingData();
+
+
             // Refresh page when modal is closed to update data
             const modals = document.querySelectorAll('.modal');
         modals.forEach(modal => {
