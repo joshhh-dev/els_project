@@ -94,7 +94,6 @@
         <div class="card text-white">
             <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
             <div class="input-group">
-                
                 <span class="input-group-text">Equipment:</span>
                 <select id="equip_washer">
                     <option value="">--Select Equipment--</option>
@@ -141,8 +140,8 @@
     
             </table>
             <div class="button-container">
-                <button class="btn btn-primary btn-lg btn-block" onclick="submitData()" id="submitBtn">Add Data</button>
                 <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='output.html'" id="saveBtn">Done Editing</button>
+                <button class="btn btn-primary btn-lg btn-block" onclick="submitData()" id="submitBtn">Add Data</button>
             </div>
             
         </div>
@@ -160,6 +159,8 @@
         document.getElementById('equip_washer').value = item.equip;
         document.getElementById('start_reads').value = item.startRead;
         document.getElementById('end_reads').value = item.endRead;
+        document.getElementById('totalUsed').textContent = item.totalUsed;
+        document.getElementById('estimatedCost').textContent = item.estimatedCost;
         document.getElementById('cost').value = item.cost;
     }
 
@@ -201,7 +202,7 @@
             
             // Load existing data if available
             document.getElementById("start_reads").value = localStorage.getItem("start_reads") || "";
-            document.getElementById("end_reads").value = localStorage.getItem("end_readsn") || "";
+            document.getElementById("end_reads").value = localStorage.getItem("end_reads") || "";
             document.getElementById("cost").value = localStorage.getItem("cost_per_kwh") || "";
             
             // Calculate if we have values
@@ -220,8 +221,8 @@
             let totalUsed = Math.max(0, endRead - startRead);
             let estimatedCost = totalUsed * costing;
             
-            document.getElementById("totalUsed_iron").textContent = totalUsed.toFixed(4)+ "kWh";
-            document.getElementById("costing_iron").textContent = "₱" + estimatedCost.toFixed(4);
+            document.getElementById("totalUsed").textContent = totalUsed.toFixed(4)+ "kWh";
+            document.getElementById("costing").textContent = "₱" + estimatedCost.toFixed(4);
         }
 
         function clearErrors() {

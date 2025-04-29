@@ -131,6 +131,7 @@
                 <table class="table table-bordered">
                     <thead class="table-dark">
                         <tr>
+                            <th>Equipment</th>
                             <th>Start Reading (kWh)</th>
                             <th>End Reading (kWh)</th>
                             <th>Total kWh Used</th>
@@ -161,6 +162,7 @@
                 <table class="table table-bordered">
                     <thead class="table-dark">
                         <tr>
+                            <th>Equipment</th>
                             <th>Start Reading (m³)</th>
                             <th>Final Reading (m³)</th>
                             <th>Total Gas Used (m³)</th>
@@ -300,11 +302,12 @@ function renderElectricSubmeteringData() {
     eSubData.innerHTML = '';  // Clear the table before rendering new data
 
     if (eStoreData.length === 0) {
-        eSubData.innerHTML = '<tr><td colspan="4" class="text-center">No data available.</td></tr>';
+        eSubData.innerHTML = '<tr><td colspan="5" class="text-center">No data available.</td></tr>';
     } else {
         eStoreData.forEach((item, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
+                <td>${item.equip}</td>
                 <td>${item.startRead}</td>
                 <td>${item.endRead}</td>
                 <td>${item.totalUsed}</td>
@@ -361,6 +364,7 @@ function renderLpgSubmetering() {
         storeLpgData.forEach((item, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
+                <td>${item.equip}</td>
                 <td>${item.initialReading}</td>
                 <td>${item.finalReading}</td>
                 <td>${item.gasUsed}</td>

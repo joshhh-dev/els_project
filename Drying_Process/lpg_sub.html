@@ -18,6 +18,7 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            text-align: center;
             margin: 0;
             padding-top: 80px;
             min-height: 100vh;
@@ -163,7 +164,18 @@
 
     <div class="main-content">
         <div class="form-container">
-            <h2>LPG Submetering - Flatwork Ironing</h2>
+            <div class="card-body">
+                <h2>LPG Submetering System - Drying Process</h2>
+                <div class="d-flex align-items-center mb-3">
+                    <label for="equip_dryer_lpg" class="me-2 mb-0 fw-bold">Equipment:</label>
+                    <select id="equip_dryer_lpg" class="form-select w-auto flex-grow-1">
+                        <option value="">--Select Equipment--</option>
+                        <option value="D#1 - T41200">D#1 - T41200</option>
+                        <option value="D#1 - T4900">D#1 - T4900</option>
+                        <option value="D#3 - T4900">D#3 - T4900</option>
+                    </select>
+                </div>
+            </div>
 
             <div class="input-group mb-3">
                 <div class="input-group">
@@ -220,6 +232,7 @@
 
     if (editIndex !== null && eData[editIndex]) {
         const item = eData[editIndex];
+        document.getElementById('equip_dryer_lpg').value = item.equip;
         document.getElementById('initialReading').value = item.initialReading;
         document.getElementById('finalReading').value = item.finalReading;
         document.getElementById('pricePerKg').value = item.pricePerKg;
@@ -227,6 +240,7 @@
     }
 
     document.getElementById('saveBtn').addEventListener('click', function () {
+        const equip = document.getElementById("equip_dryer_lpg").value;
         const initialReading = parseFloat(document.getElementById("initialReading").value) || 0;
         const finalReading = parseFloat(document.getElementById("finalReading").value) || 0;
         const pricePerKg = parseFloat(document.getElementById("pricePerKg").value) || 0;
@@ -235,7 +249,7 @@
         let lpgKgs = 1.898 * gasUsed;
         let totalCost = pricePerKg * lpgKgs;
 
-        const updatedData = { initialReading, finalReading, pricePerKg, gasUsed, lpgKgs, totalCost };
+        const updatedData = {equip, initialReading, finalReading, pricePerKg, gasUsed, lpgKgs, totalCost };
 
         if (editIndex !== null && eData[editIndex]) {
             eData[editIndex] = updatedData;
@@ -275,6 +289,7 @@
     });
 
     function saveData() {
+    let equip = document.getElementById("equip_iron_lpg").value;
     let initialReading = parseFloat(document.getElementById("initialReading").value);
     let finalReading = parseFloat(document.getElementById("finalReading").value);
     let pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
@@ -286,6 +301,7 @@
 
     const lpgData = JSON.parse(localStorage.getItem('lpgData') || '[]');
     lpgData.push({
+        equip,
         initialReading: initialReading.toFixed(2),
         finalReading: finalReading.toFixed(2),
         pricePerKg: pricePerKg.toFixed(2),

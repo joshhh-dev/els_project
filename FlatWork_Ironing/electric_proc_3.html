@@ -139,6 +139,13 @@
             <div class="card text-white">
                 <h2 class="card-header bg-secondary">Electric Submetering System</h2>
                 <div class="card-body">
+                    <div class="input-group">
+                        <span class="input-group-text">Equipment:</span>
+                        <select id="equip_iron">
+                            <option value="">--Select Equipment--</option>
+                            <option value="IC44832">IC44832</option>
+                        </select>
+                    </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text"><strong>Start Reading (kWh):</strong></span>
                         <input class="form-control" type="number" id="start_reads_iron" min="0" oninput="calculate()">
@@ -189,19 +196,21 @@
 
     if (editIndex !== null && eData[editIndex]) {
         const item = eData[editIndex];
+        document.getElementById('equip_iron').value = item.equip;
         document.getElementById('start_reads_iron').value = item.startRead;
         document.getElementById('end_reads_iron').value = item.endRead;
         document.getElementById('cost_iron').textContent = item.cost;
     }
 
     document.getElementById('saveBtn').addEventListener('click', function () {
+        const equip = document.getElementById('equip_iron').value;
         const startRead = parseFloat(document.getElementById('start_reads_iron').value);
         const endRead = parseFloat(document.getElementById('end_reads_iron').value);
         const cost = parseFloat(document.getElementById('cost_iron').value);
 
         const totalUsed = endRead - startRead;
         const estimatedCost = totalUsed * cost;
-        const updatedData = { startRead, endRead, cost, totalUsed, estimatedCost };
+        const updatedData = {equip, startRead, endRead, cost, totalUsed, estimatedCost };
 
         if (editIndex !== null && eData[editIndex]) {
             eData[editIndex] = updatedData;
@@ -260,6 +269,7 @@
         }
 
         function submitData() {
+            let equip = document.getElementById("equip_iron").value;
             let startRead = document.getElementById("start_reads_iron").value;
             let endRead = document.getElementById("end_reads_iron").value;
             let cost = document.getElementById("cost_iron").value;
@@ -269,7 +279,7 @@
             let estimatedCost = totalUsed * parseFloat(cost);
 
             const eSubData = JSON.parse(localStorage.getItem('eData_iron') || '[]');
-            eSubData.push({startRead, endRead, cost, totalUsed, estimatedCost});
+            eSubData.push({equip, startRead, endRead, cost, totalUsed, estimatedCost});
             localStorage.setItem('eData_iron', JSON.stringify(eSubData));
             
             

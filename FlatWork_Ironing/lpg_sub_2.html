@@ -164,6 +164,15 @@
     <div class="main-content">
         <div class="form-container">
             <h2>LPG Submetering - Flatwork Ironing</h2>
+            <div class="d-flex alignn-items-center mb-3">
+                <div class="input-group">
+                    <span class="input-group-text">Equipment:</span>
+                    <select id="equip_iron_lpg">
+                        <option value="">--Select Equipment--</option>
+                        <option value="IC44832">IC44832</option>
+                    </select>
+                </div>
+            </div>
 
             <div class="input-group mb-3">
                 <div class="input-group">
@@ -220,6 +229,7 @@
 
     if (editIndex !== null && eData[editIndex]) {
         const item = eData[editIndex];
+        document.getElementById('equip_iron_lpg'.value) = item.equip;
         document.getElementById('initialReading_iron').value = item.initialReading;
         document.getElementById('finalReading_iron').value = item.finalReading;
         document.getElementById('pricePerKg_iron').value = item.pricePerKg;
@@ -227,6 +237,7 @@
     }
 
     document.getElementById('saveBtn').addEventListener('click', function () {
+        const equip = document.getElementById("equip_iron_lpg").value;
         const initialReading = parseFloat(document.getElementById("initialReading_iron").value) || 0;
         const finalReading = parseFloat(document.getElementById("finalReading_iron").value) || 0;
         const pricePerKg = parseFloat(document.getElementById("pricePerKg_iron").value) || 0;
@@ -235,7 +246,7 @@
         let lpgKgs = 1.898 * gasUsed;
         let totalCost = pricePerKg * lpgKgs;
 
-        const updatedData = { initialReading, finalReading, pricePerKg, gasUsed, lpgKgs, totalCost };
+        const updatedData = {equip, initialReading, finalReading, pricePerKg, gasUsed, lpgKgs, totalCost };
 
         if (editIndex !== null && eData[editIndex]) {
             eData[editIndex] = updatedData;
@@ -292,6 +303,7 @@
     }
 
     function saveData() {
+    let equip = document.getElementById("equip_iron_lpg").value;
     let initialReading = parseFloat(document.getElementById("initialReading_iron").value);
     let finalReading = parseFloat(document.getElementById("finalReading_iron").value);
     let pricePerKg = parseFloat(document.getElementById("pricePerKg_iron").value);
@@ -311,6 +323,7 @@
 
     // Add new entry
     lpgData.push({
+        equip,
         initialReading: initialReading.toFixed(2),
         finalReading: finalReading.toFixed(2),
         pricePerKg: pricePerKg.toFixed(2),
