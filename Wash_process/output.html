@@ -996,8 +996,8 @@ function exportToPDF() {
     let filename = `Laundry_Report_${new Date().toISOString().slice(0, 10)}.pdf`;
     doc.save(filename);
 
-    const pdfDataUri = doc.output('datauristring');
-    window.open(pdfDataUri);
+    // const pdfDataUri = doc.output('datauristring');
+    // window.open(pdfDataUri);
 }
 
 
