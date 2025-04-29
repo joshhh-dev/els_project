@@ -164,20 +164,24 @@ button:hover {
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>
+                <th>Equipment</th>
                 <th>Start Reading (kWh)</th>
                 <th>End Reading (kWh)</th>
                 <th>Total kWh Used</th>
                 <th>Estimated Cost (₱)</th>
             </tr>
         </thead>
+        <tbody id="eSubDataWasher">
 
+        </tbody>
 
-        <tr>
+        <!-- <tr>
+            <td id="outEquip"></td>
             <td id="outStartReadings"></td>
             <td id="outEndReadings"></td>
             <td id="outTotalUseds"></td>
             <td id="outCosts"></td>
-        </tr>
+        </tr> -->
     </table>        
     </div>
     <button type="button" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#energyConsModal">Add Readings</button>
@@ -224,6 +228,59 @@ button:hover {
 </div>
 
     <script>
+
+function renderElectricSubmeteringData(){
+    const eSubData = document.getElementById('eSubDataWasher');
+    const eStoreData = JSON.parse(localStorage.getItem('eData_washer') || '[]');
+
+    eSubData.innerHTML = '';  // Clear the table before rendering new data
+
+    if (eStoreData.length === 0) {
+        eSubData.innerHTML = '<tr><td colspan="5" class="text-center">No data available.</td></tr>';
+    } else {
+        eStoreData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.equip}</td>
+                <td>${item.startRead}</td>
+                <td>${item.endRead}</td>
+                <td>${item.totalUsed}</td>
+                <td>${item.estimatedCost}</td>
+                <td>
+                     <button class="btn btn-sm btn-danger" onclick="deleteElectricData(${index})">Delete</button>
+                    <button class="btn btn-sm btn-warning" onclick="editElectricData(${index})">Edit</button>
+
+                </td>
+            `;
+            eSubData.appendChild(row); // Add the row to the table
+        });
+    }
+}
+function deleteElectricData(index) {
+    const eStoreData = JSON.parse(localStorage.getItem('eData_washer') || '[]');
+    eStoreData.splice(index, 1);
+    localStorage.setItem('eData_washer', JSON.stringify(eStoreData));
+    renderElectricSubmeteringData();
+}
+function editElectricData(index) {
+    window.location.href = `energy_cons.html?editIndex=${index}`;
+}
+// Update Electric Submetering Data
+function updateElectricSubmeteringData(updatedData, editIndex = null) {
+    // Update the electric submetering data
+    if (editIndex !== null && eStoreData[editIndex]) {
+        // ✅ Replace existing entry if in edit mode
+        eStoreData[editIndex] = updatedData;
+    } else {
+        // ➕ Otherwise, push new entry
+        eStoreData.push(updatedData);
+    }
+    localStorage.setItem('eData_washer', JSON.stringify(eStoreData));
+    renderElectricSubmeteringData();
+}
+
+renderElectricSubmeteringData();
+
 
 function renderWashingData() {
     const storedData = JSON.parse(localStorage.getItem("loadData")) || [];

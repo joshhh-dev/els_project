@@ -93,7 +93,17 @@
     <div class="card mx-auto" style="width: 500px;">
         <div class="card text-white">
             <h2 class="card-header bg-secondary mb-3">Electric Submetering System</h2>
-                <div class="input-group mb-3">
+            <div class="input-group">
+                
+                <span class="input-group-text">Equipment:</span>
+                <select id="equip_washer">
+                    <option value="">--Select Equipment--</option>
+                    <option value="W#1 W5330N">W#1 W5330N</option>
+                    <option value="W#2 WH6-33">W#2 WH6-33</option>
+                    <option value="W#3 WH6- 33">W#3 WH6- 33</option>
+                    <option value="W#4 W4600H">W#4 W4600H</option>
+                </select>
+            </div>
                     <div class="input-group">
                         <span class="input-group-text" id=""><strong>Start Reading (kWh):</strong></span>
                         <input class="form-control" type="number" id="start_reads" min="0" oninput="calculate()">
@@ -130,19 +140,75 @@
                 </tr>
     
             </table>
-            <button class="btn btn-primary btn-lg btn-block" onclick="submitData()" id="nextBtn">Next</button>
-            <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='wash_proc.html'" id="back_bnt">Back</button>
+            <div class="button-container">
+                <button class="btn btn-primary btn-lg btn-block" onclick="submitData()" id="submitBtn">Add Data</button>
+                <button class="btn btn-secondary btn-lg btn-block" onclick="window.location.href='output.html'" id="saveBtn">Done Editing</button>
+            </div>
+            
         </div>
 
     
 
     <script>
-           // Check URL parameters for hideNav
-            document.addEventListener('DOMContentLoaded', function() {
+    window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIndex = urlParams.get('editIndex');
+    const eData = JSON.parse(localStorage.getItem('eData_washer') || '[]');
+
+    if (editIndex !== null && eData[editIndex]) {
+        const item = eData[editIndex];
+        document.getElementById('equip_washer').value = item.equip;
+        document.getElementById('start_reads').value = item.startRead;
+        document.getElementById('end_reads').value = item.endRead;
+        document.getElementById('cost').value = item.cost;
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', function () {
+        const equip = document.getElementById('equip_washer').value;
+        const startRead = parseFloat(document.getElementById('start_reads').value);
+        const endRead = parseFloat(document.getElementById('end_reads').value);
+        const cost = parseFloat(document.getElementById('costing').value);
+        
+
+        const totalUsed = endRead - startRead;
+        const estimatedCost = totalUsed * cost;
+        const updatedData = { equip, startRead, endRead, cost, totalUsed, estimatedCost };
+
+        if (editIndex !== null && eData[editIndex]) {
+            eData[editIndex] = updatedData;
+            localStorage.setItem('eData_washer', JSON.stringify(eData));
+            window.location.href = 'output.html';
+        }
+    });
+};
+
+
+        function checkHideNav() {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('hideNav') === 'true') {
+            const hideNav = urlParams.get('hideNav');
+            if (hideNav === 'true') {
                 document.querySelector('.nav-container').style.display = 'none';
-                document.body.style.paddingTop = '0'; // Remove the top padding when nav is hidden
+                document.body.style.paddingTop = '20px';  // Reduce padding since nav is hidden
+                // Update button text and hide back button in edit mode
+                document.getElementById('submitBtn').textContent = 'Done Editing';
+                document.getElementById('backBtn').style.display = 'none';
+            }
+        }
+
+        // Load existing data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkHideNav();
+            
+            // Load existing data if available
+            document.getElementById("start_reads").value = localStorage.getItem("start_reads") || "";
+            document.getElementById("end_reads").value = localStorage.getItem("end_readsn") || "";
+            document.getElementById("cost").value = localStorage.getItem("cost_per_kwh") || "";
+            
+            // Calculate if we have values
+            if (document.getElementById("start_reads").value && 
+                document.getElementById("end_reads").value && 
+                document.getElementById("cost").value) {
+                calculate();
             }
         });
         
@@ -159,16 +225,22 @@
         }
 
         function submitData() {
+            let equip = document.getElementById("equip_washer").value;
             let startRead = document.getElementById("start_reads").value;
             let endRead = document.getElementById("end_reads").value;
-            let costing = document.getElementById("costing").value;
+            let cost = document.getElementById("costing").value;
 
 
             // Calculate final values
             let totalUsed = Math.max(0, parseFloat(endRead) - parseFloat(startRead));
-            let estimatedCost = totalUsed * parseFloat(costing);
+            let estimatedCost = totalUsed * parseFloat(cost);
 
             // Store the values in localStorage without units for numeric values
+            const eSubData = JSON.parse(localStorage.getItem('eData_washer') || '[]');
+            eSubData.push({equip, startRead, endRead, cost, totalUsed, estimatedCost});
+            localStorage.setItem('eData_washer', JSON.stringify(eSubData));
+
+            localStorage.setItem("equip", equip);
             localStorage.setItem("start_reads", startRead);
             localStorage.setItem("end_reads", endRead);
             localStorage.setItem("costing", costing);
@@ -176,7 +248,15 @@
             localStorage.setItem("cost", "₱" + estimatedCost.toFixed(4)); // Add ₱ symbol when storing
 
             alert("Data submitted successfully!");
-            window.location.href = "water_cons.html";
+
+                        // Check if we're in a modal
+            const urlParams = new URLSearchParams(window.location.search);
+            const hideNav = urlParams.get('hideNav');
+            if (hideNav === 'true') {
+                window.parent.location.reload();
+            } else {
+                window.location.href = "output.html";
+            }
         }
 
         // Load existing data if available

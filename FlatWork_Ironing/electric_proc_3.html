@@ -264,10 +264,6 @@
             let endRead = document.getElementById("end_reads_iron").value;
             let cost = document.getElementById("cost_iron").value;
 
-            if (startRead === "" || endRead === "" || cost === ""){
-                alert("Fields can't be empy");
-                return false;
-            }
 
             let totalUsed = Math.max(0, parseFloat(endRead) - parseFloat(startRead));
             let estimatedCost = totalUsed * parseFloat(cost);
