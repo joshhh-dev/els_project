@@ -220,8 +220,14 @@
             let totalUsed = Math.max(0, endRead - startRead);
             let estimatedCost = totalUsed * costing;
             
-            document.getElementById("totalUsed").textContent = totalUsed.toFixed(4) + "kWh";
-            document.getElementById("cost").textContent = "₱" + estimatedCost.toFixed(4);
+            document.getElementById("totalUsed_iron").textContent = totalUsed.toFixed(4)+ "kWh";
+            document.getElementById("costing_iron").textContent = "₱" + estimatedCost.toFixed(4);
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.input-group').forEach(group => {
+                group.classList.remove('error');
+            });
         }
 
         function submitData() {

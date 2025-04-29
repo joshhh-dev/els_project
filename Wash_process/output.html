@@ -470,93 +470,89 @@ renderWashingData();
             }
         }
 
-        // Function to update water readings display
         function updateWaterReadings() {
-            try {
-                console.log("Updating water readings...");
-                // Retrieve stored readings data
-                let waterReadings = JSON.parse(localStorage.getItem("waterReadings") || "[]");
-                console.log("Water readings from localStorage:", waterReadings);
+    try {
+        console.log("Updating water readings...");
+        let waterReadings = JSON.parse(localStorage.getItem("waterReadings") || "[]");
+        console.log("Water readings from localStorage:", waterReadings);
 
-                let outputContainer = document.getElementById("outputContainer");
-                if (!outputContainer) {
-                    console.error("Output container not found");
-                    return;
+        let outputContainer = document.getElementById("outputContainer");
+        if (!outputContainer) {
+            console.error("Output container not found");
+            return;
+        }
+        outputContainer.innerHTML = '';
+
+        if (waterReadings.length > 0) {
+            let groupedData = {};
+            waterReadings.forEach(reading => {
+                if (!groupedData[reading.waterType]) {
+                    groupedData[reading.waterType] = [];
                 }
-                outputContainer.innerHTML = ''; // Clear existing content
+                groupedData[reading.waterType].push(reading);
+            });
 
-                if (waterReadings && waterReadings.length > 0) {
-                    // Group readings by waterType (Program)
-                    let groupedData = {};
-                    waterReadings.forEach(reading => {
-                        if (!groupedData[reading.waterType]) {
-                            groupedData[reading.waterType] = [];
-                        }
-                        groupedData[reading.waterType].push(reading);
-                    });
+            Object.keys(groupedData).forEach(waterType => {
+                let programTable = document.createElement("div");
+                programTable.innerHTML = `
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Equipment</th>
+                                <th>Temperature</th>
+                                <th>Start Reading (m³)</th>
+                                <th>End Reading (m³)</th>
+                                <th>Total Water Used (m³)</th>
+                                <th>Estimated Cost (₱)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody_${waterType.replace(/\s+/g, '_')}">
+                        </tbody>
+                    </table>
+                `;
+                outputContainer.appendChild(programTable);
 
-                    // Create tables for each program
-                    Object.keys(groupedData).forEach(waterType => {
-                        let programTable = document.createElement("div");
-                        programTable.innerHTML = `
-                            <table border="1">
-                                <thead>
-                                    <tr>
-                                        <th>Temperature</th>
-                                        <th>Start Reading (m³)</th>
-                                        <th>End Reading (m³)</th>
-                                        <th>Total Water Used (m³)</th>
-                                        <th>Estimated Cost (₱)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tableBody_${waterType.replace(/\s+/g, '_')}">
-                                </tbody>
-                            </table>
+                let tableBody = document.getElementById(`tableBody_${waterType.replace(/\s+/g, '_')}`);
+                if (tableBody) {
+                    groupedData[waterType].forEach(reading => {
+                        console.log("Reading:", reading); // 👈 add this line
+                        let row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${reading.equipment || "N/A"}</td>
+                            <td>${reading.temp || "N/A"}</td>
+                            <td>${reading.startRead || "N/A"}</td>
+                            <td>${reading.endRead || "N/A"}</td>
+                            <td>${reading.totalUsed || "N/A"}</td>
+                            <td>${reading.cost || "N/A"}</td>
                         `;
-
-                        outputContainer.appendChild(programTable);
-
-                        // Insert rows for this program
-                        let tableBody = document.getElementById(`tableBody_${waterType.replace(/\s+/g, '_')}`);
-                        if (tableBody !== 0 ) {
-                            groupedData[waterType].forEach(reading => {
-                                let row = document.createElement("tr");
-                                row.innerHTML = `
-                                    <td>${reading.temp || "N/A"}</td>
-                                    <td>${reading.startRead || "N/A"}</td>
-                                    <td>${reading.endRead || "N/A"}</td>
-                                    <td>${reading.totalUsed || "N/A"}</td>
-                                    <td>${reading.cost || "N/A"}</td>
-                                `;
-                                tableBody.appendChild(row);
-                            });
-                        } else {
-                            outputContainer.innerHTML = '';
-                        }
+                        tableBody.appendChild(row);
                     });
-
-                    // Update summary totals
-                    let totalUsed = waterReadings.reduce((sum, reading) => sum + (parseFloat(reading.totalUsed) || 0), 0);
-                    let totalCost = waterReadings.reduce((sum, reading) => sum + (parseFloat(reading.cost) || 0), 0);
-                    
-                    const sumUsedElement = document.getElementById("sumUsed");
-                    const sumCostElement = document.getElementById("sumCost");
-                    
-                    if (sumUsedElement) sumUsedElement.textContent = totalUsed.toFixed(2);
-                    if (sumCostElement) sumCostElement.textContent = totalCost.toFixed(2);
-                    
-                    // Store the updated totals
-                    localStorage.setItem("sumUsed", totalUsed.toFixed(2));
-                    localStorage.setItem("sumCost", totalCost.toFixed(2));
                 } else {
                     outputContainer.innerHTML = '';
                 }
-            } catch (error) {
-                console.error("Error updating water readings:", error);
-                console.error("Error details:", error.message);
-                console.error("Error stack:", error.stack);
-            }
+            });
+
+            let totalUsed = waterReadings.reduce((sum, reading) => sum + (parseFloat(reading.totalUsed) || 0), 0);
+            let totalCost = waterReadings.reduce((sum, reading) => sum + (parseFloat(reading.cost) || 0), 0);
+
+            const sumUsedElement = document.getElementById("sumUsed");
+            const sumCostElement = document.getElementById("sumCost");
+
+            if (sumUsedElement) sumUsedElement.textContent = totalUsed.toFixed(2);
+            if (sumCostElement) sumCostElement.textContent = totalCost.toFixed(2);
+
+            localStorage.setItem("sumUsed", totalUsed.toFixed(2));
+            localStorage.setItem("sumCost", totalCost.toFixed(2));
+        } else {
+            outputContainer.innerHTML = '';
         }
+    } catch (error) {
+        console.error("Error updating water readings:", error);
+        console.error("Error details:", error.message);
+        console.error("Error stack:", error.stack);
+    }
+}
+
 
         // Modal event handlers
         document.addEventListener('DOMContentLoaded', function() {
