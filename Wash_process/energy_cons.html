@@ -159,28 +159,41 @@
         document.getElementById('equip_washer').value = item.equip;
         document.getElementById('start_reads').value = item.startRead;
         document.getElementById('end_reads').value = item.endRead;
+        document.getElementById('costing').value = item.costing;
         document.getElementById('totalUsed').textContent = item.totalUsed;
-        document.getElementById('estimatedCost').textContent = item.estimatedCost;
         document.getElementById('cost').value = item.cost;
     }
 
     document.getElementById('saveBtn').addEventListener('click', function () {
-        const equip = document.getElementById('equip_washer').value;
-        const startRead = parseFloat(document.getElementById('start_reads').value);
-        const endRead = parseFloat(document.getElementById('end_reads').value);
-        const cost = parseFloat(document.getElementById('costing').value);
-        
+    const equip = document.getElementById('equip_washer').value;
+    const startRead = parseFloat(document.getElementById('start_reads').value);
+    const endRead = parseFloat(document.getElementById('end_reads').value);
+    const costing = parseFloat(document.getElementById('costing').value);
 
-        const totalUsed = endRead - startRead;
-        const estimatedCost = totalUsed * cost;
-        const updatedData = { equip, startRead, endRead, cost, totalUsed, estimatedCost };
+    if (isNaN(startRead) || isNaN(endRead) || isNaN(costing)) {
+        alert("Please fill in all numeric fields.");
+        return;
+    }
 
-        if (editIndex !== null && eData[editIndex]) {
-            eData[editIndex] = updatedData;
-            localStorage.setItem('eData_washer', JSON.stringify(eData));
-            window.location.href = 'output.html';
-        }
-    });
+    const totalUsed = endRead - startRead;
+    const estimatedCost = totalUsed * costing;
+
+    const updatedData = {
+        equip,
+        startRead,
+        endRead,
+        costing,
+        totalUsed: totalUsed.toFixed(4),
+        estimatedCost: estimatedCost.toFixed(4)
+    };
+
+    if (editIndex !== null && eData[editIndex]) {
+        eData[editIndex] = updatedData;
+        localStorage.setItem('eData_washer', JSON.stringify(eData));
+        window.location.href = 'output.html';
+    }
+});
+
 };
 
 
@@ -222,7 +235,7 @@
             let estimatedCost = totalUsed * costing;
             
             document.getElementById("totalUsed").textContent = totalUsed.toFixed(4)+ "kWh";
-            document.getElementById("costing").textContent = "₱" + estimatedCost.toFixed(4);
+            document.getElementById("cost").textContent = "₱" + estimatedCost.toFixed(4);
         }
 
         function clearErrors() {
@@ -235,16 +248,16 @@
             let equip = document.getElementById("equip_washer").value;
             let startRead = document.getElementById("start_reads").value;
             let endRead = document.getElementById("end_reads").value;
-            let cost = document.getElementById("costing").value;
+            let costing = document.getElementById("costing").value;
 
 
             // Calculate final values
             let totalUsed = Math.max(0, parseFloat(endRead) - parseFloat(startRead));
-            let estimatedCost = totalUsed * parseFloat(cost);
+            let estimatedCost = totalUsed * parseFloat(costing);
 
             // Store the values in localStorage without units for numeric values
             const eSubData = JSON.parse(localStorage.getItem('eData_washer') || '[]');
-            eSubData.push({equip, startRead, endRead, cost, totalUsed, estimatedCost});
+            eSubData.push({equip, startRead, endRead, costing, totalUsed, estimatedCost});
             localStorage.setItem('eData_washer', JSON.stringify(eSubData));
 
             localStorage.setItem("equip", equip);
