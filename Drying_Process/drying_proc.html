@@ -207,40 +207,38 @@
                 <div class="form-group">
                     <div class="form-group">
                         <label for="operator_name_dry">OPERATOR NAME:</label>
-                        <input type="text" id="operator_name_dry" class="form-control" required>
+                        <input type="text" id="operator_name_dry" class="form-control" >
                     </div>
                     <label for="date_dry">DATE:</label>
-                    <input type="date" id="date_dry" name="date_dry" class="form-control" required>
-                    <div class="error-feedback">Date is required</div>
+                    <input type="date" id="date_dry" name="date_dry" class="form-control" >
                 </div>
             
                 <div class="form-group">
                     <label for="equipment_dry">EQUIPMENT:</label>
-                    <select id="equipment_dry" name="equipment" class="form-control" required>
+                    <select id="equipment_dry" name="equipment" class="form-control" >
                         <option value="">--Select Equipment--</option>
                         <option value="D#1 - T41200">D#1 - T41200</option>
-                        <option value="D#1 - T4900">D#1 - T4900</option>
+                        <option value="D#2 - T4900">D#2 - T4900</option>
                         <option value="D#3 - T4900">D#3 - T4900</option>
                     </select>
-                    <div class="error-feedback">Equipment selection is required</div>
                 </div>
             
                 <div class="form-group">
                     <label for="set_time_dry">SET TIME(minutes):</label>
-                    <input type="number" id="set_time_dry" name="set_time_dry" class="form-control" required>
-                    <div class="error-feedback">Set time is required</div>
+                    <input type="number" id="set_time_dry" name="set_time_dry" class="form-control" >
+                    <div class="error-feedback">Set time is </div>
                 </div>
 
                 <div class="form-group">
                     <label for="temp">TEMPERATURE(°C):</label>
-                    <input type="number" id="temp" name="temp" class="form-control" required>
-                    <div class="error-feedback">Temperature is required</div>
+                    <input type="number" id="temp" name="temp" class="form-control" >
+                    <div class="error-feedback">Temperature is </div>
                 </div>
             
                 <div class="line-group_dry">
                     <div class="form-group">
                         <label for="linen_type_dry">LINEN TYPE:</label>
-                        <select id="linen_type_dry" class="form-control" required onchange="handleLinenChange()">
+                        <select id="linen_type_dry" class="form-control"  onchange="handleLinenChange()">
                             <option value="">--Select Linen Type--</option>
                             <option value="DUVET COVER">DUVET COVER</option>
                             <option value="BEDSHEET">BEDSHEET</option>
@@ -250,19 +248,18 @@
                             <option value="BED PAD">BED PAD</option>
                             <option value="OTHERS">OTHERS</option>
                         </select>
-                        <div class="error-feedback">Linen type is required</div>
+                        <div class="error-feedback">Linen type is </div>
                     </div>
 
                     <div class="form-group">
                         <label for="quantity_dry">QUANTITY:</label>
-                        <input type="number" id="quantity_dry" name="quantity" class="form-control" required>
-                        <div class="error-feedback">Quantity is required</div>
+                        <input type="number" id="quantity_dry" name="quantity" class="form-control" >
+                        <div class="error-feedback">Quantity is </div>
                     </div>
                 </div>
                 <div class="form-group" id="other-linen-container" style="display: none;">
                     <label for="other-linen_dry">Other Linen Type:</label>
                     <input type="text" id="other-linen_dry" name="other-linen" class="form-control" placeholder="Please specify the linen type">
-                    <div class="error-feedback">Please specify the other linen type</div>
                 </div>
 
                 <div class="size_group_dry">
@@ -278,11 +275,11 @@
                 
             
                 <label for="bfr_dry">TOTAL KGS BEFORE DRY:</label>               
-                <input type="number" id="bfr_dry" name="bfr_dry" required>
+                <input type="number" id="bfr_dry" name="bfr_dry" >
                 <span id="bfrError" class="error"></span>
             
                 <label for="aftr_dry">TOTAL KGS AFTER DRY:</label>
-                <input type="number" id="aftr_dry" name="aftr_dry" required>
+                <input type="number" id="aftr_dry" name="aftr_dry" >
                 <span id="aftrError" class="error"></span>
             
                 <div class="button-container">
@@ -319,27 +316,30 @@ window.onload = function () {
         document.getElementById("aftr_dry").value = item.aftr;
     }
 
-    document.getElementById('saveBtn').addEventListener('click', function () {
-        const data = document.getElementById("fill_up_dry");
-        const operator_name = document.getElementById("operator_name_dry");
-        const date = document.getElementById("date_dry");
-        const eqp = document.getElementById("equipment_dry");
-        const time = document.getElementById("set_time_dry");
-        const others = document.getElementById("other-linen_dry");
-        const sizes = document.getElementById("linen_sizes_dry");
-        const tmpe = document.getElementById("temp");
-        const type = document.getElementById("linen_type_dry");
-        const quant = document.getElementById("quantity_dry");
-        const bfr = document.getElementById("bfr_dry");
-        const aftr = document.getElementById("aftr_dry");
+    document.getElementById("saveBtn").addEventListener("click", function () {
+        const ironingData = {
+            operator_name: document.getElementById("operator_name_dry").value,
+            date: document.getElementById("date_dry").value,
+            eqp: document.getElementById("equipment_dry").value,
+            time: document.getElementById("set_time_dry").value,
+            tmpe: document.getElementById("temp").value,
+            others: document.getElementById("other-linen_dry").value,
+            sizes: document.getElementById("linen_sizes_dry").value,
+            type: document.getElementById("linen_type_dry").value,
+            quant: document.getElementById("quantity_dry").value,
+            bfr: document.getElementById("bfr_dry").value,
+            aftr: document.getElementById("aftr_dry").value,
+        };
 
-    const updatedData = {operator_name, date, eqp, time, others, sizes, tmpe, type, quant, bfr, aftr};
-
-        if (editIndex !== null && eData[editIndex]) {
-            eData[editIndex] = updatedData;
-            localStorage.setItem('dryer_data', JSON.stringify(eData));
-            window.location.href = 'output_2.html';
+        let storeData = JSON.parse(localStorage.getItem("dryer_data") || "[]");
+        if (editIndex !== null && storeData[editIndex]) {
+            storeData[editIndex] = ironingData;
+        } else {
+            storeData.push(ironingData);
         }
+
+        localStorage.setItem("dryer_data", JSON.stringify(storeData));
+        window.location.href = "output_2.html";
     });
 };
 
@@ -382,10 +382,10 @@ function handleLinenChange() {
     // Handle the "Other" linen type input
     if (linenType === 'OTHERS') {
         otherLinenContainer.style.display = 'block';
-        otherLinenInput.required = true;
+        otherLinenInput.value = true;
     } else {
         otherLinenContainer.style.display = 'none';
-        otherLinenInput.required = false;
+        otherLinenInput.value = false;
         otherLinenInput.value = ''; // Clear the input when hidden
     }
 
@@ -498,11 +498,11 @@ document.getElementById("fill_up_dry").addEventListener("submit", function(event
     // Clear previous errors
     clearErrors();
 
-    // Get all required inputs
+    // Get all  inputs
     let isValid = true;
-    const requiredFields = this.querySelectorAll('[required]');
+    const Fields = this.querySelectorAll('[]');
     
-    requiredFields.forEach(field => {
+    Fields.forEach(field => {
         if (!field.value.trim()) {
             field.closest('.form-group').classList.add('error');
             isValid = false;

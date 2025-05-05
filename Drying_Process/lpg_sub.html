@@ -293,11 +293,7 @@
     let initialReading = parseFloat(document.getElementById("initialReading").value);
     let finalReading = parseFloat(document.getElementById("finalReading").value);
     let pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
-    // Validate Inputs (prevent NaN issues)
-    if (isNaN(initialReading) || isNaN(finalReading) || isNaN(pricePerKg)) {
-        alert("Please enter valid numbers for all fields.");
-        return;
-    }
+
 
 
     let gasUsed = finalReading - initialReading;

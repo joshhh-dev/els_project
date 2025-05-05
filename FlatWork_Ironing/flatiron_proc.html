@@ -206,31 +206,30 @@
             <form id="fill_up_iron">
                 <div class="form-group">
                     <label for="operator_name_iron">OPERATOR NAME:</label>
-                    <input type="text" id="operator_name_iron" class="form-control" required>
+                    <input type="text" id="operator_name_iron" class="form-control" >
                 </div>
 
                 <label for="date_iron">DATE:</label>
-                <input type="date" id="date_iron" name="date_iron" required>
-                <span id="dateError" class="error"></span>
+                <input type="date" id="date_iron" name="date_iron" >
             
                 <label for="equipment_iron">EQUIPMENT:</label>
-                <select id="equipment_iron" name="equipment" required>
+                <select id="equipment_iron" name="equipment" >
                     <option value="">--Select Equipment--</option>
                     <option value="IC44832">IC44832</option>
                     </select>
                 <span id="equipment_ironError" class="error"></span>
             
-                <label for="set_time_iron">SET SPEED(minutes):</label>
-                <input type="number" id="set_time_iron" name="set_time_iron" required>
+                <label for="set_time_iron">SET SPEED:</label>
+                <input type="number" id="set_time_iron" name="set_time_iron" >
                 <span id="timeError" class="error"></span>
 
                 <label for="temp">SET TEMPERATURE(°C):</label>
-                <input type="number" id="temp" name="temp" required>
+                <input type="number" id="temp" name="temp" >
                 <span id="tempError" class="error"></span>
             
                 <div class="line-group_iron">
                     <label for="linen_type_iron">LINEN TYPE:</label>
-                    <select id="linen_type_iron" required onchange="handleLinenChange()">
+                    <select id="linen_type_iron"  onchange="handleLinenChange()">
                         <option value="">--Select Linen Type--</option>
                         <option value="DUVET COVER">DUVET COVER</option>
                         <option value="BEDSHEET">BEDSHEET</option>
@@ -243,7 +242,7 @@
                     <span id="linenError" class="error"></span>
     
                     <label for="quantity_iron">QUANTITY:</label>
-                    <input type="number" id="quantity_iron" name="quantity" required>
+                    <input type="number" id="quantity_iron" name="quantity" >
                     <span id="quantityError" class="error"></span>
                 </div>
                 <input type="text" id="other-linen_iron" name="other-linen" placeholder="Other Linen Type" style="display: none;">
@@ -260,18 +259,17 @@
                 </div> 
                 
             
-                <label for="bfr_iron">TOTAL KGS BEFORE DRY:</label>               
-                <input type="number" id="bfr_iron" name="bfr_iron" required>
+                <label for="bfr_iron">TOTAL KGS BEFORE IRONING</label>               
+                <input type="number" id="bfr_iron" name="bfr_iron" >
                 <span id="bfrError" class="error"></span>
             
-                <label for="aftr_iron">TOTAL KGS AFTER DRY:</label>
-                <input type="number" id="aftr_iron" name="aftr_iron" required>
+                <label for="aftr_iron">TOTAL KGS AFTER IRONING:</label>
+                <input type="number" id="aftr_iron" name="aftr_iron" >
                 <span id="aftrError" class="error"></span>
             
                 <div class="button-container mt-4">
                     <button class="btn btn-secondary btn-lg" type="button" id="saveBtn" onclick="window.location.href='output_3.html'">Done Editing</button>
                     <button class="btn btn-success" onclick="addLoad()">Add Load</button>
-                    <button class="btn btn-primary btn-lg" type="submit" id="submit_btn">Next</button>
                 </div>
             </form>
             
@@ -404,10 +402,10 @@ function handleLinenChange() {
 
     if (linenType.value === "OTHERS") {
         otherLinenInput.style.display = "block"; // Show input field
-        otherLinenInput.setAttribute("required", "true"); // Make it required
+        otherLinenInput.setAttribute("", "true"); // Make it 
     } else {
         otherLinenInput.style.display = "none"; // Hide input field
-        otherLinenInput.removeAttribute("required"); // Remove required attribute
+        otherLinenInput.removeAttribute(""); // Remove  attribute
         otherLinenInput.value = ""; // Clear input
     }
     if (linenType !== "") {
@@ -442,47 +440,47 @@ function validateForm() {
     let aftr_iron = document.getElementById("aftr_iron").value.trim();
 
     if (date === "") {
-        document.getElementById("dateError").textContent = "Date is required!";
+        document.getElementById("dateError").textContent = "Date is !";
         isValid = false;
     }
     if (load === "") {
-        document.getElementById("loadError").textContent = "Load number is required!";
+        document.getElementById("loadError").textContent = "Load number is !";
         isValid = false;
     }
     if (trolley === "") {
-        document.getElementById("trolleyError").textContent = "Trolley number is required!";
+        document.getElementById("trolleyError").textContent = "Trolley number is !";
         isValid = false;
     }
     if (equipment_iron === "") {
-        document.getElementById("equipment_ironError").textContent = "equipment_iron is required!";
+        document.getElementById("equipment_ironError").textContent = "equipment_iron is !";
         isValid = false;
     }
     if (set_time_iron === "") {
-        document.getElementById("timeError").textContent = "Set time is required!";
+        document.getElementById("timeError").textContent = "Set time is !";
         isValid = false;
     }
     if (temp === "") {
-        document.getElementById("tempError").textContent = "Temperature is required!";
+        document.getElementById("tempError").textContent = "Temperature is !";
         isValid = false;
     }
     if (linen === "") {
-        document.getElementById("linenError").textContent = "Linen type is required!";
+        document.getElementById("linenError").textContent = "Linen type is !";
         isValid = false;
     }
     if (quantity_iron === "") {
-        document.getElementById("quantity_ironError").textContent = "quantity_iron is required!";
+        document.getElementById("quantity_ironError").textContent = "quantity_iron is !";
         isValid = false;
     }
     if (bfr_iron === "") {
-        document.getElementById("bfrError").textContent = "Total kgs before wash is required!";
+        document.getElementById("bfrError").textContent = "Total kgs before wash is !";
         isValid = false;
     }
     if (aftr_iron === "") {
-        document.getElementById("aftrError").textContent = "Total kgs after wash is required!";
+        document.getElementById("aftrError").textContent = "Total kgs after wash is !";
         isValid = false;
     }
     if (detergent === "") {
-        document.getElementById("detdosError").textContent = "Detergent dosing is required!";
+        document.getElementById("detdosError").textContent = "Detergent dosing is !";
         isValid = false;
     }
 

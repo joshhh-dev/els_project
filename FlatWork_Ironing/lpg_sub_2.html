@@ -308,11 +308,7 @@
     let finalReading = parseFloat(document.getElementById("finalReading_iron").value);
     let pricePerKg = parseFloat(document.getElementById("pricePerKg_iron").value);
 
-    // Validate Inputs (prevent NaN issues)
-    if (isNaN(initialReading) || isNaN(finalReading) || isNaN(pricePerKg)) {
-        alert("Please enter valid numbers for all fields.");
-        return;
-    }
+ 
 
     let gasUsed = finalReading - initialReading;
     let lpgKgs = 1.898 * gasUsed;
