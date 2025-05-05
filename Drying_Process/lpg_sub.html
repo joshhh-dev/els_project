@@ -171,7 +171,7 @@
                     <select id="equip_dryer_lpg" class="form-select w-auto flex-grow-1">
                         <option value="">--Select Equipment--</option>
                         <option value="D#1 - T41200">D#1 - T41200</option>
-                        <option value="D#1 - T4900">D#1 - T4900</option>
+                        <option value="D#2 - T4900">D#1 - T4900</option>
                         <option value="D#3 - T4900">D#3 - T4900</option>
                     </select>
                 </div>
@@ -289,10 +289,15 @@
     });
 
     function saveData() {
-    let equip = document.getElementById("equip_iron_lpg").value;
+    let equip = document.getElementById("equip_dryer_lpg").value;
     let initialReading = parseFloat(document.getElementById("initialReading").value);
     let finalReading = parseFloat(document.getElementById("finalReading").value);
     let pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
+    // Validate Inputs (prevent NaN issues)
+    if (isNaN(initialReading) || isNaN(finalReading) || isNaN(pricePerKg)) {
+        alert("Please enter valid numbers for all fields.");
+        return;
+    }
 
 
     let gasUsed = finalReading - initialReading;
